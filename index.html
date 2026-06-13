@@ -1,1 +1,30 @@
-test
+<!DOCTYPE html>
+<html lang="ar" dir="rtl">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>TaskEarn Bot</title>
+<script src="https://telegram.org/js/telegram-web-app.js"></script>
+<style>
+body{margin:0;font-family:Arial;background:#1a1a2e;color:white;text-align:center}
+.header{background:#0f3460;padding:20px}
+.coins{font-size:48px;color:#ffd700;margin:20px}
+.task{background:#16213e;margin:10px;padding:15px;border-radius:10px;cursor:pointer}
+.btn{background:#e94560;color:white;border:none;padding:10px 20px;border-radius:8px;font-size:16px;cursor:pointer;margin:5px}
+</style>
+</head>
+<body>
+<div class="header"><h2>🎯 TaskEarn Bot</h2><p>اكسب مكافآت من المهام</p></div>
+<div class="coins">🪙 <span id="coins">0</span></div>
+<h3>المهام المتاحة</h3>
+<div class="task" onclick="doTask(1)">📢 تابع قناتنا على تيليجرام<br><small>+50 نقطة</small></div>
+<div class="task" onclick="doTask(2)">👁️ شاهد إعلاناً قصيراً<br><small>+30 نقطة</small></div>
+<div class="task" onclick="doTask(3)">⭐ قيّم التطبيق<br><small>+20 نقطة</small></div>
+<br>
+<button class="btn">💰 سحب المكافآت</button>
+<script>
+let coins=0;
+function doTask(id){coins+=[0,50,30,20][id];document.getElementById('coins').textContent=coins;alert('أحسنت! تم إضافة النقاط')}
+</script>
+</body>
+</html>
