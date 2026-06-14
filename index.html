@@ -332,7 +332,8 @@ async function watchAd(){
   btn.disabled=true;
   btn.innerHTML='⏳ ...';
   try{
-    const AdController=window.Adsgram.init({blockId:'bot-35140'});
+    const AdController=window.Adsgram.init({blockId:'35140'});
+    
     await AdController.show().then(async result=>{
       if(result.done){
         coins+=30;
