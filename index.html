@@ -3,238 +3,428 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>TaskEarn Bot</title>
+<title>TaskEarn</title>
 <script src="https://telegram.org/js/telegram-web-app.js"></script>
+<script src="https://sad.adsgram.ai/js/sad.min.js"></script>
 <style>
 *{margin:0;padding:0;box-sizing:border-box}
-body{font-family:Arial;background:#0a0a1a;color:white;min-height:100vh}
-.nav{display:flex;justify-content:space-around;background:#111;padding:10px;position:fixed;bottom:0;width:100%;z-index:100}
-.nav-btn{background:none;border:none;color:#888;font-size:11px;cursor:pointer;display:flex;flex-direction:column;align-items:center;gap:3px}
-.nav-btn.active{color:#ffd700}
-.page{display:none;padding:15px;padding-bottom:70px}
+body{font-family:'Arial',sans-serif;background:#0a0a0f;color:white;min-height:100vh;overflow-x:hidden}
+
+/* RGB Animation */
+@keyframes rgb{
+  0%{filter:drop-shadow(0 0 8px rgba(255,0,128,0.8))}
+  25%{filter:drop-shadow(0 0 8px rgba(0,255,200,0.8))}
+  50%{filter:drop-shadow(0 0 8px rgba(100,0,255,0.8))}
+  75%{filter:drop-shadow(0 0 8px rgba(255,200,0,0.8))}
+  100%{filter:drop-shadow(0 0 8px rgba(255,0,128,0.8))}
+}
+@keyframes rgbBorder{
+  0%{border-color:rgba(255,0,128,0.6);box-shadow:0 0 15px rgba(255,0,128,0.2)}
+  25%{border-color:rgba(0,255,200,0.6);box-shadow:0 0 15px rgba(0,255,200,0.2)}
+  50%{border-color:rgba(100,0,255,0.6);box-shadow:0 0 15px rgba(100,0,255,0.2)}
+  75%{border-color:rgba(255,200,0,0.6);box-shadow:0 0 15px rgba(255,200,0,0.2)}
+  100%{border-color:rgba(255,0,128,0.6);box-shadow:0 0 15px rgba(255,0,128,0.2)}
+}
+@keyframes rgbText{
+  0%{color:#ff0080}
+  25%{color:#00ffc8}
+  50%{color:#6400ff}
+  75%{color:#ffc800}
+  100%{color:#ff0080}
+}
+@keyframes rgbBg{
+  0%{background:linear-gradient(135deg,rgba(255,0,128,0.15),rgba(100,0,255,0.1))}
+  33%{background:linear-gradient(135deg,rgba(0,255,200,0.15),rgba(255,200,0,0.1))}
+  66%{background:linear-gradient(135deg,rgba(100,0,255,0.15),rgba(255,0,128,0.1))}
+  100%{background:linear-gradient(135deg,rgba(255,0,128,0.15),rgba(100,0,255,0.1))}
+}
+@keyframes pulse{
+  0%,100%{transform:scale(1)}
+  50%{transform:scale(1.05)}
+}
+@keyframes slideDown{from{top:0;opacity:0}to{top:20px;opacity:1}}
+@keyframes float{
+  0%,100%{transform:translateY(0)}
+  50%{transform:translateY(-8px)}
+}
+
+/* Top Bar */
+.top-bar{padding:15px 20px;display:flex;justify-content:space-between;align-items:center;background:rgba(255,255,255,0.03);backdrop-filter:blur(10px);border-bottom:1px solid rgba(255,255,255,0.08)}
+.logo{font-size:20px;font-weight:bold;animation:rgbText 3s infinite}
+.uid-badge{background:rgba(255,255,255,0.08);padding:5px 12px;border-radius:20px;font-size:11px;color:#aaa}
+
+/* Coin Section */
+.coin-section{padding:30px 20px 20px;text-align:center;position:relative}
+.coin-wrap{display:inline-block;animation:float 3s ease-in-out infinite}
+.coin-icon{font-size:70px;animation:rgb 3s infinite;display:block}
+.coin-amount{font-size:44px;font-weight:bold;margin-top:8px;animation:rgbText 3s infinite}
+.usdt-val{color:rgba(255,255,255,0.4);font-size:13px;margin-top:4px}
+.level-bar{background:rgba(255,255,255,0.08);border-radius:10px;height:4px;margin:15px 30px 0;overflow:hidden}
+.level-fill{height:100%;border-radius:10px;animation:rgbBg 3s infinite;transition:width 0.5s}
+
+/* Stats */
+.stats-row{display:grid;grid-template-columns:1fr 1fr 1fr;gap:8px;padding:10px 15px}
+.stat-box{background:rgba(255,255,255,0.04);border:1px solid rgba(255,255,255,0.08);border-radius:14px;padding:12px;text-align:center;transition:all 0.3s}
+.stat-box:hover{animation:rgbBorder 3s infinite}
+.stat-num{font-size:20px;font-weight:bold;animation:rgbText 3s infinite}
+.stat-lbl{font-size:10px;color:rgba(255,255,255,0.4);margin-top:3px}
+
+/* Pages */
+.page{display:none;padding:15px;padding-bottom:85px}
 .page.active{display:block}
-.header{background:linear-gradient(135deg,#1a1a4e,#0f3460);padding:20px;border-radius:15px;text-align:center;margin-bottom:15px}
-.coins-big{font-size:48px;color:#ffd700;font-weight:bold}
-.card{background:#111827;border-radius:12px;padding:15px;margin-bottom:10px;border:1px solid #1f2937}
-.task-card{display:flex;justify-content:space-between;align-items:center;background:#111827;border-radius:12px;padding:15px;margin-bottom:10px;border:1px solid #1f2937;cursor:pointer}
-.task-reward{background:#ffd700;color:#000;padding:5px 10px;border-radius:8px;font-weight:bold;font-size:12px}
-.btn{background:linear-gradient(135deg,#e94560,#c62a47);color:white;border:none;padding:12px 20px;border-radius:10px;font-size:14px;cursor:pointer;width:100%;margin-top:10px}
-.btn-green{background:linear-gradient(135deg,#10b981,#059669)}
-.ref-box{background:#1f2937;padding:15px;border-radius:10px;margin:10px 0;word-break:break-all;font-size:13px;color:#60a5fa}
-.stats{display:grid;grid-template-columns:1fr 1fr;gap:10px;margin-bottom:15px}
-.stat-card{background:#111827;border-radius:12px;padding:15px;text-align:center;border:1px solid #1f2937}
-.stat-num{font-size:24px;font-weight:bold;color:#ffd700}
-.lang-btn{background:#1f2937;border:none;color:white;padding:8px 15px;border-radius:8px;cursor:pointer;margin:3px}
-.lang-btn.active{background:#3b82f6}
-input{background:#1f2937;border:1px solid #374151;color:white;padding:10px;border-radius:8px;width:100%;margin:5px 0}
-.withdraw-card{background:#111827;border-radius:12px;padding:15px;margin-bottom:10px;border:1px solid #1f2937}
+
+/* Cards */
+.card{background:rgba(255,255,255,0.04);border:1px solid rgba(255,255,255,0.08);border-radius:18px;padding:16px;margin-bottom:12px;backdrop-filter:blur(5px)}
+.card-rgb{animation:rgbBorder 3s infinite}
+.card-title{font-size:14px;font-weight:bold;margin-bottom:14px;display:flex;align-items:center;gap:8px;animation:rgbText 3s infinite}
+
+/* Ad Section */
+.ad-box{border-radius:18px;padding:22px;text-align:center;margin-bottom:12px;animation:rgbBorder 3s infinite,rgbBg 3s infinite;border:1px solid}
+.ad-reward-num{font-size:32px;font-weight:bold;animation:rgbText 3s infinite}
+.ad-btn{border:none;padding:15px;border-radius:14px;font-size:16px;font-weight:bold;cursor:pointer;width:100%;margin-top:14px;transition:all 0.3s;position:relative;overflow:hidden;animation:rgbBg 3s infinite,rgbBorder 3s infinite;border:1px solid;color:white}
+.ad-btn:active{transform:scale(0.97)}
+.ad-btn:disabled{background:rgba(255,255,255,0.05)!important;color:rgba(255,255,255,0.3)!important;animation:none!important;border-color:rgba(255,255,255,0.1)!important;cursor:not-allowed}
+.ad-count{font-size:12px;color:rgba(255,255,255,0.4);margin-top:8px}
+
+/* Task Items */
+.task-item{background:rgba(255,255,255,0.04);border:1px solid rgba(255,255,255,0.08);border-radius:14px;padding:14px;margin-bottom:8px;display:flex;justify-content:space-between;align-items:center;cursor:pointer;transition:all 0.3s}
+.task-item:active{transform:scale(0.98)}
+.task-item:hover{animation:rgbBorder 3s infinite}
+.task-item.done{opacity:0.3;pointer-events:none}
+.task-left{display:flex;align-items:center;gap:12px}
+.task-icon{font-size:26px}
+.task-name{font-size:14px;font-weight:bold}
+.task-desc{font-size:11px;color:rgba(255,255,255,0.4);margin-top:2px}
+.task-badge{padding:6px 12px;border-radius:8px;font-weight:bold;font-size:13px;animation:rgbBg 3s infinite,rgbBorder 3s infinite;border:1px solid;color:white}
+
+/* Ref */
+.ref-box{background:rgba(255,255,255,0.05);border:1px solid rgba(255,255,255,0.1);border-radius:12px;padding:12px;font-size:12px;color:rgba(150,200,255,0.9);word-break:break-all;margin:10px 0}
+.btn-rgb{border:1px solid;padding:13px;border-radius:13px;font-size:14px;font-weight:bold;cursor:pointer;width:100%;margin-top:8px;color:white;animation:rgbBg 3s infinite,rgbBorder 3s infinite;transition:transform 0.2s}
+.btn-rgb:active{transform:scale(0.97)}
+.btn-outline{background:rgba(255,255,255,0.05);border:1px solid rgba(255,255,255,0.15);padding:13px;border-radius:13px;font-size:14px;cursor:pointer;width:100%;margin-top:8px;color:white;transition:all 0.2s}
+
+/* Withdraw */
+.balance-card{border-radius:18px;padding:22px;text-align:center;margin-bottom:12px;animation:rgbBorder 3s infinite,rgbBg 3s infinite;border:1px solid}
+.withdraw-input{background:rgba(255,255,255,0.06);border:1px solid rgba(255,255,255,0.12);color:white;padding:14px;border-radius:13px;width:100%;margin:8px 0;font-size:14px}
+.withdraw-input:focus{outline:none;animation:rgbBorder 3s infinite}
+
+/* Lang */
+.lang-grid{display:grid;grid-template-columns:1fr 1fr;gap:8px;margin-top:10px}
+.lang-item{background:rgba(255,255,255,0.04);border:1px solid rgba(255,255,255,0.1);border-radius:12px;padding:12px;text-align:center;cursor:pointer;transition:all 0.3s;font-size:13px}
+.lang-item.active{animation:rgbBorder 3s infinite,rgbBg 3s infinite}
+
+/* Nav */
+.nav{display:flex;justify-content:space-around;background:rgba(10,10,15,0.95);padding:8px 0 12px;position:fixed;bottom:0;width:100%;z-index:100;border-top:1px solid rgba(255,255,255,0.06);backdrop-filter:blur(20px)}
+.nav-btn{background:none;border:none;color:rgba(255,255,255,0.35);font-size:10px;cursor:pointer;display:flex;flex-direction:column;align-items:center;gap:4px;padding:5px 15px;transition:all 0.3s}
+.nav-btn .icon{font-size:22px;transition:all 0.3s}
+.nav-btn.active{color:white}
+.nav-btn.active .icon{animation:rgb 3s infinite}
+
+/* Notif */
+.notif{position:fixed;top:20px;left:50%;transform:translateX(-50%);padding:12px 24px;border-radius:14px;font-weight:bold;font-size:14px;z-index:999;display:none;animation:slideDown 0.3s ease,rgbBg 3s infinite,rgbBorder 3s infinite;border:1px solid;color:white;backdrop-filter:blur(10px);white-space:nowrap}
 </style>
 </head>
 <body>
+
+<div class="notif" id="notif"></div>
+
+<!-- HOME -->
 <div id="home" class="page active">
-  <div class="header">
-    <div id="welcome">مرحباً! 👋</div>
-    <div class="coins-big">🪙 <span id="coins">0</span></div>
-    <div style="color:#888;font-size:13px" id="usdt-val">≈ 0.00 USDT</div>
+  <div class="top-bar">
+    <div class="logo">⚡ TaskEarn</div>
+    <div class="uid-badge" id="uid-display">ID: ...</div>
   </div>
-  <div class="stats">
-    <div class="stat-card"><div class="stat-num" id="tasks-done">0</div><div id="txt-tasks">مهام منجزة</div></div>
-    <div class="stat-card"><div class="stat-num" id="refs-count">0</div><div id="txt-refs">إحالات</div></div>
+
+  <div class="coin-section">
+    <div class="coin-wrap">
+      <span class="coin-icon">🪙</span>
+    </div>
+    <div class="coin-amount" id="coins">0</div>
+    <div class="usdt-val" id="usdt-val">≈ 0.0000 USDT</div>
+    <div class="level-bar"><div class="level-fill" id="level-fill" style="width:0%"></div></div>
   </div>
+
+  <div class="stats-row">
+    <div class="stat-box"><div class="stat-num" id="stat-tasks">0</div><div class="stat-lbl" id="t-tasks">مهام</div></div>
+    <div class="stat-box"><div class="stat-num" id="stat-ads">0</div><div class="stat-lbl" id="t-ads">إعلانات</div></div>
+    <div class="stat-box"><div class="stat-num" id="stat-refs">0</div><div class="stat-lbl" id="t-refs">إحالات</div></div>
+  </div>
+
+  <div class="ad-box">
+    <div style="color:rgba(255,255,255,0.5);font-size:12px;margin-bottom:8px" id="t-watch-earn">شاهد إعلاناً واكسب</div>
+    <div class="ad-reward-num">+30 <span style="font-size:16px" id="t-points">نقطة</span></div>
+    <button class="ad-btn" id="ad-btn" onclick="watchAd()">
+      📺 <span id="t-watch-btn">شاهد الإعلان</span>
+    </button>
+    <div class="ad-count" id="ad-count"></div>
+  </div>
+
   <div class="card">
-    <div id="txt-daily">المهام اليومية</div>
-    <div class="task-card" onclick="doTask('watch_ad',30)">
-      <div>📺 <span id="txt-watch">شاهد إعلاناً</span></div>
-      <div class="task-reward">+30 🪙</div>
+    <div class="card-title">📋 <span id="t-daily">المهام اليومية</span></div>
+    <div class="task-item" id="task-channel" onclick="joinChannel()">
+      <div class="task-left">
+        <div class="task-icon">📢</div>
+        <div>
+          <div class="task-name" id="t-join">اشترك في القناة</div>
+          <div class="task-desc" id="t-join-desc">اشترك واكسب نقاط</div>
+        </div>
+      </div>
+      <div class="task-badge">+100 🪙</div>
     </div>
-    <div class="task-card" onclick="doTask('join_channel',50)">
-      <div>📢 <span id="txt-join">اشترك في قناتنا</span></div>
-      <div class="task-reward">+50 🪙</div>
-    </div>
-    <div class="task-card" onclick="doTask('share',20)">
-      <div>🔗 <span id="txt-share">شارك البوت</span></div>
-      <div class="task-reward">+20 🪙</div>
+    <div class="task-item" id="task-share" onclick="shareBot()">
+      <div class="task-left">
+        <div class="task-icon">🔗</div>
+        <div>
+          <div class="task-name" id="t-share">شارك البوت</div>
+          <div class="task-desc" id="t-share-desc">شارك مع أصدقائك</div>
+        </div>
+      </div>
+      <div class="task-badge">+20 🪙</div>
     </div>
   </div>
 </div>
 
-<div id="tasks" class="page">
-  <h3 style="margin-bottom:15px" id="txt-all-tasks">كل المهام</h3>
-  <div class="task-card" onclick="openChannel('https://t.me/yourchannel')">
-    <div>📢 اشترك في القناة الرئيسية</div>
-    <div class="task-reward">+100 🪙</div>
-  </div>
-  <div class="task-card" onclick="openChannel('https://t.me/yourbot')">
-    <div>🤖 شغل البوت الشقيق</div>
-    <div class="task-reward">+75 🪙</div>
-  </div>
-  <div class="task-card" onclick="doTask('watch_ad',30)">
-    <div>📺 شاهد إعلاناً</div>
-    <div class="task-reward">+30 🪙</div>
-  </div>
-  <div class="task-card" onclick="doTask('watch_ad',30)">
-    <div>📺 شاهد إعلاناً ثانياً</div>
-    <div class="task-reward">+30 🪙</div>
-  </div>
-</div>
-
+<!-- REFERRAL -->
 <div id="referral" class="page">
-  <h3 style="margin-bottom:15px" id="txt-ref-title">نظام الإحالة</h3>
-  <div class="card">
-    <div id="txt-ref-desc">ادعو أصدقاءك واكسب 100 نقطة لكل إحالة!</div>
+  <div class="card card-rgb">
+    <div class="card-title">👥 <span id="t-ref-title">نظام الإحالة</span></div>
+    <p style="color:rgba(255,255,255,0.5);font-size:13px;margin-bottom:10px" id="t-ref-desc">ادعو أصدقاءك واكسب 100 نقطة لكل إحالة!</p>
     <div class="ref-box" id="ref-link">جاري التحميل...</div>
-    <button class="btn" onclick="copyRef()" id="txt-copy">📋 نسخ الرابط</button>
-    <button class="btn btn-green" onclick="shareRef()" style="margin-top:5px" id="txt-share-ref">📤 مشاركة الرابط</button>
+    <button class="btn-rgb" onclick="copyRef()" id="t-copy">📋 نسخ الرابط</button>
+    <button class="btn-outline" onclick="shareRef()" id="t-share-ref">📤 مشاركة الرابط</button>
+  </div>
+  <div class="stats-row">
+    <div class="stat-box"><div class="stat-num" id="ref-num">0</div><div class="stat-lbl" id="t-ref-count">إحالات</div></div>
+    <div class="stat-box"><div class="stat-num" id="ref-earn">0</div><div class="stat-lbl" id="t-ref-earn">نقاط</div></div>
+    <div class="stat-box"><div class="stat-num" id="ref-usdt">0.00</div><div class="stat-lbl">USDT</div></div>
+  </div>
+</div>
+
+<!-- WITHDRAW -->
+<div id="withdraw" class="page">
+  <div class="balance-card">
+    <div style="color:rgba(255,255,255,0.4);font-size:12px" id="t-balance">رصيدك الحالي</div>
+    <div class="coin-amount" style="font-size:38px;margin-top:8px" id="coins2">0</div>
+    <div class="usdt-val" id="usdt-val2">≈ 0.0000 USDT</div>
+    <div style="color:rgba(255,255,255,0.25);font-size:11px;margin-top:10px">1000 نقطة = 0.09 USDT</div>
   </div>
   <div class="card">
-    <div id="txt-ref-stats">إحصائيات الإحالة</div>
-    <div class="stats" style="margin-top:10px">
-      <div class="stat-card"><div class="stat-num" id="ref-num">0</div><div>إحالات</div></div>
-      <div class="stat-card"><div class="stat-num" id="ref-earn">0</div><div>نقاط مكتسبة</div></div>
+    <div class="card-title">💸 <span id="t-withdraw-title">سحب المكافآت</span></div>
+    <div style="color:rgba(255,255,255,0.5);font-size:13px;margin-bottom:6px" id="t-wallet">عنوان المحفظة (TRC20/TON)</div>
+    <input class="withdraw-input" type="text" id="wallet-addr" placeholder="أدخل عنوان محفظتك...">
+    <button class="btn-rgb" onclick="withdraw()" id="t-withdraw-btn">💸 سحب</button>
+  </div>
+  <div class="card" style="font-size:12px;color:rgba(255,255,255,0.35)">
+    <div>⚠️ <span id="t-min">الحد الأدنى: 1000 نقطة</span></div>
+    <div style="margin-top:6px">⏱️ <span id="t-time">وقت المعالجة: 24-48 ساعة</span></div>
+    <div style="margin-top:6px">💡 عمولة الخدمة: 10%</div>
+  </div>
+</div>
+
+<!-- SETTINGS -->
+<div id="settings" class="page">
+  <div class="card">
+    <div class="card-title">🌍 <span id="t-lang">اللغة</span></div>
+    <div class="lang-grid">
+      <div class="lang-item active" onclick="setLang('ar',this)">🇸🇦 العربية</div>
+      <div class="lang-item" onclick="setLang('en',this)">🇬🇧 English</div>
+      <div class="lang-item" onclick="setLang('fr',this)">🇫🇷 Français</div>
+      <div class="lang-item" onclick="setLang('ru',this)">🇷🇺 Русский</div>
     </div>
   </div>
-</div>
-
-<div id="withdraw" class="page">
-  <h3 style="margin-bottom:15px" id="txt-withdraw-title">سحب المكافآت</h3>
-  <div class="card" style="text-align:center">
-    <div id="txt-balance">رصيدك</div>
-    <div class="coins-big" style="font-size:36px">🪙 <span id="coins2">0</span></div>
-    <div style="color:#ffd700;margin:5px 0" id="usdt-val2">≈ 0.00 USDT</div>
-    <div style="color:#888;font-size:12px">1000 نقطة = 0.1 USDT</div>
-  </div>
-  <div class="withdraw-card">
-    <div style="margin-bottom:10px" id="txt-wallet">عنوان المحفظة (TRC20/TON)</div>
-    <input type="text" id="wallet-addr" placeholder="أدخل عنوان محفظتك...">
-    <button class="btn" onclick="withdraw()" id="txt-withdraw-btn">💸 سحب</button>
-  </div>
-  <div class="card" style="font-size:13px;color:#888">
-    <div>⚠️ الحد الأدنى للسحب: 1000 نقطة (0.1 USDT)</div>
-    <div style="margin-top:5px">⏱️ وقت المعالجة: 24-48 ساعة</div>
-  </div>
-</div>
-
-<div id="settings" class="page">
-  <h3 style="margin-bottom:15px">الإعدادات</h3>
   <div class="card">
-    <div style="margin-bottom:10px">🌍 اللغة / Language</div>
-    <button class="lang-btn active" onclick="setLang('ar')">العربية</button>
-    <button class="lang-btn" onclick="setLang('en')">English</button>
-    <button class="lang-btn" onclick="setLang('fr')">Français</button>
+    <div class="card-title">📊 <span id="t-rate">معدل التحويل</span></div>
+    <div style="text-align:center;margin-top:5px">
+      <div style="font-size:18px;animation:rgbText 3s infinite">1000 🪙 = 0.09 USDT</div>
+      <div style="font-size:11px;color:rgba(255,255,255,0.3);margin-top:5px">بعد خصم عمولة الخدمة 10%</div>
+    </div>
   </div>
   <div class="card">
-    <div>معدل التحويل</div>
-    <div style="color:#ffd700;margin-top:5px">1000 نقطة = 0.1 USDT</div>
+    <div class="card-title">🆔 <span id="t-myid">معرفك</span></div>
+    <div style="font-size:16px;text-align:center;animation:rgbText 3s infinite" id="my-id">-</div>
   </div>
 </div>
 
 <nav class="nav">
-  <button class="nav-btn active" onclick="showPage('home',this)">🏠<span id="nav-home">الرئيسية</span></button>
-  <button class="nav-btn" onclick="showPage('tasks',this)">📋<span id="nav-tasks">المهام</span></button>
-  <button class="nav-btn" onclick="showPage('referral',this)">👥<span id="nav-ref">الإحالة</span></button>
-  <button class="nav-btn" onclick="showPage('withdraw',this)">💰<span id="nav-withdraw">السحب</span></button>
-  <button class="nav-btn" onclick="showPage('settings',this)">⚙️<span id="nav-settings">الإعدادات</span></button>
+  <button class="nav-btn active" onclick="showPage('home',this)"><span class="icon">🏠</span><span id="n-home">الرئيسية</span></button>
+  <button class="nav-btn" onclick="showPage('referral',this)"><span class="icon">👥</span><span id="n-ref">الإحالة</span></button>
+  <button class="nav-btn" onclick="showPage('withdraw',this)"><span class="icon">💰</span><span id="n-withdraw">السحب</span></button>
+  <button class="nav-btn" onclick="showPage('settings',this)"><span class="icon">⚙️</span><span id="n-settings">الإعدادات</span></button>
 </nav>
 
 <script>
-const SUPABASE_URL = 'https://xdsqoflkdbcsbbqonfrv.supabase.co';
-const SUPABASE_KEY = 'sb_publishable_yyThqbzPOCoqrAcDmY60gw_-0QZSzJt';
-const RATE = 0.0001;
-let coins = 0, userId = null, lang = 'ar';
+const SUPABASE_URL='https://xdsqoflkdbcsbbqonfrv.supabase.co';
+const SUPABASE_KEY='sb_publishable_yyThqbzPOCoqrAcDmY60gw_-0QZSzJt';
+const RATE=0.0001;
+const USER_RATE=0.9;
+let coins=0,userId=null,adsWatched=0,lang='ar';
 
-const translations = {
-  ar: {home:'الرئيسية',tasks:'المهام',ref:'الإحالة',withdraw:'السحب',settings:'الإعدادات'},
-  en: {home:'Home',tasks:'Tasks',ref:'Referral',withdraw:'Withdraw',settings:'Settings'},
-  fr: {home:'Accueil',tasks:'Tâches',ref:'Parrainage',withdraw:'Retrait',settings:'Paramètres'}
+const T={
+ar:{home:'الرئيسية',ref:'الإحالة',withdraw:'السحب',settings:'الإعدادات',tasks:'مهام',ads:'إعلانات',refs:'إحالات',watchEarn:'شاهد إعلاناً واكسب',points:'نقطة',watchBtn:'شاهد الإعلان',daily:'المهام اليومية',join:'اشترك في القناة',joinDesc:'اشترك واكسب نقاط',share:'شارك البوت',shareDesc:'شارك مع أصدقائك',refTitle:'نظام الإحالة',refDesc:'ادعو أصدقاءك واكسب 100 نقطة لكل إحالة!',copy:'📋 نسخ الرابط',shareRef:'📤 مشاركة',refCount:'إحالات',refEarn:'نقاط',balance:'رصيدك الحالي',wallet:'عنوان المحفظة',withdrawTitle:'سحب المكافآت',withdrawBtn:'💸 سحب',min:'الحد الأدنى: 1000 نقطة',time:'وقت المعالجة: 24-48 ساعة',lang:'اللغة',rate:'معدل التحويل',myid:'معرفك',adWatched:'إعلان'},
+en:{home:'Home',ref:'Referral',withdraw:'Withdraw',settings:'Settings',tasks:'Tasks',ads:'Ads',refs:'Refs',watchEarn:'Watch ad & earn',points:'pts',watchBtn:'Watch Ad',daily:'Daily Tasks',join:'Join Channel',joinDesc:'Subscribe & earn',share:'Share Bot',shareDesc:'Share with friends',refTitle:'Referral System',refDesc:'Invite friends & earn 100 pts!',copy:'📋 Copy Link',shareRef:'📤 Share',refCount:'Referrals',refEarn:'Points',balance:'Your Balance',wallet:'Wallet Address',withdrawTitle:'Withdraw',withdrawBtn:'💸 Withdraw',min:'Minimum: 1000 points',time:'Processing: 24-48h',lang:'Language',rate:'Exchange Rate',myid:'Your ID',adWatched:'ad'},
+fr:{home:'Accueil',ref:'Parrainage',withdraw:'Retrait',settings:'Paramètres',tasks:'Tâches',ads:'Pubs',refs:'Refs',watchEarn:'Voir pub & gagner',points:'pts',watchBtn:'Voir pub',daily:'Tâches du jour',join:'Rejoindre',joinDesc:'Abonnez-vous & gagnez',share:'Partager',shareDesc:'Partager avec amis',refTitle:'Parrainage',refDesc:'Invitez & gagnez 100 pts!',copy:'📋 Copier',shareRef:'📤 Partager',refCount:'Parrainages',refEarn:'Points',balance:'Votre solde',wallet:'Adresse portefeuille',withdrawTitle:'Retrait',withdrawBtn:'💸 Retirer',min:'Minimum: 1000 pts',time:'Délai: 24-48h',lang:'Langue',rate:'Taux',myid:'Votre ID',adWatched:'pub'},
+ru:{home:'Главная',ref:'Рефералы',withdraw:'Вывод',settings:'Настройки',tasks:'Задания',ads:'Реклама',refs:'Рефералы',watchEarn:'Смотри & зарабатывай',points:'очков',watchBtn:'Смотреть',daily:'Задания',join:'Подписаться',joinDesc:'Подпишись & зарабатывай',share:'Поделиться',shareDesc:'Поделись с друзьями',refTitle:'Реферальная система',refDesc:'Приглашай & получай 100 очков!',copy:'📋 Копировать',shareRef:'📤 Поделиться',refCount:'Рефералы',refEarn:'Очки',balance:'Ваш баланс',wallet:'Адрес кошелька',withdrawTitle:'Вывод',withdrawBtn:'💸 Вывести',min:'Минимум: 1000 очков',time:'Обработка: 24-48ч',lang:'Язык',rate:'Курс',myid:'Ваш ID',adWatched:'реклама'}
 };
 
-function setLang(l) {
-  lang = l;
-  document.querySelectorAll('.lang-btn').forEach(b=>b.classList.remove('active'));
-  event.target.classList.add('active');
-  document.getElementById('nav-home').textContent = translations[l].home;
-  document.getElementById('nav-tasks').textContent = translations[l].tasks;
-  document.getElementById('nav-ref').textContent = translations[l].ref;
-  document.getElementById('nav-withdraw').textContent = translations[l].withdraw;
-  document.getElementById('nav-settings').textContent = translations[l].settings;
+function showNotif(msg){
+  const n=document.getElementById('notif');
+  n.textContent=msg;n.style.display='block';
+  setTimeout(()=>n.style.display='none',2500);
 }
 
-function showPage(id, btn) {
+function setLang(l,el){
+  lang=l;
+  document.querySelectorAll('.lang-item').forEach(i=>i.classList.remove('active'));
+  if(el)el.classList.add('active');
+  document.documentElement.dir=l==='ar'?'rtl':'ltr';
+  const t=T[l];
+  const ids={
+    'n-home':'home','n-ref':'ref','n-withdraw':'withdraw','n-settings':'settings',
+    't-tasks':'tasks','t-ads':'ads','t-refs':'refs','t-watch-earn':'watchEarn',
+    't-points':'points','t-watch-btn':'watchBtn','t-daily':'daily','t-join':'join',
+    't-join-desc':'joinDesc','t-share':'share','t-share-desc':'shareDesc',
+    't-ref-title':'refTitle','t-ref-desc':'refDesc','t-copy':'copy',
+    't-share-ref':'shareRef','t-ref-count':'refCount','t-ref-earn':'refEarn',
+    't-balance':'balance','t-wallet':'wallet','t-withdraw-title':'withdrawTitle',
+    't-withdraw-btn':'withdrawBtn','t-min':'min','t-time':'time',
+    't-lang':'lang','t-rate':'rate','t-myid':'myid'
+  };
+  Object.entries(ids).forEach(([id,key])=>{
+    const el2=document.getElementById(id);
+    if(el2)el2.textContent=t[key];
+  });
+  updateAdCount();
+}
+
+function showPage(id,btn){
   document.querySelectorAll('.page').forEach(p=>p.classList.remove('active'));
   document.querySelectorAll('.nav-btn').forEach(b=>b.classList.remove('active'));
   document.getElementById(id).classList.add('active');
-  btn.classList.add('active');
+  if(btn)btn.classList.add('active');
 }
 
-function updateCoinsDisplay() {
-  document.getElementById('coins').textContent = coins;
-  document.getElementById('coins2').textContent = coins;
-  document.getElementById('usdt-val').textContent = '≈ ' + (coins * RATE).toFixed(4) + ' USDT';
-  document.getElementById('usdt-val2').textContent = '≈ ' + (coins * RATE).toFixed(4) + ' USDT';
+function updateCoins(){
+  document.getElementById('coins').textContent=coins;
+  document.getElementById('coins2').textContent=coins;
+  const usdt=(coins*RATE*USER_RATE).toFixed(4);
+  document.getElementById('usdt-val').textContent='≈ '+usdt+' USDT';
+  document.getElementById('usdt-val2').textContent='≈ '+usdt+' USDT';
+  document.getElementById('level-fill').style.width=Math.min((coins%1000)/10,100)+'%';
 }
 
-async function saveCoins() {
-  if (!userId) return;
-  await fetch(`${SUPABASE_URL}/rest/v1/users?telegram_id=eq.${userId}`, {
-    method: 'PATCH',
-    headers: {'Content-Type':'application/json','apikey':SUPABASE_KEY,'Authorization':'Bearer '+SUPABASE_KEY},
-    body: JSON.stringify({coins: coins})
+function updateAdCount(){
+  const el=document.getElementById('ad-count');
+  if(el)el.textContent=adsWatched>0?adsWatched+' '+T[lang].adWatched:'';
+  document.getElementById('stat-ads').textContent=adsWatched;
+}
+
+async function saveData(){
+  if(!userId)return;
+  await fetch(`${SUPABASE_URL}/rest/v1/users?telegram_id=eq.${userId}`,{
+    method:'PATCH',
+    headers:{'Content-Type':'application/json','apikey':SUPABASE_KEY,'Authorization':'Bearer '+SUPABASE_KEY},
+    body:JSON.stringify({coins,ads_watched:adsWatched})
   });
 }
 
-async function doTask(type, reward) {
-  coins += reward;
-  updateCoinsDisplay();
-  await saveCoins();
-  alert(lang === 'ar' ? 'أحسنت! تم إضافة ' + reward + ' نقطة' : 'Done! +' + reward + ' points');
-}
-
-function openChannel(url) {
-  window.Telegram.WebApp.openLink(url);
-  setTimeout(() => doTask('channel', 100), 3000);
-}
-
-function copyRef() {
-  const link = document.getElementById('ref-link').textContent;
-  navigator.clipboard.writeText(link);
-  alert(lang === 'ar' ? 'تم النسخ!' : 'Copied!');
-}
-
-function shareRef() {
-  const link = document.getElementById('ref-link').textContent;
-  window.Telegram.WebApp.openLink('https://t.me/share/url?url=' + encodeURIComponent(link));
-}
-
-async function withdraw() {
-  const wallet = document.getElementById('wallet-addr').value;
-  if (!wallet) { alert('أدخل عنوان المحفظة'); return; }
-  if (coins < 1000) { alert('تحتاج 1000 نقطة على الأقل'); return; }
-  alert('تم إرسال طلب السحب! سيتم المعالجة خلال 24-48 ساعة');
-}
-
-async function init() {
-  const tg = window.Telegram.WebApp;
-  tg.expand();
-  const user = tg.initDataUnsafe?.user;
-  if (user) {
-    userId = user.id;
-    document.getElementById('welcome').textContent = 'مرحباً ' + (user.first_name || '') + '! 👋';
-    document.getElementById('ref-link').textContent = 'https://t.me/earntaskpro_bot?start=' + userId;
-    
-    const res = await fetch(`${SUPABASE_URL}/rest/v1/users?telegram_id=eq.${userId}`, {
-      headers: {'apikey': SUPABASE_KEY, 'Authorization': 'Bearer ' + SUPABASE_KEY}
+async function watchAd(){
+  const btn=document.getElementById('ad-btn');
+  btn.disabled=true;
+  btn.innerHTML='⏳ ...';
+  try{
+    const AdController=window.Adsgram.init({blockId:'bot-35140'});
+    await AdController.show().then(async result=>{
+      if(result.done){
+        coins+=30;
+        adsWatched++;
+        updateCoins();
+        updateAdCount();
+        await saveData();
+        showNotif('🎉 +30 '+T[lang].points);
+      }
+    }).catch(()=>{
+      showNotif(lang==='ar'?'لا توجد إعلانات الآن':'No ads now');
     });
-    const data = await res.json();
-    
-    if (data.length === 0) {
-      await fetch(`${SUPABASE_URL}/rest/v1/users`, {
-        method: 'POST',
-        headers: {'Content-Type':'application/json','apikey':SUPABASE_KEY,'Authorization':'Bearer '+SUPABASE_KEY},
-        body: JSON.stringify({telegram_id: userId, username: user.username, coins: 0})
+  }catch(e){
+    showNotif(lang==='ar'?'حدث خطأ':'Error occurred');
+  }
+  btn.disabled=false;
+  btn.innerHTML='📺 <span id="t-watch-btn">'+T[lang].watchBtn+'</span>';
+}
+
+async function joinChannel(){
+  window.Telegram.WebApp.openLink('https://t.me/yourchannel');
+  setTimeout(async()=>{
+    coins+=100;
+    updateCoins();
+    await saveData();
+    document.getElementById('task-channel').classList.add('done');
+    showNotif('🎉 +100 '+T[lang].points);
+  },3000);
+}
+
+async function shareBot(){
+  const link=`https://t.me/earntaskpro_bot?start=${userId}`;
+  window.Telegram.WebApp.openLink('https://t.me/share/url?url='+encodeURIComponent(link));
+  setTimeout(async()=>{
+    coins+=20;
+    updateCoins();
+    await saveData();
+    document.getElementById('task-share').classList.add('done');
+    showNotif('🎉 +20 '+T[lang].points);
+  },2000);
+}
+
+function copyRef(){
+  navigator.clipboard.writeText(`https://t.me/earntaskpro_bot?start=${userId}`);
+  showNotif(lang==='ar'?'✅ تم النسخ!':'✅ Copied!');
+}
+
+function shareRef(){
+  const link=`https://t.me/earntaskpro_bot?start=${userId}`;
+  const text=lang==='ar'?'انضم وكسب مكافآت! 🎁':'Join & earn rewards! 🎁';
+  window.Telegram.WebApp.openLink('https://t.me/share/url?url='+encodeURIComponent(link)+'&text='+encodeURIComponent(text));
+}
+
+async function withdraw(){
+  const wallet=document.getElementById('wallet-addr').value.trim();
+  if(!wallet){showNotif(lang==='ar'?'أدخل عنوان المحفظة':'Enter wallet');return;}
+  if(coins<1000){showNotif(lang==='ar'?'تحتاج 1000 نقطة على الأقل':'Need 1000+ points');return;}
+  const userUsdt=(coins*RATE*USER_RATE).toFixed(4);
+  const commission=(coins*RATE*0.1).toFixed(4);
+  await fetch(`${SUPABASE_URL}/rest/v1/withdrawals`,{
+    method:'POST',
+    headers:{'Content-Type':'application/json','apikey':SUPABASE_KEY,'Authorization':'Bearer '+SUPABASE_KEY},
+    body:JSON.stringify({telegram_id:userId,wallet,coins,usdt:userUsdt,commission})
+  }).catch(()=>{});
+  showNotif(lang==='ar'?'✅ تم إرسال طلب السحب!':'✅ Withdrawal sent!');
+}
+
+async function init(){
+  const tg=window.Telegram.WebApp;
+  tg.expand();
+  try{tg.setHeaderColor('#0a0a0f');}catch(e){}
+  const user=tg.initDataUnsafe?.user;
+  if(user){
+    userId=user.id;
+    document.getElementById('uid-display').textContent='ID: '+userId;
+    document.getElementById('my-id').textContent=userId;
+    document.getElementById('ref-link').textContent=`https://t.me/earntaskpro_bot?start=${userId}`;
+    const res=await fetch(`${SUPABASE_URL}/rest/v1/users?telegram_id=eq.${userId}`,{
+      headers:{'apikey':SUPABASE_KEY,'Authorization':'Bearer '+SUPABASE_KEY}
+    });
+    const data=await res.json();
+    if(data.length===0){
+      await fetch(`${SUPABASE_URL}/rest/v1/users`,{
+        method:'POST',
+        headers:{'Content-Type':'application/json','apikey':SUPABASE_KEY,'Authorization':'Bearer '+SUPABASE_KEY},
+        body:JSON.stringify({telegram_id:userId,username:user.username||'',coins:0,ads_watched:0})
       });
-    } else {
-      coins = data[0].coins || 0;
-      updateCoinsDisplay();
+    }else{
+      coins=data[0].coins||0;
+      adsWatched=data[0].ads_watched||0;
+      updateCoins();
+      updateAdCount();
     }
   }
 }
