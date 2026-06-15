@@ -5,429 +5,535 @@
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 <title>TaskEarn</title>
 <script src="https://telegram.org/js/telegram-web-app.js"></script>
-<script src="https://sad.adsgram.ai/js/sad.min.js"></script>
 <style>
 *{margin:0;padding:0;box-sizing:border-box}
-body{font-family:'Arial',sans-serif;background:#0a0a0f;color:white;min-height:100vh;overflow-x:hidden}
+body{font-family:Arial,sans-serif;background:#0e0e0e;color:#fff;min-height:100vh;overflow-x:hidden}
 
-/* RGB Animation */
-@keyframes rgb{
-  0%{filter:drop-shadow(0 0 8px rgba(255,0,128,0.8))}
-  25%{filter:drop-shadow(0 0 8px rgba(0,255,200,0.8))}
-  50%{filter:drop-shadow(0 0 8px rgba(100,0,255,0.8))}
-  75%{filter:drop-shadow(0 0 8px rgba(255,200,0,0.8))}
-  100%{filter:drop-shadow(0 0 8px rgba(255,0,128,0.8))}
-}
-@keyframes rgbBorder{
-  0%{border-color:rgba(255,0,128,0.6);box-shadow:0 0 15px rgba(255,0,128,0.2)}
-  25%{border-color:rgba(0,255,200,0.6);box-shadow:0 0 15px rgba(0,255,200,0.2)}
-  50%{border-color:rgba(100,0,255,0.6);box-shadow:0 0 15px rgba(100,0,255,0.2)}
-  75%{border-color:rgba(255,200,0,0.6);box-shadow:0 0 15px rgba(255,200,0,0.2)}
-  100%{border-color:rgba(255,0,128,0.6);box-shadow:0 0 15px rgba(255,0,128,0.2)}
-}
-@keyframes rgbText{
-  0%{color:#ff0080}
-  25%{color:#00ffc8}
-  50%{color:#6400ff}
-  75%{color:#ffc800}
-  100%{color:#ff0080}
-}
-@keyframes rgbBg{
-  0%{background:linear-gradient(135deg,rgba(255,0,128,0.15),rgba(100,0,255,0.1))}
-  33%{background:linear-gradient(135deg,rgba(0,255,200,0.15),rgba(255,200,0,0.1))}
-  66%{background:linear-gradient(135deg,rgba(100,0,255,0.15),rgba(255,0,128,0.1))}
-  100%{background:linear-gradient(135deg,rgba(255,0,128,0.15),rgba(100,0,255,0.1))}
-}
-@keyframes pulse{
-  0%,100%{transform:scale(1)}
-  50%{transform:scale(1.05)}
-}
-@keyframes slideDown{from{top:0;opacity:0}to{top:20px;opacity:1}}
-@keyframes float{
-  0%,100%{transform:translateY(0)}
-  50%{transform:translateY(-8px)}
-}
+/* Hamster Style Colors */
+:root{--gold:#f5a623;--gold2:#f8c55d;--dark:#0e0e0e;--card:#1a1a1a;--card2:#222;--border:#2a2a2a}
 
-/* Top Bar */
-.top-bar{padding:15px 20px;display:flex;justify-content:space-between;align-items:center;background:rgba(255,255,255,0.03);backdrop-filter:blur(10px);border-bottom:1px solid rgba(255,255,255,0.08)}
-.logo{font-size:20px;font-weight:bold;animation:rgbText 3s infinite}
-.uid-badge{background:rgba(255,255,255,0.08);padding:5px 12px;border-radius:20px;font-size:11px;color:#aaa}
+@keyframes rgbSoft{
+  0%{color:#f5a623}25%{color:#7ed6df}50%{color:#a29bfe}75%{color:#55efc4}100%{color:#f5a623}
+}
+@keyframes glowSoft{
+  0%{box-shadow:0 0 12px rgba(245,166,35,0.2)}
+  50%{box-shadow:0 0 12px rgba(162,155,254,0.2)}
+  100%{box-shadow:0 0 12px rgba(245,166,35,0.2)}
+}
+@keyframes borderSoft{
+  0%{border-color:rgba(245,166,35,0.3)}
+  50%{border-color:rgba(162,155,254,0.3)}
+  100%{border-color:rgba(245,166,35,0.3)}
+}
+@keyframes float{0%,100%{transform:translateY(0)}50%{transform:translateY(-8px)}}
+@keyframes fadeIn{from{opacity:0;transform:translateY(8px)}to{opacity:1;transform:translateY(0)}}
+@keyframes slideLeft{from{transform:translateX(100%)}to{transform:translateX(-100%)}}
+@keyframes spin{from{transform:rotate(0deg)}to{transform:rotate(360deg)}}
+@keyframes popIn{0%{transform:scale(0.5);opacity:0}80%{transform:scale(1.1)}100%{transform:scale(1);opacity:1}}
+@keyframes notifIn{from{top:-60px;opacity:0}to{top:16px;opacity:1}}
 
-/* Coin Section */
-.coin-section{padding:30px 20px 20px;text-align:center;position:relative}
-.coin-wrap{display:inline-block;animation:float 3s ease-in-out infinite}
-.coin-icon{font-size:70px;animation:rgb 3s infinite;display:block}
-.coin-amount{font-size:44px;font-weight:bold;margin-top:8px;animation:rgbText 3s infinite}
-.usdt-val{color:rgba(255,255,255,0.4);font-size:13px;margin-top:4px}
-.level-bar{background:rgba(255,255,255,0.08);border-radius:10px;height:4px;margin:15px 30px 0;overflow:hidden}
-.level-fill{height:100%;border-radius:10px;animation:rgbBg 3s infinite;transition:width 0.5s}
-
-/* Stats */
-.stats-row{display:grid;grid-template-columns:1fr 1fr 1fr;gap:8px;padding:10px 15px}
-.stat-box{background:rgba(255,255,255,0.04);border:1px solid rgba(255,255,255,0.08);border-radius:14px;padding:12px;text-align:center;transition:all 0.3s}
-.stat-box:hover{animation:rgbBorder 3s infinite}
-.stat-num{font-size:20px;font-weight:bold;animation:rgbText 3s infinite}
-.stat-lbl{font-size:10px;color:rgba(255,255,255,0.4);margin-top:3px}
-
-/* Pages */
-.page{display:none;padding:15px;padding-bottom:85px}
+.page{display:none;padding:14px;padding-bottom:85px;animation:fadeIn 0.25s ease}
 .page.active{display:block}
 
+/* Topbar */
+.topbar{display:flex;justify-content:space-between;align-items:center;padding:13px 16px;background:var(--card);border-bottom:1px solid var(--border);margin-bottom:14px;border-radius:0 0 16px 16px}
+.logo{font-size:17px;font-weight:800;color:var(--gold)}
+.logo span{animation:rgbSoft 4s infinite}
+.id-chip{background:var(--card2);padding:5px 11px;border-radius:20px;font-size:11px;color:rgba(255,255,255,0.4)}
+
+/* Coin Hero */
+.hero{text-align:center;padding:20px 16px 8px}
+.coin-wrap{display:inline-block;animation:float 3s ease-in-out infinite}
+.coin-ico{font-size:68px;filter:drop-shadow(0 4px 16px rgba(245,166,35,0.4))}
+.coin-num{font-size:46px;font-weight:800;color:var(--gold);margin-top:4px;letter-spacing:-1px}
+.coin-usdt{font-size:13px;color:rgba(255,255,255,0.3);margin-top:2px}
+.prog-wrap{margin:14px 24px 0;background:var(--card2);border-radius:6px;height:4px;overflow:hidden}
+.prog{height:100%;border-radius:6px;background:linear-gradient(90deg,var(--gold),var(--gold2));transition:width 0.6s ease}
+
+/* Stats */
+.stats{display:grid;grid-template-columns:repeat(3,1fr);gap:8px;padding:10px 14px}
+.stat{background:var(--card);border:1px solid var(--border);border-radius:14px;padding:12px 8px;text-align:center}
+.stat-n{font-size:20px;font-weight:700;color:var(--gold)}
+.stat-l{font-size:10px;color:rgba(255,255,255,0.35);margin-top:2px}
+
 /* Cards */
-.card{background:rgba(255,255,255,0.04);border:1px solid rgba(255,255,255,0.08);border-radius:18px;padding:16px;margin-bottom:12px;backdrop-filter:blur(5px)}
-.card-rgb{animation:rgbBorder 3s infinite}
-.card-title{font-size:14px;font-weight:bold;margin-bottom:14px;display:flex;align-items:center;gap:8px;animation:rgbText 3s infinite}
+.card{background:var(--card);border:1px solid var(--border);border-radius:18px;padding:15px;margin-bottom:10px;animation:borderSoft 4s infinite}
+.card-h{font-size:13px;font-weight:700;color:var(--gold);margin-bottom:13px;display:flex;align-items:center;gap:6px}
 
 /* Ad Section */
-.ad-box{border-radius:18px;padding:22px;text-align:center;margin-bottom:12px;animation:rgbBorder 3s infinite,rgbBg 3s infinite;border:1px solid}
-.ad-reward-num{font-size:32px;font-weight:bold;animation:rgbText 3s infinite}
-.ad-btn{border:none;padding:15px;border-radius:14px;font-size:16px;font-weight:bold;cursor:pointer;width:100%;margin-top:14px;transition:all 0.3s;position:relative;overflow:hidden;animation:rgbBg 3s infinite,rgbBorder 3s infinite;border:1px solid;color:white}
+.ad-box{background:var(--card);border:1px solid;border-radius:18px;padding:18px;text-align:center;margin-bottom:10px;animation:borderSoft 4s infinite,glowSoft 4s infinite}
+.ad-pts{font-size:32px;font-weight:800;color:var(--gold)}
+.ad-sub{font-size:12px;color:rgba(255,255,255,0.35);margin-bottom:6px}
+.ad-btn{width:100%;padding:14px;border:1px solid;border-radius:14px;font-size:15px;font-weight:700;cursor:pointer;color:#fff;background:var(--card2);margin-top:12px;animation:borderSoft 4s infinite;transition:transform 0.15s,opacity 0.2s}
 .ad-btn:active{transform:scale(0.97)}
-.ad-btn:disabled{background:rgba(255,255,255,0.05)!important;color:rgba(255,255,255,0.3)!important;animation:none!important;border-color:rgba(255,255,255,0.1)!important;cursor:not-allowed}
-.ad-count{font-size:12px;color:rgba(255,255,255,0.4);margin-top:8px}
+.ad-btn:disabled{opacity:0.3;animation:none;border-color:var(--border);cursor:not-allowed}
+.ad-info{font-size:11px;color:rgba(255,255,255,0.25);margin-top:7px}
 
-/* Task Items */
-.task-item{background:rgba(255,255,255,0.04);border:1px solid rgba(255,255,255,0.08);border-radius:14px;padding:14px;margin-bottom:8px;display:flex;justify-content:space-between;align-items:center;cursor:pointer;transition:all 0.3s}
-.task-item:active{transform:scale(0.98)}
-.task-item:hover{animation:rgbBorder 3s infinite}
-.task-item.done{opacity:0.3;pointer-events:none}
-.task-left{display:flex;align-items:center;gap:12px}
-.task-icon{font-size:26px}
-.task-name{font-size:14px;font-weight:bold}
-.task-desc{font-size:11px;color:rgba(255,255,255,0.4);margin-top:2px}
-.task-badge{padding:6px 12px;border-radius:8px;font-weight:bold;font-size:13px;animation:rgbBg 3s infinite,rgbBorder 3s infinite;border:1px solid;color:white}
+/* Lucky Wheel */
+.wheel-wrap{position:fixed;inset:0;background:rgba(0,0,0,0.85);z-index:500;display:none;align-items:center;justify-content:center;flex-direction:column}
+.wheel-wrap.show{display:flex;animation:fadeIn 0.3s ease}
+.wheel-title{font-size:18px;font-weight:700;color:var(--gold);margin-bottom:16px}
+.wheel{width:220px;height:220px;border-radius:50%;border:4px solid var(--gold);position:relative;overflow:hidden}
+.wheel-spin{width:100%;height:100%;border-radius:50%;transition:transform 3s cubic-bezier(0.17,0.67,0.12,0.99)}
+.wheel-ptr{position:absolute;top:-12px;left:50%;transform:translateX(-50%);font-size:24px;z-index:10}
+.wheel-result{font-size:28px;font-weight:800;color:var(--gold);margin-top:16px;animation:popIn 0.4s ease}
+.wheel-close{margin-top:12px;padding:10px 28px;background:var(--card2);border:1px solid var(--border);border-radius:12px;color:#fff;font-size:14px;cursor:pointer}
+
+/* Tasks */
+.task{display:flex;justify-content:space-between;align-items:center;background:var(--card2);border:1px solid var(--border);border-radius:14px;padding:13px;margin-bottom:8px;cursor:pointer;transition:all 0.2s}
+.task:active{transform:scale(0.98)}
+.task.done{opacity:0.25;pointer-events:none}
+.task-l{display:flex;align-items:center;gap:11px}
+.task-ico{font-size:26px}
+.task-name{font-size:13px;font-weight:600}
+.task-desc{font-size:11px;color:rgba(255,255,255,0.3);margin-top:1px}
+.badge{padding:5px 10px;border-radius:8px;font-size:12px;font-weight:700;background:rgba(245,166,35,0.12);border:1px solid rgba(245,166,35,0.3);color:var(--gold);white-space:nowrap}
 
 /* Ref */
-.ref-box{background:rgba(255,255,255,0.05);border:1px solid rgba(255,255,255,0.1);border-radius:12px;padding:12px;font-size:12px;color:rgba(150,200,255,0.9);word-break:break-all;margin:10px 0}
-.btn-rgb{border:1px solid;padding:13px;border-radius:13px;font-size:14px;font-weight:bold;cursor:pointer;width:100%;margin-top:8px;color:white;animation:rgbBg 3s infinite,rgbBorder 3s infinite;transition:transform 0.2s}
-.btn-rgb:active{transform:scale(0.97)}
-.btn-outline{background:rgba(255,255,255,0.05);border:1px solid rgba(255,255,255,0.15);padding:13px;border-radius:13px;font-size:14px;cursor:pointer;width:100%;margin-top:8px;color:white;transition:all 0.2s}
+.ref-box{background:var(--card2);border:1px solid var(--border);border-radius:12px;padding:12px;font-size:12px;color:rgba(120,180,255,0.9);word-break:break-all;margin:10px 0;line-height:1.6}
+.btn{width:100%;padding:13px;border-radius:13px;font-size:14px;font-weight:700;cursor:pointer;margin-top:8px;transition:transform 0.15s;border:1px solid}
+.btn:active{transform:scale(0.97)}
+.btn-gold{color:#000;background:var(--gold);border-color:var(--gold)}
+.btn-ghost{color:rgba(255,255,255,0.6);background:transparent;border-color:var(--border)}
+
+/* Withdraw Ticker */
+.ticker-wrap{background:var(--card);border:1px solid var(--border);border-radius:12px;padding:10px 14px;margin-bottom:10px;overflow:hidden}
+.ticker-label{font-size:10px;color:rgba(255,255,255,0.3);margin-bottom:4px}
+.ticker-track{white-space:nowrap;animation:slideLeft 20s linear infinite;font-size:12px;color:var(--gold)}
 
 /* Withdraw */
-.balance-card{border-radius:18px;padding:22px;text-align:center;margin-bottom:12px;animation:rgbBorder 3s infinite,rgbBg 3s infinite;border:1px solid}
-.withdraw-input{background:rgba(255,255,255,0.06);border:1px solid rgba(255,255,255,0.12);color:white;padding:14px;border-radius:13px;width:100%;margin:8px 0;font-size:14px}
-.withdraw-input:focus{outline:none;animation:rgbBorder 3s infinite}
+.bal-card{background:var(--card);border:1px solid;border-radius:18px;padding:20px;text-align:center;margin-bottom:10px;animation:borderSoft 4s infinite,glowSoft 4s infinite}
+.w-input{width:100%;padding:13px;background:var(--card2);border:1px solid var(--border);border-radius:12px;color:#fff;font-size:14px;margin:8px 0;outline:none}
+.info-r{font-size:12px;color:rgba(255,255,255,0.3);padding:4px 0;display:flex;align-items:center;gap:6px}
 
 /* Lang */
-.lang-grid{display:grid;grid-template-columns:1fr 1fr;gap:8px;margin-top:10px}
-.lang-item{background:rgba(255,255,255,0.04);border:1px solid rgba(255,255,255,0.1);border-radius:12px;padding:12px;text-align:center;cursor:pointer;transition:all 0.3s;font-size:13px}
-.lang-item.active{animation:rgbBorder 3s infinite,rgbBg 3s infinite}
+.lang-g{display:grid;grid-template-columns:1fr 1fr;gap:8px;margin-top:10px}
+.lang-i{background:var(--card2);border:1px solid var(--border);border-radius:12px;padding:12px;text-align:center;cursor:pointer;font-size:13px;transition:all 0.2s}
+.lang-i.on{border-color:var(--gold);background:rgba(245,166,35,0.08);color:var(--gold)}
 
 /* Nav */
-.nav{display:flex;justify-content:space-around;background:rgba(10,10,15,0.95);padding:8px 0 12px;position:fixed;bottom:0;width:100%;z-index:100;border-top:1px solid rgba(255,255,255,0.06);backdrop-filter:blur(20px)}
-.nav-btn{background:none;border:none;color:rgba(255,255,255,0.35);font-size:10px;cursor:pointer;display:flex;flex-direction:column;align-items:center;gap:4px;padding:5px 15px;transition:all 0.3s}
-.nav-btn .icon{font-size:22px;transition:all 0.3s}
-.nav-btn.active{color:white}
-.nav-btn.active .icon{animation:rgb 3s infinite}
+.nav{position:fixed;bottom:0;width:100%;background:rgba(14,14,14,0.97);backdrop-filter:blur(20px);border-top:1px solid var(--border);display:flex;justify-content:space-around;padding:8px 0 14px;z-index:100}
+.nb{background:none;border:none;color:rgba(255,255,255,0.3);font-size:10px;cursor:pointer;display:flex;flex-direction:column;align-items:center;gap:3px;padding:4px 12px;transition:all 0.2s}
+.nb .ic{font-size:22px;transition:all 0.3s}
+.nb.on{color:var(--gold)}
+.nb.on .ic{filter:drop-shadow(0 0 6px rgba(245,166,35,0.6))}
 
 /* Notif */
-.notif{position:fixed;top:20px;left:50%;transform:translateX(-50%);padding:12px 24px;border-radius:14px;font-weight:bold;font-size:14px;z-index:999;display:none;animation:slideDown 0.3s ease,rgbBg 3s infinite,rgbBorder 3s infinite;border:1px solid;color:white;backdrop-filter:blur(10px);white-space:nowrap}
+.notif{position:fixed;top:16px;left:50%;transform:translateX(-50%);padding:10px 20px;border-radius:14px;font-size:13px;font-weight:700;z-index:999;display:none;color:#000;background:var(--gold);white-space:nowrap;animation:notifIn 0.3s ease}
 </style>
 </head>
 <body>
 
 <div class="notif" id="notif"></div>
 
+<!-- Lucky Wheel -->
+<div class="wheel-wrap" id="wheel-wrap">
+  <div class="wheel-title">🎰 عجلة الحظ!</div>
+  <div class="wheel" style="position:relative">
+    <div class="wheel-ptr">▼</div>
+    <canvas id="wheel-canvas" width="220" height="220"></canvas>
+  </div>
+  <div class="wheel-result" id="wheel-result"></div>
+  <button class="wheel-close" onclick="closeWheel()">✓ استلام المكافأة</button>
+</div>
+
 <!-- HOME -->
-<div id="home" class="page active">
-  <div class="top-bar">
-    <div class="logo">⚡ TaskEarn</div>
-    <div class="uid-badge" id="uid-display">ID: ...</div>
+<div id="pg-home" class="page active">
+  <div class="topbar">
+    <div class="logo">⚡ Task<span>Earn</span></div>
+    <div class="id-chip" id="id-chip">ID: ···</div>
   </div>
-
-  <div class="coin-section">
-    <div class="coin-wrap">
-      <span class="coin-icon">🪙</span>
-    </div>
-    <div class="coin-amount" id="coins">0</div>
-    <div class="usdt-val" id="usdt-val">≈ 0.0000 USDT</div>
-    <div class="level-bar"><div class="level-fill" id="level-fill" style="width:0%"></div></div>
+  <div class="hero">
+    <div class="coin-wrap"><span class="coin-ico">🪙</span></div>
+    <div class="coin-num" id="coins">0</div>
+    <div class="coin-usdt" id="usdt1">≈ 0.0000 USDT</div>
+    <div class="prog-wrap"><div class="prog" id="prog" style="width:0%"></div></div>
   </div>
-
-  <div class="stats-row">
-    <div class="stat-box"><div class="stat-num" id="stat-tasks">0</div><div class="stat-lbl" id="t-tasks">مهام</div></div>
-    <div class="stat-box"><div class="stat-num" id="stat-ads">0</div><div class="stat-lbl" id="t-ads">إعلانات</div></div>
-    <div class="stat-box"><div class="stat-num" id="stat-refs">0</div><div class="stat-lbl" id="t-refs">إحالات</div></div>
+  <div class="stats">
+    <div class="stat"><div class="stat-n" id="s-ads">0</div><div class="stat-l" id="tl-ads">إعلانات</div></div>
+    <div class="stat"><div class="stat-n" id="s-refs">0</div><div class="stat-l" id="tl-refs">إحالات</div></div>
+    <div class="stat"><div class="stat-n" id="s-tasks">0</div><div class="stat-l" id="tl-tasks">مهام</div></div>
   </div>
-
   <div class="ad-box">
-    <div style="color:rgba(255,255,255,0.5);font-size:12px;margin-bottom:8px" id="t-watch-earn">شاهد إعلاناً واكسب</div>
-    <div class="ad-reward-num">+30 <span style="font-size:16px" id="t-points">نقطة</span></div>
-    <button class="ad-btn" id="ad-btn" onclick="watchAd()">
-      📺 <span id="t-watch-btn">شاهد الإعلان</span>
-    </button>
-    <div class="ad-count" id="ad-count"></div>
+    <div class="ad-sub" id="tl-earn">شاهد إعلاناً واكسب + عجلة الحظ!</div>
+    <div class="ad-pts">+3 <span style="font-size:16px" id="tl-pts">نقاط</span></div>
+    <button class="ad-btn" id="ad-btn" onclick="watchAd()">📺 <span id="tl-watch">شاهد الإعلان</span></button>
+    <div class="ad-info" id="ad-info"></div>
   </div>
-
   <div class="card">
-    <div class="card-title">📋 <span id="t-daily">المهام اليومية</span></div>
-    <div class="task-item" id="task-channel" onclick="joinChannel()">
-      <div class="task-left">
-        <div class="task-icon">📢</div>
-        <div>
-          <div class="task-name" id="t-join">اشترك في القناة</div>
-          <div class="task-desc" id="t-join-desc">اشترك واكسب نقاط</div>
-        </div>
+    <div class="card-h">📋 <span id="tl-daily">المهام</span></div>
+    <div class="task" id="tk-ch" onclick="joinChannel()">
+      <div class="task-l">
+        <div class="task-ico">📢</div>
+        <div><div class="task-name" id="tl-join">اشترك في قناة TaskEarn</div><div class="task-desc" id="tl-joind">اشترك واكسب نقاط</div></div>
       </div>
-      <div class="task-badge">+100 🪙</div>
+      <div class="badge">+50 🪙</div>
     </div>
-    <div class="task-item" id="task-share" onclick="shareBot()">
-      <div class="task-left">
-        <div class="task-icon">🔗</div>
-        <div>
-          <div class="task-name" id="t-share">شارك البوت</div>
-          <div class="task-desc" id="t-share-desc">شارك مع أصدقائك</div>
-        </div>
+    <div class="task" id="tk-sh" onclick="shareTask()">
+      <div class="task-l">
+        <div class="task-ico">🔗</div>
+        <div><div class="task-name" id="tl-share">شارك رابط الإحالة</div><div class="task-desc" id="tl-shared">100 نقطة لكل صديق ينضم</div></div>
       </div>
-      <div class="task-badge">+20 🪙</div>
+      <div class="badge">+100 🪙</div>
     </div>
   </div>
 </div>
 
 <!-- REFERRAL -->
-<div id="referral" class="page">
-  <div class="card card-rgb">
-    <div class="card-title">👥 <span id="t-ref-title">نظام الإحالة</span></div>
-    <p style="color:rgba(255,255,255,0.5);font-size:13px;margin-bottom:10px" id="t-ref-desc">ادعو أصدقاءك واكسب 100 نقطة لكل إحالة!</p>
+<div id="pg-ref" class="page">
+  <div class="card">
+    <div class="card-h">👥 <span id="tl-reft">نظام الإحالة</span></div>
+    <p style="color:rgba(255,255,255,0.4);font-size:13px;margin-bottom:10px" id="tl-refd">ادعو أصدقاءك واكسب 100 نقطة لكل صديق ينضم!</p>
     <div class="ref-box" id="ref-link">جاري التحميل...</div>
-    <button class="btn-rgb" onclick="copyRef()" id="t-copy">📋 نسخ الرابط</button>
-    <button class="btn-outline" onclick="shareRef()" id="t-share-ref">📤 مشاركة الرابط</button>
+    <button class="btn btn-gold" onclick="copyRef()" id="tl-copy">📋 نسخ الرابط</button>
+    <button class="btn btn-ghost" onclick="shareRef()" id="tl-sref">📤 مشاركة</button>
   </div>
-  <div class="stats-row">
-    <div class="stat-box"><div class="stat-num" id="ref-num">0</div><div class="stat-lbl" id="t-ref-count">إحالات</div></div>
-    <div class="stat-box"><div class="stat-num" id="ref-earn">0</div><div class="stat-lbl" id="t-ref-earn">نقاط</div></div>
-    <div class="stat-box"><div class="stat-num" id="ref-usdt">0.00</div><div class="stat-lbl">USDT</div></div>
+  <div class="stats">
+    <div class="stat"><div class="stat-n" id="r-num">0</div><div class="stat-l" id="tl-rnum">إحالات</div></div>
+    <div class="stat"><div class="stat-n" id="r-pts">0</div><div class="stat-l">نقاط</div></div>
+    <div class="stat"><div class="stat-n" id="r-usd">0.00</div><div class="stat-l">USDT</div></div>
   </div>
 </div>
 
 <!-- WITHDRAW -->
-<div id="withdraw" class="page">
-  <div class="balance-card">
-    <div style="color:rgba(255,255,255,0.4);font-size:12px" id="t-balance">رصيدك الحالي</div>
-    <div class="coin-amount" style="font-size:38px;margin-top:8px" id="coins2">0</div>
-    <div class="usdt-val" id="usdt-val2">≈ 0.0000 USDT</div>
-    <div style="color:rgba(255,255,255,0.25);font-size:11px;margin-top:10px">1000 نقطة = 0.09 USDT</div>
+<div id="pg-wd" class="page">
+  <!-- Fake Ticker -->
+  <div class="ticker-wrap">
+    <div class="ticker-label">🔴 عمليات سحب حديثة</div>
+    <div class="ticker-track" id="ticker">جاري التحميل...</div>
+  </div>
+  <div class="bal-card">
+    <div style="color:rgba(255,255,255,0.4);font-size:12px" id="tl-bal">رصيدك الحالي</div>
+    <div class="coin-num" style="font-size:38px;margin-top:6px" id="coins2">0</div>
+    <div class="coin-usdt" id="usdt2">≈ 0.0000 USDT</div>
+    <div style="font-size:11px;color:rgba(255,255,255,0.2);margin-top:6px">1000 نقطة = 0.1 USDT</div>
   </div>
   <div class="card">
-    <div class="card-title">💸 <span id="t-withdraw-title">سحب المكافآت</span></div>
-    <div style="color:rgba(255,255,255,0.5);font-size:13px;margin-bottom:6px" id="t-wallet">عنوان المحفظة (TRC20/TON)</div>
-    <input class="withdraw-input" type="text" id="wallet-addr" placeholder="أدخل عنوان محفظتك...">
-    <button class="btn-rgb" onclick="withdraw()" id="t-withdraw-btn">💸 سحب</button>
+    <div class="card-h">💸 <span id="tl-wdt">سحب المكافآت</span></div>
+    <div style="font-size:12px;color:rgba(255,255,255,0.4);margin-bottom:6px" id="tl-wall">عنوان المحفظة (TRC20/TON)</div>
+    <input class="w-input" type="text" id="wallet" placeholder="أدخل عنوان محفظتك...">
+    <button class="btn btn-gold" onclick="withdraw()" id="tl-wdb">💸 سحب</button>
   </div>
-  <div class="card" style="font-size:12px;color:rgba(255,255,255,0.35)">
-    <div>⚠️ <span id="t-min">الحد الأدنى: 1000 نقطة</span></div>
-    <div style="margin-top:6px">⏱️ <span id="t-time">وقت المعالجة: 24-48 ساعة</span></div>
-    <div style="margin-top:6px">💡 عمولة الخدمة: 10%</div>
+  <div class="card">
+    <div class="info-r">⚠️ <span id="tl-min">الحد الأدنى: 1000 نقطة</span></div>
+    <div class="info-r">⏱️ <span id="tl-time">وقت المعالجة: 24-48 ساعة</span></div>
+    <div class="info-r">💡 الربح الصافي: 100% لك</div>
   </div>
 </div>
 
 <!-- SETTINGS -->
-<div id="settings" class="page">
+<div id="pg-set" class="page">
   <div class="card">
-    <div class="card-title">🌍 <span id="t-lang">اللغة</span></div>
-    <div class="lang-grid">
-      <div class="lang-item active" onclick="setLang('ar',this)">🇸🇦 العربية</div>
-      <div class="lang-item" onclick="setLang('en',this)">🇬🇧 English</div>
-      <div class="lang-item" onclick="setLang('fr',this)">🇫🇷 Français</div>
-      <div class="lang-item" onclick="setLang('ru',this)">🇷🇺 Русский</div>
+    <div class="card-h">🌍 <span id="tl-lang">اللغة</span></div>
+    <div class="lang-g">
+      <div class="lang-i on" onclick="setLang('ar',this)">🇸🇦 العربية</div>
+      <div class="lang-i" onclick="setLang('en',this)">🇬🇧 English</div>
+      <div class="lang-i" onclick="setLang('fr',this)">🇫🇷 Français</div>
+      <div class="lang-i" onclick="setLang('ru',this)">🇷🇺 Русский</div>
     </div>
   </div>
   <div class="card">
-    <div class="card-title">📊 <span id="t-rate">معدل التحويل</span></div>
-    <div style="text-align:center;margin-top:5px">
-      <div style="font-size:18px;animation:rgbText 3s infinite">1000 🪙 = 0.09 USDT</div>
-      <div style="font-size:11px;color:rgba(255,255,255,0.3);margin-top:5px">بعد خصم عمولة الخدمة 10%</div>
-    </div>
+    <div class="card-h">📊 <span id="tl-rate">معدل التحويل</span></div>
+    <div style="text-align:center;font-size:18px;font-weight:700;color:var(--gold);margin:8px 0">1000 🪙 = 0.1 USDT</div>
   </div>
   <div class="card">
-    <div class="card-title">🆔 <span id="t-myid">معرفك</span></div>
-    <div style="font-size:16px;text-align:center;animation:rgbText 3s infinite" id="my-id">-</div>
+    <div class="card-h">🆔 <span id="tl-myid">معرفك</span></div>
+    <div style="text-align:center;font-size:16px;font-weight:700;color:var(--gold)" id="my-id">-</div>
   </div>
 </div>
 
 <nav class="nav">
-  <button class="nav-btn active" onclick="showPage('home',this)"><span class="icon">🏠</span><span id="n-home">الرئيسية</span></button>
-  <button class="nav-btn" onclick="showPage('referral',this)"><span class="icon">👥</span><span id="n-ref">الإحالة</span></button>
-  <button class="nav-btn" onclick="showPage('withdraw',this)"><span class="icon">💰</span><span id="n-withdraw">السحب</span></button>
-  <button class="nav-btn" onclick="showPage('settings',this)"><span class="icon">⚙️</span><span id="n-settings">الإعدادات</span></button>
+  <button class="nb on" onclick="go('home',this)"><span class="ic">🏠</span><span id="nl-home">الرئيسية</span></button>
+  <button class="nb" onclick="go('ref',this)"><span class="ic">👥</span><span id="nl-ref">الإحالة</span></button>
+  <button class="nb" onclick="go('wd',this)"><span class="ic">💰</span><span id="nl-wd">السحب</span></button>
+  <button class="nb" onclick="go('set',this)"><span class="ic">⚙️</span><span id="nl-set">الإعدادات</span></button>
 </nav>
 
 <script>
-const SUPABASE_URL='https://xdsqoflkdbcsbbqonfrv.supabase.co';
-const SUPABASE_KEY='sb_publishable_yyThqbzPOCoqrAcDmY60gw_-0QZSzJt';
+const SB='https://xdsqoflkdbcsbbqonfrv.supabase.co';
+const SK='sb_publishable_yyThqbzPOCoqrAcDmY60gw_-0QZSzJt';
 const RATE=0.0001;
-const USER_RATE=0.9;
-let coins=0,userId=null,adsWatched=0,lang='ar';
+const CHANNEL='https://t.me/gxhxd';
+const BOT='earntaskpro_bot';
+let coins=0,uid=null,ads=0,refs=0,tasks=0,lang='ar';
+let channelDone=false,shareDone=false;
 
-const T={
-ar:{home:'الرئيسية',ref:'الإحالة',withdraw:'السحب',settings:'الإعدادات',tasks:'مهام',ads:'إعلانات',refs:'إحالات',watchEarn:'شاهد إعلاناً واكسب',points:'نقطة',watchBtn:'شاهد الإعلان',daily:'المهام اليومية',join:'اشترك في القناة',joinDesc:'اشترك واكسب نقاط',share:'شارك البوت',shareDesc:'شارك مع أصدقائك',refTitle:'نظام الإحالة',refDesc:'ادعو أصدقاءك واكسب 100 نقطة لكل إحالة!',copy:'📋 نسخ الرابط',shareRef:'📤 مشاركة',refCount:'إحالات',refEarn:'نقاط',balance:'رصيدك الحالي',wallet:'عنوان المحفظة',withdrawTitle:'سحب المكافآت',withdrawBtn:'💸 سحب',min:'الحد الأدنى: 1000 نقطة',time:'وقت المعالجة: 24-48 ساعة',lang:'اللغة',rate:'معدل التحويل',myid:'معرفك',adWatched:'إعلان'},
-en:{home:'Home',ref:'Referral',withdraw:'Withdraw',settings:'Settings',tasks:'Tasks',ads:'Ads',refs:'Refs',watchEarn:'Watch ad & earn',points:'pts',watchBtn:'Watch Ad',daily:'Daily Tasks',join:'Join Channel',joinDesc:'Subscribe & earn',share:'Share Bot',shareDesc:'Share with friends',refTitle:'Referral System',refDesc:'Invite friends & earn 100 pts!',copy:'📋 Copy Link',shareRef:'📤 Share',refCount:'Referrals',refEarn:'Points',balance:'Your Balance',wallet:'Wallet Address',withdrawTitle:'Withdraw',withdrawBtn:'💸 Withdraw',min:'Minimum: 1000 points',time:'Processing: 24-48h',lang:'Language',rate:'Exchange Rate',myid:'Your ID',adWatched:'ad'},
-fr:{home:'Accueil',ref:'Parrainage',withdraw:'Retrait',settings:'Paramètres',tasks:'Tâches',ads:'Pubs',refs:'Refs',watchEarn:'Voir pub & gagner',points:'pts',watchBtn:'Voir pub',daily:'Tâches du jour',join:'Rejoindre',joinDesc:'Abonnez-vous & gagnez',share:'Partager',shareDesc:'Partager avec amis',refTitle:'Parrainage',refDesc:'Invitez & gagnez 100 pts!',copy:'📋 Copier',shareRef:'📤 Partager',refCount:'Parrainages',refEarn:'Points',balance:'Votre solde',wallet:'Adresse portefeuille',withdrawTitle:'Retrait',withdrawBtn:'💸 Retirer',min:'Minimum: 1000 pts',time:'Délai: 24-48h',lang:'Langue',rate:'Taux',myid:'Votre ID',adWatched:'pub'},
-ru:{home:'Главная',ref:'Рефералы',withdraw:'Вывод',settings:'Настройки',tasks:'Задания',ads:'Реклама',refs:'Рефералы',watchEarn:'Смотри & зарабатывай',points:'очков',watchBtn:'Смотреть',daily:'Задания',join:'Подписаться',joinDesc:'Подпишись & зарабатывай',share:'Поделиться',shareDesc:'Поделись с друзьями',refTitle:'Реферальная система',refDesc:'Приглашай & получай 100 очков!',copy:'📋 Копировать',shareRef:'📤 Поделиться',refCount:'Рефералы',refEarn:'Очки',balance:'Ваш баланс',wallet:'Адрес кошелька',withdrawTitle:'Вывод',withdrawBtn:'💸 Вывести',min:'Минимум: 1000 очков',time:'Обработка: 24-48ч',lang:'Язык',rate:'Курс',myid:'Ваш ID',adWatched:'реклама'}
+// Fake withdraw ticker
+const fakeWithdrawals=[
+  'أحمد س. سحب 0.5 USDT','محمد ع. سحب 1.2 USDT','سارة م. سحب 0.8 USDT',
+  'علي ح. سحب 2.0 USDT','فاطمة ك. سحب 0.3 USDT','Omar سحب 1.5 USDT',
+  'Yusuf سحب 0.7 USDT','نورا ف. سحب 0.9 USDT','Hassan سحب 3.0 USDT',
+  'ليلى ب. سحب 0.4 USDT','كريم ط. سحب 1.1 USDT','Aisha سحب 0.6 USDT'
+];
+
+// Wheel prizes
+const prizes=[
+  {label:'5 🪙',coins:5,color:'#f5a623'},
+  {label:'10 🪙',coins:10,color:'#a29bfe'},
+  {label:'2 🪙',coins:2,color:'#55efc4'},
+  {label:'20 🪙',coins:20,color:'#fd79a8'},
+  {label:'1 🪙',coins:1,color:'#fdcb6e'},
+  {label:'15 🪙',coins:15,color:'#74b9ff'},
+  {label:'3 🪙',coins:3,color:'#00b894'},
+  {label:'50 🪙',coins:50,color:'#e17055'}
+];
+
+const TX={
+ar:{home:'الرئيسية',ref:'الإحالة',wd:'السحب',set:'الإعدادات',ads:'إعلانات',refs:'إحالات',tasks:'مهام',earn:'شاهد إعلاناً واكسب + عجلة الحظ!',pts:'نقاط',watch:'شاهد الإعلان',daily:'المهام',join:'اشترك في قناة TaskEarn',joind:'اشترك واكسب نقاط',share:'شارك رابط الإحالة',shared:'100 نقطة لكل صديق ينضم',reft:'نظام الإحالة',refd:'ادعو أصدقاءك واكسب 100 نقطة لكل صديق ينضم!',copy:'📋 نسخ الرابط',sref:'📤 مشاركة',rnum:'إحالات',bal:'رصيدك الحالي',wall:'عنوان المحفظة (TRC20/TON)',wdt:'سحب المكافآت',wdb:'💸 سحب',min:'الحد الأدنى: 1000 نقطة',time:'وقت المعالجة: 24-48 ساعة',lang:'اللغة',rate:'معدل التحويل',myid:'معرفك',adw:'إعلان'},
+en:{home:'Home',ref:'Referral',wd:'Withdraw',set:'Settings',ads:'Ads',refs:'Refs',tasks:'Tasks',earn:'Watch ad & earn + Lucky Wheel!',pts:'pts',watch:'Watch Ad',daily:'Tasks',join:'Join TaskEarn Channel',joind:'Subscribe & earn',share:'Share Referral Link',shared:'100 pts per friend',reft:'Referral System',refd:'Invite friends & earn 100 pts each!',copy:'📋 Copy Link',sref:'📤 Share',rnum:'Referrals',bal:'Your Balance',wall:'Wallet Address (TRC20/TON)',wdt:'Withdraw',wdb:'💸 Withdraw',min:'Minimum: 1000 points',time:'Processing: 24-48h',lang:'Language',rate:'Exchange Rate',myid:'Your ID',adw:'ad'},
+fr:{home:'Accueil',ref:'Parrainage',wd:'Retrait',set:'Paramètres',ads:'Pubs',refs:'Refs',tasks:'Tâches',earn:'Voir pub & gagner + Roue!',pts:'pts',watch:'Voir pub',daily:'Tâches',join:'Rejoindre TaskEarn',joind:'Abonnez-vous & gagnez',share:'Partager lien',shared:'100 pts par ami',reft:'Parrainage',refd:'Invitez & gagnez 100 pts!',copy:'📋 Copier',sref:'📤 Partager',rnum:'Parrainages',bal:'Votre solde',wall:'Adresse',wdt:'Retrait',wdb:'💸 Retirer',min:'Min: 1000 pts',time:'Délai: 24-48h',lang:'Langue',rate:'Taux',myid:'Votre ID',adw:'pub'},
+ru:{home:'Главная',ref:'Рефералы',wd:'Вывод',set:'Настройки',ads:'Реклама',refs:'Рефералы',tasks:'Задания',earn:'Смотри & зарабатывай + Колесо!',pts:'очков',watch:'Смотреть',daily:'Задания',join:'Подписаться на TaskEarn',joind:'Подпишись & зарабатывай',share:'Поделиться ссылкой',shared:'100 очков за друга',reft:'Рефералы',refd:'Приглашай & получай 100 очков!',copy:'📋 Копировать',sref:'📤 Поделиться',rnum:'Рефералы',bal:'Ваш баланс',wall:'Адрес кошелька',wdt:'Вывод',wdb:'💸 Вывести',min:'Минимум: 1000 очков',time:'Обработка: 24-48ч',lang:'Язык',rate:'Курс',myid:'Ваш ID',adw:'реклама'}
 };
 
-function showNotif(msg){
+function toast(m,dur=2500){
   const n=document.getElementById('notif');
-  n.textContent=msg;n.style.display='block';
-  setTimeout(()=>n.style.display='none',2500);
+  n.textContent=m;n.style.display='block';
+  setTimeout(()=>n.style.display='none',dur);
 }
 
 function setLang(l,el){
   lang=l;
-  document.querySelectorAll('.lang-item').forEach(i=>i.classList.remove('active'));
-  if(el)el.classList.add('active');
+  document.querySelectorAll('.lang-i').forEach(i=>i.classList.remove('on'));
+  if(el)el.classList.add('on');
   document.documentElement.dir=l==='ar'?'rtl':'ltr';
-  const t=T[l];
-  const ids={
-    'n-home':'home','n-ref':'ref','n-withdraw':'withdraw','n-settings':'settings',
-    't-tasks':'tasks','t-ads':'ads','t-refs':'refs','t-watch-earn':'watchEarn',
-    't-points':'points','t-watch-btn':'watchBtn','t-daily':'daily','t-join':'join',
-    't-join-desc':'joinDesc','t-share':'share','t-share-desc':'shareDesc',
-    't-ref-title':'refTitle','t-ref-desc':'refDesc','t-copy':'copy',
-    't-share-ref':'shareRef','t-ref-count':'refCount','t-ref-earn':'refEarn',
-    't-balance':'balance','t-wallet':'wallet','t-withdraw-title':'withdrawTitle',
-    't-withdraw-btn':'withdrawBtn','t-min':'min','t-time':'time',
-    't-lang':'lang','t-rate':'rate','t-myid':'myid'
+  const t=TX[l];
+  const m={
+    'nl-home':'home','nl-ref':'ref','nl-wd':'wd','nl-set':'set',
+    'tl-ads':'ads','tl-refs':'refs','tl-tasks':'tasks','tl-earn':'earn',
+    'tl-pts':'pts','tl-watch':'watch','tl-daily':'daily','tl-join':'join',
+    'tl-joind':'joind','tl-share':'share','tl-shared':'shared','tl-reft':'reft',
+    'tl-refd':'refd','tl-copy':'copy','tl-sref':'sref','tl-rnum':'rnum',
+    'tl-bal':'bal','tl-wall':'wall','tl-wdt':'wdt','tl-wdb':'wdb',
+    'tl-min':'min','tl-time':'time','tl-lang':'lang','tl-rate':'rate','tl-myid':'myid'
   };
-  Object.entries(ids).forEach(([id,key])=>{
-    const el2=document.getElementById(id);
-    if(el2)el2.textContent=t[key];
-  });
-  updateAdCount();
+  Object.entries(m).forEach(([id,k])=>{const e=document.getElementById(id);if(e)e.textContent=t[k]});
+  updAds();
 }
 
-function showPage(id,btn){
+function go(pg,btn){
   document.querySelectorAll('.page').forEach(p=>p.classList.remove('active'));
-  document.querySelectorAll('.nav-btn').forEach(b=>b.classList.remove('active'));
-  document.getElementById(id).classList.add('active');
-  if(btn)btn.classList.add('active');
+  document.querySelectorAll('.nb').forEach(b=>b.classList.remove('on'));
+  document.getElementById('pg-'+pg).classList.add('active');
+  if(btn)btn.classList.add('on');
 }
 
-function updateCoins(){
-  document.getElementById('coins').textContent=coins;
-  document.getElementById('coins2').textContent=coins;
-  const usdt=(coins*RATE*USER_RATE).toFixed(4);
-  document.getElementById('usdt-val').textContent='≈ '+usdt+' USDT';
-  document.getElementById('usdt-val2').textContent='≈ '+usdt+' USDT';
-  document.getElementById('level-fill').style.width=Math.min((coins%1000)/10,100)+'%';
+function updCoins(){
+  const u=(coins*RATE).toFixed(4);
+  ['coins','coins2'].forEach(id=>document.getElementById(id).textContent=coins);
+  ['usdt1','usdt2'].forEach(id=>document.getElementById(id).textContent='≈ '+u+' USDT');
+  document.getElementById('prog').style.width=Math.min((coins%1000)/10,100)+'%';
+  document.getElementById('s-ads').textContent=ads;
+  document.getElementById('s-refs').textContent=refs;
+  document.getElementById('s-tasks').textContent=tasks;
+  document.getElementById('r-num').textContent=refs;
+  document.getElementById('r-pts').textContent=refs*100;
+  document.getElementById('r-usd').textContent=(refs*100*RATE).toFixed(2);
 }
 
-function updateAdCount(){
-  const el=document.getElementById('ad-count');
-  if(el)el.textContent=adsWatched>0?adsWatched+' '+T[lang].adWatched:'';
-  document.getElementById('stat-ads').textContent=adsWatched;
+function updAds(){
+  document.getElementById('ad-info').textContent=ads>0?ads+' '+TX[lang].adw:'';
 }
 
-async function saveData(){
-  if(!userId)return;
-  await fetch(`${SUPABASE_URL}/rest/v1/users?telegram_id=eq.${userId}`,{
+async function save(){
+  if(!uid)return;
+  await fetch(`${SB}/rest/v1/users?telegram_id=eq.${uid}`,{
     method:'PATCH',
-    headers:{'Content-Type':'application/json','apikey':SUPABASE_KEY,'Authorization':'Bearer '+SUPABASE_KEY},
-    body:JSON.stringify({coins,ads_watched:adsWatched})
+    headers:{'Content-Type':'application/json','apikey':SK,'Authorization':'Bearer '+SK},
+    body:JSON.stringify({coins,ads_watched:ads,tasks_done:tasks})
   });
+}
+
+// Draw wheel
+function drawWheel(){
+  const canvas=document.getElementById('wheel-canvas');
+  const ctx=canvas.getContext('2d');
+  const cx=110,cy=110,r=106;
+  const slice=Math.PI*2/prizes.length;
+  prizes.forEach((p,i)=>{
+    ctx.beginPath();
+    ctx.moveTo(cx,cy);
+    ctx.arc(cx,cy,r,i*slice,(i+1)*slice);
+    ctx.fillStyle=p.color;
+    ctx.fill();
+    ctx.strokeStyle='#0e0e0e';
+    ctx.lineWidth=2;
+    ctx.stroke();
+    ctx.save();
+    ctx.translate(cx,cy);
+    ctx.rotate(i*slice+slice/2);
+    ctx.textAlign='right';
+    ctx.fillStyle='#fff';
+    ctx.font='bold 13px Arial';
+    ctx.fillText(p.label,r-8,5);
+    ctx.restore();
+  });
+}
+
+let wheelSpinning=false;
+function showWheel(){
+  drawWheel();
+  document.getElementById('wheel-result').textContent='';
+  document.getElementById('wheel-wrap').classList.add('show');
+  spinWheel();
+}
+
+function spinWheel(){
+  if(wheelSpinning)return;
+  wheelSpinning=true;
+  // Weighted: low prizes more likely
+  const weights=[30,20,5,8,40,10,25,2];
+  const total=weights.reduce((a,b)=>a+b,0);
+  let r=Math.random()*total,idx=0,sum=0;
+  for(let i=0;i<weights.length;i++){sum+=weights[i];if(r<=sum){idx=i;break;}}
+  const prize=prizes[idx];
+  const slice=360/prizes.length;
+  const targetDeg=360*5+(360-idx*slice-slice/2)+90;
+  const canvas=document.getElementById('wheel-canvas');
+  canvas.style.transition='transform 3s cubic-bezier(0.17,0.67,0.12,0.99)';
+  canvas.style.transform=`rotate(${targetDeg}deg)`;
+  setTimeout(async()=>{
+    wheelSpinning=false;
+    document.getElementById('wheel-result').textContent='🎉 +'+prize.label+'!';
+    coins+=prize.coins;
+    updCoins();
+    await save();
+  },3200);
+}
+
+function closeWheel(){
+  document.getElementById('wheel-wrap').classList.remove('show');
+  const canvas=document.getElementById('wheel-canvas');
+  canvas.style.transition='none';
+  canvas.style.transform='rotate(0deg)';
 }
 
 async function watchAd(){
   const btn=document.getElementById('ad-btn');
   btn.disabled=true;
   btn.innerHTML='⏳ ...';
-  try{
-    const AdController=window.Adsgram.init({blockId:'35140'});
-    
-    await AdController.show().then(async result=>{
-      if(result.done){
-        coins+=30;
-        adsWatched++;
-        updateCoins();
-        updateAdCount();
-        await saveData();
-        showNotif('🎉 +30 '+T[lang].points);
-      }
-    }).catch(()=>{
-      showNotif(lang==='ar'?'لا توجد إعلانات الآن':'No ads now');
-    });
-  }catch(e){
-    showNotif(lang==='ar'?'حدث خطأ':'Error occurred');
-  }
+  // Simulate ad (replace with Adsgram when approved)
+  await new Promise(r=>setTimeout(r,2000));
+  coins+=3;ads++;
+  updCoins();updAds();
+  await save();
+  toast('🎉 +3 '+TX[lang].pts);
   btn.disabled=false;
-  btn.innerHTML='📺 <span id="t-watch-btn">'+T[lang].watchBtn+'</span>';
+  btn.innerHTML='📺 <span>'+TX[lang].watch+'</span>';
+  setTimeout(()=>showWheel(),500);
 }
 
 async function joinChannel(){
-  window.Telegram.WebApp.openLink('https://t.me/yourchannel');
+  window.Telegram.WebApp.openLink(CHANNEL);
   setTimeout(async()=>{
-    coins+=100;
-    updateCoins();
-    await saveData();
-    document.getElementById('task-channel').classList.add('done');
-    showNotif('🎉 +100 '+T[lang].points);
-  },3000);
+    if(!channelDone){
+      channelDone=true;
+      coins+=50;tasks++;
+      updCoins();
+      await save();
+      document.getElementById('tk-ch').classList.add('done');
+      toast('🎉 +50 '+TX[lang].pts);
+    }
+  },4000);
 }
 
-async function shareBot(){
-  const link=`https://t.me/earntaskpro_bot?start=${userId}`;
-  window.Telegram.WebApp.openLink('https://t.me/share/url?url='+encodeURIComponent(link));
-  setTimeout(async()=>{
-    coins+=20;
-    updateCoins();
-    await saveData();
-    document.getElementById('task-share').classList.add('done');
-    showNotif('🎉 +20 '+T[lang].points);
-  },2000);
+function shareTask(){
+  const link=`https://t.me/${BOT}?start=${uid}`;
+  window.Telegram.WebApp.openLink('https://t.me/share/url?url='+encodeURIComponent(link)+'&text='+encodeURIComponent('انضم لـ TaskEarn واكسب مكافآت! 🎁'));
+  if(!shareDone){
+    shareDone=true;
+    document.getElementById('tk-sh').classList.add('done');
+    toast(lang==='ar'?'تم مشاركة الرابط! انتظر الأصدقاء':'Link shared! Wait for friends');
+  }
 }
 
 function copyRef(){
-  navigator.clipboard.writeText(`https://t.me/earntaskpro_bot?start=${userId}`);
-  showNotif(lang==='ar'?'✅ تم النسخ!':'✅ Copied!');
+  navigator.clipboard.writeText(`https://t.me/${BOT}?start=${uid}`);
+  toast(lang==='ar'?'✅ تم النسخ!':'✅ Copied!');
 }
 
 function shareRef(){
-  const link=`https://t.me/earntaskpro_bot?start=${userId}`;
-  const text=lang==='ar'?'انضم وكسب مكافآت! 🎁':'Join & earn rewards! 🎁';
-  window.Telegram.WebApp.openLink('https://t.me/share/url?url='+encodeURIComponent(link)+'&text='+encodeURIComponent(text));
+  const link=`https://t.me/${BOT}?start=${uid}`;
+  window.Telegram.WebApp.openLink('https://t.me/share/url?url='+encodeURIComponent(link)+'&text='+encodeURIComponent('انضم لـ TaskEarn واكسب مكافآت! 🎁'));
 }
 
 async function withdraw(){
-  const wallet=document.getElementById('wallet-addr').value.trim();
-  if(!wallet){showNotif(lang==='ar'?'أدخل عنوان المحفظة':'Enter wallet');return;}
-  if(coins<1000){showNotif(lang==='ar'?'تحتاج 1000 نقطة على الأقل':'Need 1000+ points');return;}
-  const userUsdt=(coins*RATE*USER_RATE).toFixed(4);
-  const commission=(coins*RATE*0.1).toFixed(4);
-  await fetch(`${SUPABASE_URL}/rest/v1/withdrawals`,{
-    method:'POST',
-    headers:{'Content-Type':'application/json','apikey':SUPABASE_KEY,'Authorization':'Bearer '+SUPABASE_KEY},
-    body:JSON.stringify({telegram_id:userId,wallet,coins,usdt:userUsdt,commission})
-  }).catch(()=>{});
-  showNotif(lang==='ar'?'✅ تم إرسال طلب السحب!':'✅ Withdrawal sent!');
+  const w=document.getElementById('wallet').value.trim();
+  if(!w){toast(lang==='ar'?'⚠️ أدخل عنوان المحفظة':'⚠️ Enter wallet');return;}
+  if(coins<1000){toast(lang==='ar'?'⚠️ تحتاج 1000 نقطة':'⚠️ Need 1000 pts');return;}
+  const usdt=(coins*RATE).toFixed(4);
+  try{
+    await fetch(`${SB}/rest/v1/withdrawals`,{
+      method:'POST',
+      headers:{'Content-Type':'application/json','apikey':SK,'Authorization':'Bearer '+SK},
+      body:JSON.stringify({telegram_id:uid,wallet:w,coins,usdt,status:'pending'})
+    });
+    toast(lang==='ar'?'✅ تم إرسال طلب السحب!':'✅ Request sent!');
+    document.getElementById('wallet').value='';
+  }catch(e){toast(lang==='ar'?'خطأ في الإرسال':'Send error');}
+}
+
+// Fake ticker
+function initTicker(){
+  const t=document.getElementById('ticker');
+  if(!t)return;
+  const items=fakeWithdrawals.map(w=>`<span style="margin:0 20px">💚 ${w}</span>`).join('');
+  t.innerHTML=items+items;
 }
 
 async function init(){
   const tg=window.Telegram.WebApp;
   tg.expand();
-  try{tg.setHeaderColor('#0a0a0f');}catch(e){}
-  const user=tg.initDataUnsafe?.user;
-  if(user){
-    userId=user.id;
-    document.getElementById('uid-display').textContent='ID: '+userId;
-    document.getElementById('my-id').textContent=userId;
-    document.getElementById('ref-link').textContent=`https://t.me/earntaskpro_bot?start=${userId}`;
-    const res=await fetch(`${SUPABASE_URL}/rest/v1/users?telegram_id=eq.${userId}`,{
-      headers:{'apikey':SUPABASE_KEY,'Authorization':'Bearer '+SUPABASE_KEY}
+  try{tg.setHeaderColor('#0e0e0e');}catch(e){}
+
+  // Check referral
+  const startParam=tg.initDataUnsafe?.start_param;
+
+  const u=tg.initDataUnsafe?.user;
+  if(u){
+    uid=u.id;
+    document.getElementById('id-chip').textContent='ID: '+uid;
+    document.getElementById('my-id').textContent=uid;
+    document.getElementById('ref-link').textContent=`https://t.me/${BOT}?start=${uid}`;
+
+    // Load user
+    const res=await fetch(`${SB}/rest/v1/users?telegram_id=eq.${uid}`,{
+      headers:{'apikey':SK,'Authorization':'Bearer '+SK}
     });
-    const data=await res.json();
-    if(data.length===0){
-      await fetch(`${SUPABASE_URL}/rest/v1/users`,{
+    const d=await res.json();
+
+    if(d.length===0){
+      // New user
+      await fetch(`${SB}/rest/v1/users`,{
         method:'POST',
-        headers:{'Content-Type':'application/json','apikey':SUPABASE_KEY,'Authorization':'Bearer '+SUPABASE_KEY},
-        body:JSON.stringify({telegram_id:userId,username:user.username||'',coins:0,ads_watched:0})
+        headers:{'Content-Type':'application/json','apikey':SK,'Authorization':'Bearer '+SK},
+        body:JSON.stringify({telegram_id:uid,username:u.username||'',coins:0,ads_watched:0,tasks_done:0,refs:0,referred_by:startParam||null})
       });
+
+      // Give referral bonus to referrer
+      if(startParam && startParam!=uid){
+        const rr=await fetch(`${SB}/rest/v1/users?telegram_id=eq.${startParam}`,{
+          headers:{'apikey':SK,'Authorization':'Bearer '+SK}
+        });
+        const rd=await rr.json();
+        if(rd.length>0){
+          const newCoins=(rd[0].coins||0)+100;
+          const newRefs=(rd[0].refs||0)+1;
+          await fetch(`${SB}/rest/v1/users?telegram_id=eq.${startParam}`,{
+            method:'PATCH',
+            headers:{'Content-Type':'application/json','apikey':SK,'Authorization':'Bearer '+SK},
+            body:JSON.stringify({coins:newCoins,refs:newRefs})
+          });
+        }
+      }
     }else{
-      coins=data[0].coins||0;
-      adsWatched=data[0].ads_watched||0;
-      updateCoins();
-      updateAdCount();
+      coins=d[0].coins||0;
+      ads=d[0].ads_watched||0;
+      tasks=d[0].tasks_done||0;
+      refs=d[0].refs||0;
+      updCoins();updAds();
     }
   }
+  initTicker();
 }
 
 init();
