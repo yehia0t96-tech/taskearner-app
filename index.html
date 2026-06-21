@@ -5,6 +5,7 @@
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 <title>TaskEarn</title>
 <script src="https://telegram.org/js/telegram-web-app.js"></script>
+<script src="https://sad.adsgram.ai/js/sad.min.js"></script>
 <style>
 *{margin:0;padding:0;box-sizing:border-box}
 body{font-family:Arial,sans-serif;background:#0e0e0e;color:#fff;min-height:100vh;overflow-x:hidden}
@@ -277,7 +278,7 @@ async function watchAd(){
     if(window.Adsgram){
       const AdController=window.Adsgram.init({blockId:'bot-35140'});
       await AdController.show();
-    } else {
+    }else{
       await new Promise(r=>setTimeout(r,2000));
     }
     coins+=3;ads++;
@@ -309,7 +310,7 @@ async function verifyChannel(){
       const vb=document.getElementById('verify-btn');
       if(vb)vb.remove();
       toast('🎉 +50 '+TX[lang].pts);
-    } else {
+    }else{
       toast(lang==='ar'?'❌ لسه مشتركتش! اشترك الأول':'❌ Not subscribed yet!');
     }
   }catch(e){
@@ -371,20 +372,16 @@ async function init(){
     document.getElementById('id-chip').textContent='ID: '+uid;
     document.getElementById('my-id').textContent=uid;
     document.getElementById('ref-link').textContent=`https://t.me/${BOT}?start=${uid}`;
-
     const res=await fetch(`${SB}/rest/v1/users?telegram_id=eq.${uid}&select=*`,{
       headers:{'apikey':SK,'Authorization':'Bearer '+SK}
     });
     const d=await res.json();
-
     if(d.length===0){
-      // مستخدم جديد
       await fetch(`${SB}/rest/v1/users`,{
         method:'POST',
         headers:{'Content-Type':'application/json','apikey':SK,'Authorization':'Bearer '+SK},
         body:JSON.stringify({telegram_id:uid,username:u.username||'',coins:0,ads_watched:0,tasks_done:0,refs:0,referred_by:startParam||null,is_member:false,channel_bonus:false})
       });
-      // ✅ إحالة فورية لما حد جديد يفتح الـ Mini App
       if(startParam && startParam!=uid){
         const rr=await fetch(`${SB}/rest/v1/users?telegram_id=eq.${startParam}&select=*`,{
           headers:{'apikey':SK,'Authorization':'Bearer '+SK}
@@ -398,8 +395,7 @@ async function init(){
           });
         }
       }
-    } else {
-      // مستخدم موجود
+    }else{
       coins=d[0].coins||0;
       ads=d[0].ads_watched||0;
       tasks=d[0].tasks_done||0;
@@ -408,8 +404,6 @@ async function init(){
       if(channelDone) document.getElementById('tk-ch').classList.add('done');
       updCoins();updAds();
     }
-
-    // زر مهمة القناة
     document.getElementById('tk-ch').onclick=function(){
       if(channelDone) return;
       window.Telegram.WebApp.openLink(CHANNEL);
