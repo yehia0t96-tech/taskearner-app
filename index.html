@@ -15,7 +15,6 @@ body{font-family:Arial,sans-serif;background:#0e0e0e;color:#fff;min-height:100vh
 @keyframes float{0%,100%{transform:translateY(0)}50%{transform:translateY(-8px)}}
 @keyframes fadeIn{from{opacity:0;transform:translateY(8px)}to{opacity:1;transform:translateY(0)}}
 @keyframes slideLeft{from{transform:translateX(100%)}to{transform:translateX(-100%)}}
-@keyframes popIn{0%{transform:scale(0.5);opacity:0}80%{transform:scale(1.1)}100%{transform:scale(1);opacity:1}}
 @keyframes notifIn{from{top:-60px;opacity:0}to{top:16px;opacity:1}}
 .page{display:none;padding:14px;padding-bottom:85px;animation:fadeIn 0.25s ease}
 .page.active{display:block}
@@ -102,7 +101,7 @@ body{font-family:Arial,sans-serif;background:#0e0e0e;color:#fff;min-height:100vh
   </div>
   <div class="card">
     <div class="card-h">📋 <span id="tl-daily">المهام</span></div>
-    <div class="task" id="tk-ch" onclick="joinChannel()">
+    <div class="task" id="tk-ch">
       <div class="task-l">
         <div class="task-ico">📢</div>
         <div><div class="task-name" id="tl-join">اشترك في قناة TaskEarn</div><div class="task-desc" id="tl-joind">اشترك واكسب 50 نقطة</div></div>
@@ -269,12 +268,11 @@ async function save(){
   });
 }
 
-// ─── مشاهدة الإعلان (بدون عجلة الحظ) ───────────────
 async function watchAd(){
   const btn=document.getElementById('ad-btn');
   btn.disabled=true;
   btn.innerHTML='⏳ ...';
-  try {
+  try{
     if(window.Adsgram){
       const AdController=window.Adsgram.init({blockId:'bot-35140'});
       await AdController.show();
@@ -285,17 +283,11 @@ async function watchAd(){
     updCoins();updAds();
     await save();
     toast('🎉 +3 '+TX[lang].pts);
-  } catch(e){
+  }catch(e){
     toast(lang==='ar'?'⚠️ لا يوجد إعلان الآن':'⚠️ No ad available');
   }
   btn.disabled=false;
-  btn.innerHTML='📺 <span id="tl-watch">'+TX[lang].watch+'</span>';
-}
-
-// ─── مهمة الاشتراك في القناة ─────────────────────────
-async function joinChannel(){
-  if(channelDone) return;
-  window.Telegram.WebApp.openLink(CHANNEL);
+  btn.innerHTML='📺 <span>'+TX[lang].watch+'</span>';
 }
 
 async function verifyChannel(){
@@ -304,8 +296,7 @@ async function verifyChannel(){
     return;
   }
   toast(lang==='ar'?'⏳ جاري التحقق...':'⏳ Checking...');
-  // تحقق من الاشتراك عبر الباك اند
-  try {
+  try{
     const res=await fetch(`${SB}/rest/v1/users?telegram_id=eq.${uid}&select=is_member,channel_bonus`,{
       headers:{'apikey':SK,'Authorization':'Bearer '+SK}
     });
@@ -316,11 +307,13 @@ async function verifyChannel(){
       updCoins();
       await save();
       document.getElementById('tk-ch').classList.add('done');
+      const vb=document.getElementById('verify-btn');
+      if(vb)vb.remove();
       toast('🎉 +50 '+TX[lang].pts);
     } else {
       toast(lang==='ar'?'❌ لسه مشتركتش! اشترك الأول':'❌ Not subscribed yet!');
     }
-  } catch(e){
+  }catch(e){
     toast(lang==='ar'?'خطأ في التحقق':'Verify error');
   }
 }
@@ -379,17 +372,20 @@ async function init(){
     document.getElementById('id-chip').textContent='ID: '+uid;
     document.getElementById('my-id').textContent=uid;
     document.getElementById('ref-link').textContent=`https://t.me/${BOT}?start=${uid}`;
+
     const res=await fetch(`${SB}/rest/v1/users?telegram_id=eq.${uid}&select=*`,{
       headers:{'apikey':SK,'Authorization':'Bearer '+SK}
     });
     const d=await res.json();
+
     if(d.length===0){
+      // مستخدم جديد
       await fetch(`${SB}/rest/v1/users`,{
         method:'POST',
         headers:{'Content-Type':'application/json','apikey':SK,'Authorization':'Bearer '+SK},
         body:JSON.stringify({telegram_id:uid,username:u.username||'',coins:0,ads_watched:0,tasks_done:0,refs:0,referred_by:startParam||null,is_member:false,channel_bonus:false})
       });
-      // إحالة فورية لما حد جديد يفتح البوت
+      // ✅ إحالة فورية لما حد جديد يفتح الـ Mini App
       if(startParam && startParam!=uid){
         const rr=await fetch(`${SB}/rest/v1/users?telegram_id=eq.${startParam}&select=*`,{
           headers:{'apikey':SK,'Authorization':'Bearer '+SK}
@@ -404,6 +400,7 @@ async function init(){
         }
       }
     } else {
+      // مستخدم موجود
       coins=d[0].coins||0;
       ads=d[0].ads_watched||0;
       tasks=d[0].tasks_done||0;
@@ -412,31 +409,26 @@ async function init(){
       if(channelDone) document.getElementById('tk-ch').classList.add('done');
       updCoins();updAds();
     }
+
+    // زر مهمة القناة
+    document.getElementById('tk-ch').onclick=function(){
+      if(channelDone) return;
+      window.Telegram.WebApp.openLink(CHANNEL);
+      setTimeout(()=>{
+        if(!document.getElementById('verify-btn')){
+          const btn=document.createElement('button');
+          btn.id='verify-btn';
+          btn.className='btn btn-gold';
+          btn.style='margin-top:10px;width:calc(100% - 28px);position:fixed;bottom:75px;left:14px;z-index:200';
+          btn.textContent='✅ تحقق من اشتراكي';
+          btn.onclick=verifyChannel;
+          document.body.appendChild(btn);
+          setTimeout(()=>{const b=document.getElementById('verify-btn');if(b)b.remove();},30000);
+        }
+      },1500);
+    };
   }
   initTicker();
-
-  // زر تحقق من الاشتراك
-  const tkCh=document.getElementById('tk-ch');
-  tkCh.onclick=async function(){
-    if(channelDone) return;
-    window.Telegram.WebApp.openLink(CHANNEL);
-    setTimeout(()=>{
-      // بعد ما يفتح القناة يظهر زر التحقق
-      if(!document.getElementById('verify-btn')){
-        const btn=document.createElement('button');
-        btn.id='verify-btn';
-        btn.className='btn btn-gold';
-        btn.style='margin-top:10px;width:calc(100% - 28px);position:fixed;bottom:75px;left:14px;z-index:200';
-        btn.textContent='✅ تحقق من اشتراكي';
-        btn.onclick=verifyChannel;
-        document.body.appendChild(btn);
-        setTimeout(()=>{
-          const b=document.getElementById('verify-btn');
-          if(b)b.remove();
-        },30000);
-      }
-    },1500);
-  };
 }
 
 init();
