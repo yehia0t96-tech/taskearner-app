@@ -8,40 +8,21 @@
 <style>
 *{margin:0;padding:0;box-sizing:border-box}
 body{font-family:Arial,sans-serif;background:#0e0e0e;color:#fff;min-height:100vh;overflow-x:hidden}
-
-/* Hamster Style Colors */
 :root{--gold:#f5a623;--gold2:#f8c55d;--dark:#0e0e0e;--card:#1a1a1a;--card2:#222;--border:#2a2a2a}
-
-@keyframes rgbSoft{
-  0%{color:#f5a623}25%{color:#7ed6df}50%{color:#a29bfe}75%{color:#55efc4}100%{color:#f5a623}
-}
-@keyframes glowSoft{
-  0%{box-shadow:0 0 12px rgba(245,166,35,0.2)}
-  50%{box-shadow:0 0 12px rgba(162,155,254,0.2)}
-  100%{box-shadow:0 0 12px rgba(245,166,35,0.2)}
-}
-@keyframes borderSoft{
-  0%{border-color:rgba(245,166,35,0.3)}
-  50%{border-color:rgba(162,155,254,0.3)}
-  100%{border-color:rgba(245,166,35,0.3)}
-}
+@keyframes rgbSoft{0%{color:#f5a623}25%{color:#7ed6df}50%{color:#a29bfe}75%{color:#55efc4}100%{color:#f5a623}}
+@keyframes glowSoft{0%{box-shadow:0 0 12px rgba(245,166,35,0.2)}50%{box-shadow:0 0 12px rgba(162,155,254,0.2)}100%{box-shadow:0 0 12px rgba(245,166,35,0.2)}}
+@keyframes borderSoft{0%{border-color:rgba(245,166,35,0.3)}50%{border-color:rgba(162,155,254,0.3)}100%{border-color:rgba(245,166,35,0.3)}}
 @keyframes float{0%,100%{transform:translateY(0)}50%{transform:translateY(-8px)}}
 @keyframes fadeIn{from{opacity:0;transform:translateY(8px)}to{opacity:1;transform:translateY(0)}}
 @keyframes slideLeft{from{transform:translateX(100%)}to{transform:translateX(-100%)}}
-@keyframes spin{from{transform:rotate(0deg)}to{transform:rotate(360deg)}}
 @keyframes popIn{0%{transform:scale(0.5);opacity:0}80%{transform:scale(1.1)}100%{transform:scale(1);opacity:1}}
 @keyframes notifIn{from{top:-60px;opacity:0}to{top:16px;opacity:1}}
-
 .page{display:none;padding:14px;padding-bottom:85px;animation:fadeIn 0.25s ease}
 .page.active{display:block}
-
-/* Topbar */
 .topbar{display:flex;justify-content:space-between;align-items:center;padding:13px 16px;background:var(--card);border-bottom:1px solid var(--border);margin-bottom:14px;border-radius:0 0 16px 16px}
 .logo{font-size:17px;font-weight:800;color:var(--gold)}
 .logo span{animation:rgbSoft 4s infinite}
 .id-chip{background:var(--card2);padding:5px 11px;border-radius:20px;font-size:11px;color:rgba(255,255,255,0.4)}
-
-/* Coin Hero */
 .hero{text-align:center;padding:20px 16px 8px}
 .coin-wrap{display:inline-block;animation:float 3s ease-in-out infinite}
 .coin-ico{font-size:68px;filter:drop-shadow(0 4px 16px rgba(245,166,35,0.4))}
@@ -49,18 +30,12 @@ body{font-family:Arial,sans-serif;background:#0e0e0e;color:#fff;min-height:100vh
 .coin-usdt{font-size:13px;color:rgba(255,255,255,0.3);margin-top:2px}
 .prog-wrap{margin:14px 24px 0;background:var(--card2);border-radius:6px;height:4px;overflow:hidden}
 .prog{height:100%;border-radius:6px;background:linear-gradient(90deg,var(--gold),var(--gold2));transition:width 0.6s ease}
-
-/* Stats */
 .stats{display:grid;grid-template-columns:repeat(3,1fr);gap:8px;padding:10px 14px}
 .stat{background:var(--card);border:1px solid var(--border);border-radius:14px;padding:12px 8px;text-align:center}
 .stat-n{font-size:20px;font-weight:700;color:var(--gold)}
 .stat-l{font-size:10px;color:rgba(255,255,255,0.35);margin-top:2px}
-
-/* Cards */
 .card{background:var(--card);border:1px solid var(--border);border-radius:18px;padding:15px;margin-bottom:10px;animation:borderSoft 4s infinite}
 .card-h{font-size:13px;font-weight:700;color:var(--gold);margin-bottom:13px;display:flex;align-items:center;gap:6px}
-
-/* Ad Section */
 .ad-box{background:var(--card);border:1px solid;border-radius:18px;padding:18px;text-align:center;margin-bottom:10px;animation:borderSoft 4s infinite,glowSoft 4s infinite}
 .ad-pts{font-size:32px;font-weight:800;color:var(--gold)}
 .ad-sub{font-size:12px;color:rgba(255,255,255,0.35);margin-bottom:6px}
@@ -68,18 +43,6 @@ body{font-family:Arial,sans-serif;background:#0e0e0e;color:#fff;min-height:100vh
 .ad-btn:active{transform:scale(0.97)}
 .ad-btn:disabled{opacity:0.3;animation:none;border-color:var(--border);cursor:not-allowed}
 .ad-info{font-size:11px;color:rgba(255,255,255,0.25);margin-top:7px}
-
-/* Lucky Wheel */
-.wheel-wrap{position:fixed;inset:0;background:rgba(0,0,0,0.85);z-index:500;display:none;align-items:center;justify-content:center;flex-direction:column}
-.wheel-wrap.show{display:flex;animation:fadeIn 0.3s ease}
-.wheel-title{font-size:18px;font-weight:700;color:var(--gold);margin-bottom:16px}
-.wheel{width:220px;height:220px;border-radius:50%;border:4px solid var(--gold);position:relative;overflow:hidden}
-.wheel-spin{width:100%;height:100%;border-radius:50%;transition:transform 3s cubic-bezier(0.17,0.67,0.12,0.99)}
-.wheel-ptr{position:absolute;top:-12px;left:50%;transform:translateX(-50%);font-size:24px;z-index:10}
-.wheel-result{font-size:28px;font-weight:800;color:var(--gold);margin-top:16px;animation:popIn 0.4s ease}
-.wheel-close{margin-top:12px;padding:10px 28px;background:var(--card2);border:1px solid var(--border);border-radius:12px;color:#fff;font-size:14px;cursor:pointer}
-
-/* Tasks */
 .task{display:flex;justify-content:space-between;align-items:center;background:var(--card2);border:1px solid var(--border);border-radius:14px;padding:13px;margin-bottom:8px;cursor:pointer;transition:all 0.2s}
 .task:active{transform:scale(0.98)}
 .task.done{opacity:0.25;pointer-events:none}
@@ -88,54 +51,31 @@ body{font-family:Arial,sans-serif;background:#0e0e0e;color:#fff;min-height:100vh
 .task-name{font-size:13px;font-weight:600}
 .task-desc{font-size:11px;color:rgba(255,255,255,0.3);margin-top:1px}
 .badge{padding:5px 10px;border-radius:8px;font-size:12px;font-weight:700;background:rgba(245,166,35,0.12);border:1px solid rgba(245,166,35,0.3);color:var(--gold);white-space:nowrap}
-
-/* Ref */
 .ref-box{background:var(--card2);border:1px solid var(--border);border-radius:12px;padding:12px;font-size:12px;color:rgba(120,180,255,0.9);word-break:break-all;margin:10px 0;line-height:1.6}
 .btn{width:100%;padding:13px;border-radius:13px;font-size:14px;font-weight:700;cursor:pointer;margin-top:8px;transition:transform 0.15s;border:1px solid}
 .btn:active{transform:scale(0.97)}
 .btn-gold{color:#000;background:var(--gold);border-color:var(--gold)}
 .btn-ghost{color:rgba(255,255,255,0.6);background:transparent;border-color:var(--border)}
-
-/* Withdraw Ticker */
 .ticker-wrap{background:var(--card);border:1px solid var(--border);border-radius:12px;padding:10px 14px;margin-bottom:10px;overflow:hidden}
 .ticker-label{font-size:10px;color:rgba(255,255,255,0.3);margin-bottom:4px}
 .ticker-track{white-space:nowrap;animation:slideLeft 20s linear infinite;font-size:12px;color:var(--gold)}
-
-/* Withdraw */
 .bal-card{background:var(--card);border:1px solid;border-radius:18px;padding:20px;text-align:center;margin-bottom:10px;animation:borderSoft 4s infinite,glowSoft 4s infinite}
 .w-input{width:100%;padding:13px;background:var(--card2);border:1px solid var(--border);border-radius:12px;color:#fff;font-size:14px;margin:8px 0;outline:none}
 .info-r{font-size:12px;color:rgba(255,255,255,0.3);padding:4px 0;display:flex;align-items:center;gap:6px}
-
-/* Lang */
 .lang-g{display:grid;grid-template-columns:1fr 1fr;gap:8px;margin-top:10px}
 .lang-i{background:var(--card2);border:1px solid var(--border);border-radius:12px;padding:12px;text-align:center;cursor:pointer;font-size:13px;transition:all 0.2s}
 .lang-i.on{border-color:var(--gold);background:rgba(245,166,35,0.08);color:var(--gold)}
-
-/* Nav */
 .nav{position:fixed;bottom:0;width:100%;background:rgba(14,14,14,0.97);backdrop-filter:blur(20px);border-top:1px solid var(--border);display:flex;justify-content:space-around;padding:8px 0 14px;z-index:100}
 .nb{background:none;border:none;color:rgba(255,255,255,0.3);font-size:10px;cursor:pointer;display:flex;flex-direction:column;align-items:center;gap:3px;padding:4px 12px;transition:all 0.2s}
 .nb .ic{font-size:22px;transition:all 0.3s}
 .nb.on{color:var(--gold)}
 .nb.on .ic{filter:drop-shadow(0 0 6px rgba(245,166,35,0.6))}
-
-/* Notif */
 .notif{position:fixed;top:16px;left:50%;transform:translateX(-50%);padding:10px 20px;border-radius:14px;font-size:13px;font-weight:700;z-index:999;display:none;color:#000;background:var(--gold);white-space:nowrap;animation:notifIn 0.3s ease}
 </style>
 </head>
 <body>
 
 <div class="notif" id="notif"></div>
-
-<!-- Lucky Wheel -->
-<div class="wheel-wrap" id="wheel-wrap">
-  <div class="wheel-title">🎰 عجلة الحظ!</div>
-  <div class="wheel" style="position:relative">
-    <div class="wheel-ptr">▼</div>
-    <canvas id="wheel-canvas" width="220" height="220"></canvas>
-  </div>
-  <div class="wheel-result" id="wheel-result"></div>
-  <button class="wheel-close" onclick="closeWheel()">✓ استلام المكافأة</button>
-</div>
 
 <!-- HOME -->
 <div id="pg-home" class="page active">
@@ -155,7 +95,7 @@ body{font-family:Arial,sans-serif;background:#0e0e0e;color:#fff;min-height:100vh
     <div class="stat"><div class="stat-n" id="s-tasks">0</div><div class="stat-l" id="tl-tasks">مهام</div></div>
   </div>
   <div class="ad-box">
-    <div class="ad-sub" id="tl-earn">شاهد إعلاناً واكسب + عجلة الحظ!</div>
+    <div class="ad-sub" id="tl-earn">شاهد إعلاناً واكسب نقاط!</div>
     <div class="ad-pts">+3 <span style="font-size:16px" id="tl-pts">نقاط</span></div>
     <button class="ad-btn" id="ad-btn" onclick="watchAd()">📺 <span id="tl-watch">شاهد الإعلان</span></button>
     <div class="ad-info" id="ad-info"></div>
@@ -165,7 +105,7 @@ body{font-family:Arial,sans-serif;background:#0e0e0e;color:#fff;min-height:100vh
     <div class="task" id="tk-ch" onclick="joinChannel()">
       <div class="task-l">
         <div class="task-ico">📢</div>
-        <div><div class="task-name" id="tl-join">اشترك في قناة TaskEarn</div><div class="task-desc" id="tl-joind">اشترك واكسب نقاط</div></div>
+        <div><div class="task-name" id="tl-join">اشترك في قناة TaskEarn</div><div class="task-desc" id="tl-joind">اشترك واكسب 50 نقطة</div></div>
       </div>
       <div class="badge">+50 🪙</div>
     </div>
@@ -197,7 +137,6 @@ body{font-family:Arial,sans-serif;background:#0e0e0e;color:#fff;min-height:100vh
 
 <!-- WITHDRAW -->
 <div id="pg-wd" class="page">
-  <!-- Fake Ticker -->
   <div class="ticker-wrap">
     <div class="ticker-label">🔴 عمليات سحب حديثة</div>
     <div class="ticker-track" id="ticker">جاري التحميل...</div>
@@ -258,7 +197,6 @@ const BOT='earntaskpro_bot';
 let coins=0,uid=null,ads=0,refs=0,tasks=0,lang='ar';
 let channelDone=false,shareDone=false;
 
-// Fake withdraw ticker
 const fakeWithdrawals=[
   'أحمد س. سحب 0.5 USDT','محمد ع. سحب 1.2 USDT','سارة م. سحب 0.8 USDT',
   'علي ح. سحب 2.0 USDT','فاطمة ك. سحب 0.3 USDT','Omar سحب 1.5 USDT',
@@ -266,23 +204,11 @@ const fakeWithdrawals=[
   'ليلى ب. سحب 0.4 USDT','كريم ط. سحب 1.1 USDT','Aisha سحب 0.6 USDT'
 ];
 
-// Wheel prizes
-const prizes=[
-  {label:'5 🪙',coins:5,color:'#f5a623'},
-  {label:'10 🪙',coins:10,color:'#a29bfe'},
-  {label:'2 🪙',coins:2,color:'#55efc4'},
-  {label:'20 🪙',coins:20,color:'#fd79a8'},
-  {label:'1 🪙',coins:1,color:'#fdcb6e'},
-  {label:'15 🪙',coins:15,color:'#74b9ff'},
-  {label:'3 🪙',coins:3,color:'#00b894'},
-  {label:'50 🪙',coins:50,color:'#e17055'}
-];
-
 const TX={
-ar:{home:'الرئيسية',ref:'الإحالة',wd:'السحب',set:'الإعدادات',ads:'إعلانات',refs:'إحالات',tasks:'مهام',earn:'شاهد إعلاناً واكسب + عجلة الحظ!',pts:'نقاط',watch:'شاهد الإعلان',daily:'المهام',join:'اشترك في قناة TaskEarn',joind:'اشترك واكسب نقاط',share:'شارك رابط الإحالة',shared:'100 نقطة لكل صديق ينضم',reft:'نظام الإحالة',refd:'ادعو أصدقاءك واكسب 100 نقطة لكل صديق ينضم!',copy:'📋 نسخ الرابط',sref:'📤 مشاركة',rnum:'إحالات',bal:'رصيدك الحالي',wall:'عنوان المحفظة (TRC20/TON)',wdt:'سحب المكافآت',wdb:'💸 سحب',min:'الحد الأدنى: 1000 نقطة',time:'وقت المعالجة: 24-48 ساعة',lang:'اللغة',rate:'معدل التحويل',myid:'معرفك',adw:'إعلان'},
-en:{home:'Home',ref:'Referral',wd:'Withdraw',set:'Settings',ads:'Ads',refs:'Refs',tasks:'Tasks',earn:'Watch ad & earn + Lucky Wheel!',pts:'pts',watch:'Watch Ad',daily:'Tasks',join:'Join TaskEarn Channel',joind:'Subscribe & earn',share:'Share Referral Link',shared:'100 pts per friend',reft:'Referral System',refd:'Invite friends & earn 100 pts each!',copy:'📋 Copy Link',sref:'📤 Share',rnum:'Referrals',bal:'Your Balance',wall:'Wallet Address (TRC20/TON)',wdt:'Withdraw',wdb:'💸 Withdraw',min:'Minimum: 1000 points',time:'Processing: 24-48h',lang:'Language',rate:'Exchange Rate',myid:'Your ID',adw:'ad'},
-fr:{home:'Accueil',ref:'Parrainage',wd:'Retrait',set:'Paramètres',ads:'Pubs',refs:'Refs',tasks:'Tâches',earn:'Voir pub & gagner + Roue!',pts:'pts',watch:'Voir pub',daily:'Tâches',join:'Rejoindre TaskEarn',joind:'Abonnez-vous & gagnez',share:'Partager lien',shared:'100 pts par ami',reft:'Parrainage',refd:'Invitez & gagnez 100 pts!',copy:'📋 Copier',sref:'📤 Partager',rnum:'Parrainages',bal:'Votre solde',wall:'Adresse',wdt:'Retrait',wdb:'💸 Retirer',min:'Min: 1000 pts',time:'Délai: 24-48h',lang:'Langue',rate:'Taux',myid:'Votre ID',adw:'pub'},
-ru:{home:'Главная',ref:'Рефералы',wd:'Вывод',set:'Настройки',ads:'Реклама',refs:'Рефералы',tasks:'Задания',earn:'Смотри & зарабатывай + Колесо!',pts:'очков',watch:'Смотреть',daily:'Задания',join:'Подписаться на TaskEarn',joind:'Подпишись & зарабатывай',share:'Поделиться ссылкой',shared:'100 очков за друга',reft:'Рефералы',refd:'Приглашай & получай 100 очков!',copy:'📋 Копировать',sref:'📤 Поделиться',rnum:'Рефералы',bal:'Ваш баланс',wall:'Адрес кошелька',wdt:'Вывод',wdb:'💸 Вывести',min:'Минимум: 1000 очков',time:'Обработка: 24-48ч',lang:'Язык',rate:'Курс',myid:'Ваш ID',adw:'реклама'}
+ar:{home:'الرئيسية',ref:'الإحالة',wd:'السحب',set:'الإعدادات',ads:'إعلانات',refs:'إحالات',tasks:'مهام',earn:'شاهد إعلاناً واكسب نقاط!',pts:'نقاط',watch:'شاهد الإعلان',daily:'المهام',join:'اشترك في قناة TaskEarn',joind:'اشترك واكسب 50 نقطة',share:'شارك رابط الإحالة',shared:'100 نقطة لكل صديق ينضم',reft:'نظام الإحالة',refd:'ادعو أصدقاءك واكسب 100 نقطة لكل صديق ينضم!',copy:'📋 نسخ الرابط',sref:'📤 مشاركة',rnum:'إحالات',bal:'رصيدك الحالي',wall:'عنوان المحفظة (TRC20/TON)',wdt:'سحب المكافآت',wdb:'💸 سحب',min:'الحد الأدنى: 1000 نقطة',time:'وقت المعالجة: 24-48 ساعة',lang:'اللغة',rate:'معدل التحويل',myid:'معرفك',adw:'إعلان'},
+en:{home:'Home',ref:'Referral',wd:'Withdraw',set:'Settings',ads:'Ads',refs:'Refs',tasks:'Tasks',earn:'Watch ad & earn points!',pts:'pts',watch:'Watch Ad',daily:'Tasks',join:'Join TaskEarn Channel',joind:'Subscribe & earn 50 pts',share:'Share Referral Link',shared:'100 pts per friend',reft:'Referral System',refd:'Invite friends & earn 100 pts each!',copy:'📋 Copy Link',sref:'📤 Share',rnum:'Referrals',bal:'Your Balance',wall:'Wallet Address (TRC20/TON)',wdt:'Withdraw',wdb:'💸 Withdraw',min:'Minimum: 1000 points',time:'Processing: 24-48h',lang:'Language',rate:'Exchange Rate',myid:'Your ID',adw:'ad'},
+fr:{home:'Accueil',ref:'Parrainage',wd:'Retrait',set:'Paramètres',ads:'Pubs',refs:'Refs',tasks:'Tâches',earn:'Voir pub & gagner!',pts:'pts',watch:'Voir pub',daily:'Tâches',join:'Rejoindre TaskEarn',joind:'Abonnez-vous & gagnez 50 pts',share:'Partager lien',shared:'100 pts par ami',reft:'Parrainage',refd:'Invitez & gagnez 100 pts!',copy:'📋 Copier',sref:'📤 Partager',rnum:'Parrainages',bal:'Votre solde',wall:'Adresse',wdt:'Retrait',wdb:'💸 Retirer',min:'Min: 1000 pts',time:'Délai: 24-48h',lang:'Langue',rate:'Taux',myid:'Votre ID',adw:'pub'},
+ru:{home:'Главная',ref:'Рефералы',wd:'Вывод',set:'Настройки',ads:'Реклама',refs:'Рефералы',tasks:'Задания',earn:'Смотри & зарабатывай!',pts:'очков',watch:'Смотреть',daily:'Задания',join:'Подписаться на TaskEarn',joind:'Подпишись & получи 50 очков',share:'Поделиться ссылкой',shared:'100 очков за друга',reft:'Рефералы',refd:'Приглашай & получай 100 очков!',copy:'📋 Копировать',sref:'📤 Поделиться',rnum:'Рефералы',bal:'Ваш баланс',wall:'Адрес кошелька',wdt:'Вывод',wdb:'💸 Вывести',min:'Минимум: 1000 очков',time:'Обработка: 24-48ч',lang:'Язык',rate:'Курс',myid:'Ваш ID',adw:'реклама'}
 };
 
 function toast(m,dur=2500){
@@ -343,97 +269,60 @@ async function save(){
   });
 }
 
-// Draw wheel
-function drawWheel(){
-  const canvas=document.getElementById('wheel-canvas');
-  const ctx=canvas.getContext('2d');
-  const cx=110,cy=110,r=106;
-  const slice=Math.PI*2/prizes.length;
-  prizes.forEach((p,i)=>{
-    ctx.beginPath();
-    ctx.moveTo(cx,cy);
-    ctx.arc(cx,cy,r,i*slice,(i+1)*slice);
-    ctx.fillStyle=p.color;
-    ctx.fill();
-    ctx.strokeStyle='#0e0e0e';
-    ctx.lineWidth=2;
-    ctx.stroke();
-    ctx.save();
-    ctx.translate(cx,cy);
-    ctx.rotate(i*slice+slice/2);
-    ctx.textAlign='right';
-    ctx.fillStyle='#fff';
-    ctx.font='bold 13px Arial';
-    ctx.fillText(p.label,r-8,5);
-    ctx.restore();
-  });
-}
-
-let wheelSpinning=false;
-function showWheel(){
-  drawWheel();
-  document.getElementById('wheel-result').textContent='';
-  document.getElementById('wheel-wrap').classList.add('show');
-  spinWheel();
-}
-
-function spinWheel(){
-  if(wheelSpinning)return;
-  wheelSpinning=true;
-  // Weighted: low prizes more likely
-  const weights=[30,20,5,8,40,10,25,2];
-  const total=weights.reduce((a,b)=>a+b,0);
-  let r=Math.random()*total,idx=0,sum=0;
-  for(let i=0;i<weights.length;i++){sum+=weights[i];if(r<=sum){idx=i;break;}}
-  const prize=prizes[idx];
-  const slice=360/prizes.length;
-  const targetDeg=360*5+(360-idx*slice-slice/2)+90;
-  const canvas=document.getElementById('wheel-canvas');
-  canvas.style.transition='transform 3s cubic-bezier(0.17,0.67,0.12,0.99)';
-  canvas.style.transform=`rotate(${targetDeg}deg)`;
-  setTimeout(async()=>{
-    wheelSpinning=false;
-    document.getElementById('wheel-result').textContent='🎉 +'+prize.label+'!';
-    coins+=prize.coins;
-    updCoins();
-    await save();
-  },3200);
-}
-
-function closeWheel(){
-  document.getElementById('wheel-wrap').classList.remove('show');
-  const canvas=document.getElementById('wheel-canvas');
-  canvas.style.transition='none';
-  canvas.style.transform='rotate(0deg)';
-}
-
+// ─── مشاهدة الإعلان (بدون عجلة الحظ) ───────────────
 async function watchAd(){
   const btn=document.getElementById('ad-btn');
   btn.disabled=true;
   btn.innerHTML='⏳ ...';
-  // Simulate ad (replace with Adsgram when approved)
-  await new Promise(r=>setTimeout(r,2000));
-  coins+=3;ads++;
-  updCoins();updAds();
-  await save();
-  toast('🎉 +3 '+TX[lang].pts);
+  try {
+    if(window.Adsgram){
+      const AdController=window.Adsgram.init({blockId:'bot-35140'});
+      await AdController.show();
+    } else {
+      await new Promise(r=>setTimeout(r,2000));
+    }
+    coins+=3;ads++;
+    updCoins();updAds();
+    await save();
+    toast('🎉 +3 '+TX[lang].pts);
+  } catch(e){
+    toast(lang==='ar'?'⚠️ لا يوجد إعلان الآن':'⚠️ No ad available');
+  }
   btn.disabled=false;
-  btn.innerHTML='📺 <span>'+TX[lang].watch+'</span>';
-  setTimeout(()=>showWheel(),500);
+  btn.innerHTML='📺 <span id="tl-watch">'+TX[lang].watch+'</span>';
 }
 
+// ─── مهمة الاشتراك في القناة ─────────────────────────
 async function joinChannel(){
+  if(channelDone) return;
   window.Telegram.WebApp.openLink(CHANNEL);
-  setTimeout(async()=>{
-    if(!channelDone){
+}
+
+async function verifyChannel(){
+  if(channelDone){
+    toast(lang==='ar'?'✅ أنت مشترك بالفعل!':'✅ Already subscribed!');
+    return;
+  }
+  toast(lang==='ar'?'⏳ جاري التحقق...':'⏳ Checking...');
+  // تحقق من الاشتراك عبر الباك اند
+  try {
+    const res=await fetch(`${SB}/rest/v1/users?telegram_id=eq.${uid}&select=is_member,channel_bonus`,{
+      headers:{'apikey':SK,'Authorization':'Bearer '+SK}
+    });
+    const d=await res.json();
+    if(d.length>0 && d[0].channel_bonus){
       channelDone=true;
       coins+=50;tasks++;
       updCoins();
       await save();
       document.getElementById('tk-ch').classList.add('done');
       toast('🎉 +50 '+TX[lang].pts);
+    } else {
+      toast(lang==='ar'?'❌ لسه مشتركتش! اشترك الأول':'❌ Not subscribed yet!');
     }
-  },4000);
+  } catch(e){
+    toast(lang==='ar'?'خطأ في التحقق':'Verify error');
+  }
 }
 
 function shareTask(){
@@ -472,7 +361,6 @@ async function withdraw(){
   }catch(e){toast(lang==='ar'?'خطأ في الإرسال':'Send error');}
 }
 
-// Fake ticker
 function initTicker(){
   const t=document.getElementById('ticker');
   if(!t)return;
@@ -484,56 +372,71 @@ async function init(){
   const tg=window.Telegram.WebApp;
   tg.expand();
   try{tg.setHeaderColor('#0e0e0e');}catch(e){}
-
-  // Check referral
   const startParam=tg.initDataUnsafe?.start_param;
-
   const u=tg.initDataUnsafe?.user;
   if(u){
     uid=u.id;
     document.getElementById('id-chip').textContent='ID: '+uid;
     document.getElementById('my-id').textContent=uid;
     document.getElementById('ref-link').textContent=`https://t.me/${BOT}?start=${uid}`;
-
-    // Load user
-    const res=await fetch(`${SB}/rest/v1/users?telegram_id=eq.${uid}`,{
+    const res=await fetch(`${SB}/rest/v1/users?telegram_id=eq.${uid}&select=*`,{
       headers:{'apikey':SK,'Authorization':'Bearer '+SK}
     });
     const d=await res.json();
-
     if(d.length===0){
-      // New user
       await fetch(`${SB}/rest/v1/users`,{
         method:'POST',
         headers:{'Content-Type':'application/json','apikey':SK,'Authorization':'Bearer '+SK},
-        body:JSON.stringify({telegram_id:uid,username:u.username||'',coins:0,ads_watched:0,tasks_done:0,refs:0,referred_by:startParam||null})
+        body:JSON.stringify({telegram_id:uid,username:u.username||'',coins:0,ads_watched:0,tasks_done:0,refs:0,referred_by:startParam||null,is_member:false,channel_bonus:false})
       });
-
-      // Give referral bonus to referrer
+      // إحالة فورية لما حد جديد يفتح البوت
       if(startParam && startParam!=uid){
-        const rr=await fetch(`${SB}/rest/v1/users?telegram_id=eq.${startParam}`,{
+        const rr=await fetch(`${SB}/rest/v1/users?telegram_id=eq.${startParam}&select=*`,{
           headers:{'apikey':SK,'Authorization':'Bearer '+SK}
         });
         const rd=await rr.json();
         if(rd.length>0){
-          const newCoins=(rd[0].coins||0)+100;
-          const newRefs=(rd[0].refs||0)+1;
           await fetch(`${SB}/rest/v1/users?telegram_id=eq.${startParam}`,{
             method:'PATCH',
             headers:{'Content-Type':'application/json','apikey':SK,'Authorization':'Bearer '+SK},
-            body:JSON.stringify({coins:newCoins,refs:newRefs})
+            body:JSON.stringify({coins:(rd[0].coins||0)+100,refs:(rd[0].refs||0)+1})
           });
         }
       }
-    }else{
+    } else {
       coins=d[0].coins||0;
       ads=d[0].ads_watched||0;
       tasks=d[0].tasks_done||0;
       refs=d[0].refs||0;
+      channelDone=d[0].channel_bonus||false;
+      if(channelDone) document.getElementById('tk-ch').classList.add('done');
       updCoins();updAds();
     }
   }
   initTicker();
+
+  // زر تحقق من الاشتراك
+  const tkCh=document.getElementById('tk-ch');
+  tkCh.onclick=async function(){
+    if(channelDone) return;
+    window.Telegram.WebApp.openLink(CHANNEL);
+    setTimeout(()=>{
+      // بعد ما يفتح القناة يظهر زر التحقق
+      if(!document.getElementById('verify-btn')){
+        const btn=document.createElement('button');
+        btn.id='verify-btn';
+        btn.className='btn btn-gold';
+        btn.style='margin-top:10px;width:calc(100% - 28px);position:fixed;bottom:75px;left:14px;z-index:200';
+        btn.textContent='✅ تحقق من اشتراكي';
+        btn.onclick=verifyChannel;
+        document.body.appendChild(btn);
+        setTimeout(()=>{
+          const b=document.getElementById('verify-btn');
+          if(b)b.remove();
+        },30000);
+      }
+    },1500);
+  };
 }
 
 init();
