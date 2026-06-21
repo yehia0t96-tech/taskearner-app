@@ -193,6 +193,7 @@ const SK='sb_publishable_yyThqbzPOCoqrAcDmY60gw_-0QZSzJt';
 const RATE=0.0001;
 const CHANNEL='https://t.me/gxhxd';
 const BOT='earntaskpro_bot';
+const VERCEL='https://taskearnbot.vercel.app';
 let coins=0,uid=null,ads=0,refs=0,tasks=0,lang='ar';
 let channelDone=false,shareDone=false;
 
@@ -297,15 +298,13 @@ async function verifyChannel(){
   }
   toast(lang==='ar'?'⏳ جاري التحقق...':'⏳ Checking...');
   try{
-    const res=await fetch(`${SB}/rest/v1/users?telegram_id=eq.${uid}&select=is_member,channel_bonus`,{
-      headers:{'apikey':SK,'Authorization':'Bearer '+SK}
-    });
+    const res=await fetch(`${VERCEL}/api/verify?uid=${uid}`);
     const d=await res.json();
-    if(d.length>0 && d[0].channel_bonus){
+    if(d.ok){
       channelDone=true;
-      coins+=50;tasks++;
+      if(d.coins) coins=d.coins;
+      tasks++;
       updCoins();
-      await save();
       document.getElementById('tk-ch').classList.add('done');
       const vb=document.getElementById('verify-btn');
       if(vb)vb.remove();
@@ -314,7 +313,7 @@ async function verifyChannel(){
       toast(lang==='ar'?'❌ لسه مشتركتش! اشترك الأول':'❌ Not subscribed yet!');
     }
   }catch(e){
-    toast(lang==='ar'?'خطأ في التحقق':'Verify error');
+    toast(lang==='ar'?'❌ خطأ في التحقق':'❌ Verify error');
   }
 }
 
@@ -419,7 +418,7 @@ async function init(){
           const btn=document.createElement('button');
           btn.id='verify-btn';
           btn.className='btn btn-gold';
-          btn.style='margin-top:10px;width:calc(100% - 28px);position:fixed;bottom:75px;left:14px;z-index:200';
+          btn.style='width:calc(100% - 28px);position:fixed;bottom:75px;left:14px;z-index:200;padding:14px;border-radius:13px;font-size:14px;font-weight:700;cursor:pointer;border:none;';
           btn.textContent='✅ تحقق من اشتراكي';
           btn.onclick=verifyChannel;
           document.body.appendChild(btn);
