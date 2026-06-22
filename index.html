@@ -276,7 +276,7 @@ async function watchAd(){
   btn.innerHTML='⏳ ...';
   try{
     if(window.Adsgram){
-      const AdController=window.Adsgram.init({blockId:'rewarded-35884'});
+      const AdController=window.Adsgram.init({blockId:'35884'});
       await AdController.show();
     }else{
       await new Promise(r=>setTimeout(r,2000));
