@@ -6,6 +6,7 @@
 <title>TaskEarn</title>
 <script src="https://telegram.org/js/telegram-web-app.js"></script>
 <script src="https://sad.adsgram.ai/js/sad.min.js"></script>
+<script src="https://cdn.monetag.com/tag.min.js" data-zone="3382238" async></script>
 <style>
 *{margin:0;padding:0;box-sizing:border-box}
 body{font-family:Arial,sans-serif;background:#0e0e0e;color:#fff;min-height:100vh;overflow-x:hidden}
@@ -286,7 +287,20 @@ async function watchAd(){
     await save();
     toast('🎉 +3 '+TX[lang].pts);
   }catch(e){
-    toast(lang==='ar'?'⚠️ لا يوجد إعلان الآن':'⚠️ No ad available');
+    // لو مفيش Adsgram جرب Monetag
+    try{
+      if(window.monetag){
+        await window.monetag.show(11189425);
+        coins+=3;ads++;
+        updCoins();updAds();
+        await save();
+        toast('🎉 +3 '+TX[lang].pts);
+      }else{
+        toast(lang==='ar'?'⚠️ لا يوجد إعلان الآن':'⚠️ No ad available');
+      }
+    }catch(e2){
+      toast(lang==='ar'?'⚠️ لا يوجد إعلان الآن':'⚠️ No ad available');
+    }
   }
   btn.disabled=false;
   btn.innerHTML='📺 <span>'+TX[lang].watch+'</span>';
