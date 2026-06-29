@@ -1,2445 +1,545 @@
 <!DOCTYPE html>
 <html lang="ar" dir="rtl">
 <head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=no, viewport-fit=cover">
-    <title>TaskEarn ⚡ FIFA CUP</title>
-    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;600;700;800;900&display=swap" rel="stylesheet">
-    <script src="https://telegram.org/js/telegram-web-app.js">
-    </script>
-    <script src="https://unpkg.com/@tonconnect/ui@latest/dist/tonconnect-ui.min.js">
-    </script>
-    <script src="https://sad.adsgram.ai/js/sad.min.js">
-    </script>
-    <style>
-        :root {
-            --bg: #0e0e12;
-            --card: #16181f;
-            --card2: #1a1c25;
-            --text: #eaeaea;
-            --hint: #8a8fa0;
-            --neon: #00e676;
-            --neon-glow: rgba(0, 230, 118, 0.5);
-            --neon-soft: rgba(0, 230, 118, 0.2);
-            --gold: #ffd700;
-            --gold-glow: rgba(255, 215, 0, 0.5);
-            --danger: #ff4d6d;
-            --danger-glow: rgba(255, 77, 109, 0.45);
-            --radius-sm: 10px;
-            --radius: 14px;
-            --radius-lg: 18px;
-            --radius-xl: 24px;
-            --nav-height: 80px;
-            --font: 'Inter', -apple-system, BlinkMacSystemFont, 'Segoe UI', 'Noto Sans Arabic', sans-serif;
-            --ease: 0.25s cubic-bezier(0.4, 0, 0.2, 1);
-            --ease-bounce: 0.4s cubic-bezier(0.34, 1.56, 0.64, 1);
-        }
-        * {
-            margin: 0;
-            padding: 0;
-            box-sizing: border-box;
-            -webkit-tap-highlight-color: transparent;
-            -webkit-user-select: none;
-            user-select: none;
-        }
-        body {
-            font-family: var(--font);
-            background: var(--bg);
-            color: var(--text);
-            min-height: 100vh;
-            min-height: 100dvh;
-            overflow-x: hidden;
-            -webkit-font-smoothing: antialiased;
-            background-image: radial-gradient(ellipse at 30% 5%, rgba(0, 230, 118, 0.07) 0%, transparent 55%),
-                radial-gradient(ellipse at 70% 90%, rgba(255, 215, 0, 0.05) 0%, transparent 55%),
-                radial-gradient(ellipse at 50% 50%, rgba(0, 0, 0, 0.5) 0%, transparent 100%);
-            background-attachment: fixed;
-        }
-        .glass {
-            background: rgba(22, 24, 31, 0.7);
-            backdrop-filter: blur(18px) saturate(180%);
-            -webkit-backdrop-filter: blur(18px) saturate(180%);
-            border: 1px solid rgba(255, 255, 255, 0.06);
-            transform: translateZ(0);
-        }
-        .glass-card {
-            background: var(--card);
-            border: 1px solid rgba(255, 255, 255, 0.05);
-            border-radius: var(--radius-lg);
-            transform: translateZ(0);
-            transition: border-color var(--ease);
-        }
-        .glass-nav {
-            background: rgba(14, 14, 18, 0.92);
-            backdrop-filter: blur(28px) saturate(200%);
-            -webkit-backdrop-filter: blur(28px) saturate(200%);
-            border-top: 1px solid rgba(255, 255, 255, 0.06);
-            transform: translateZ(0);
-        }
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no, viewport-fit=cover">
+  <title>TaskEarn ⚡ FIFA CUP</title>
+  <link href="https://fonts.googleapis.com/css2?family=Inter:opsz,wght@14..32,400;14..32,500;14..32,600;14..32,700;14..32,800;14..32,900&display=swap" rel="stylesheet">
+  <script src="https://telegram.org/js/telegram-web-app.js"></script>
+  <script src="https://unpkg.com/@tonconnect/ui@latest/dist/tonconnect-ui.min.js"></script>
+  <script src="https://sad.adsgram.ai/js/sad.min.js"></script>
+  <style>
+    :root {
+      --bg: #0e0e12;
+      --card: #16181f;
+      --card2: #1a1c25;
+      --text: #eaeaea;
+      --hint: #8a8fa0;
+      --neon: #00e676;
+      --neon-glow: rgba(0, 230, 118, 0.55);
+      --neon-soft: rgba(0, 230, 118, 0.25);
+      --gold: #ffd700;
+      --gold-glow: rgba(255, 215, 0, 0.5);
+      --danger: #ff4d6d;
+      --danger-glow: rgba(255, 77, 109, 0.45);
+      --blue-accent: #00b0ff;
+      --blue-glow: rgba(0, 176, 255, 0.5);
+      --radius-sm: 10px;
+      --radius: 14px;
+      --radius-lg: 18px;
+      --radius-xl: 24px;
+      --nav-height: 82px;
+      --font: 'Inter', -apple-system, BlinkMacSystemFont, 'Segoe UI', 'Noto Sans Arabic', sans-serif;
+      --ease: 0.25s cubic-bezier(0.4, 0, 0.2, 1);
+      --ease-bounce: 0.4s cubic-bezier(0.34, 1.56, 0.64, 1);
+    }
+    * { margin:0; padding:0; box-sizing:border-box; -webkit-tap-highlight-color:transparent; -webkit-user-select:none; user-select:none; }
+    body {
+      font-family: var(--font);
+      background: var(--bg);
+      color: var(--text);
+      min-height: 100vh; min-height: 100dvh;
+      overflow-x: hidden;
+      -webkit-font-smoothing: antialiased;
+      background-image: radial-gradient(ellipse at 30% 5%, rgba(0,230,118,0.07) 0%, transparent 55%),
+        radial-gradient(ellipse at 70% 90%, rgba(255,215,0,0.05) 0%, transparent 55%),
+        radial-gradient(ellipse at 50% 50%, rgba(0,0,0,0.5) 0%, transparent 100%);
+      background-attachment: fixed;
+    }
+    .glass-card {
+      background: var(--card);
+      border: 1px solid rgba(255,255,255,0.05);
+      border-radius: var(--radius-lg);
+      transform: translateZ(0);
+    }
+    .glass-nav {
+      background: rgba(14,14,18,0.94);
+      backdrop-filter: blur(28px) saturate(200%);
+      -webkit-backdrop-filter: blur(28px) saturate(200%);
+      border-top: 1px solid rgba(255,255,255,0.06);
+      transform: translateZ(0);
+    }
+    @keyframes fadeInUp { from { opacity:0; transform:translateY(14px); } to { opacity:1; transform:translateY(0); } }
+    @keyframes float { 0%,100% { transform:translateY(0); } 50% { transform:translateY(-10px); } }
+    @keyframes pulseNeon { 0%,100% { box-shadow:0 0 20px var(--neon-glow),0 0 50px rgba(0,230,118,0.18); } 50% { box-shadow:0 0 35px var(--neon-glow),0 0 90px rgba(0,230,118,0.35); } }
+    @keyframes pulseGold { 0%,100% { box-shadow:0 0 15px var(--gold-glow),0 0 40px rgba(255,215,0,0.15); } 50% { box-shadow:0 0 30px var(--gold-glow),0 0 70px rgba(255,215,0,0.3); } }
+    @keyframes shake { 0%,100% { transform:translateX(0); } 15% { transform:translateX(-6px); } 30% { transform:translateX(6px); } 45% { transform:translateX(-4px); } 60% { transform:translateX(4px); } 75% { transform:translateX(-2px); } 90% { transform:translateX(2px); } }
+    @keyframes burstWin { 0% { transform:scale(1); opacity:1; } 40% { transform:scale(1.8); opacity:0.7; } 100% { transform:scale(0.3); opacity:0; } }
+    @keyframes notifIn { from { top:-70px; opacity:0; transform:translateX(-50%) scale(0.85); } to { top:16px; opacity:1; transform:translateX(-50%) scale(1); } }
+    @keyframes notifOut { from { top:16px; opacity:1; transform:translateX(-50%) scale(1); } to { top:-70px; opacity:0; transform:translateX(-50%) scale(0.85); } }
+    @keyframes coinPop { 0% { transform:scale(1); } 40% { transform:scale(1.5); } 100% { transform:scale(1); } }
+    @keyframes slideUpModal { from { transform:translate(-50%,20px); opacity:0; } to { transform:translate(-50%,0); opacity:1; } }
+    .coin-pop { animation: coinPop 0.4s ease-out; }
+    .shake-anim { animation: shake 0.5s ease-out; }
 
-        @keyframes fadeInUp {
-            from {
-                opacity: 0;
-                transform: translateY(14px);
-            }
-            to {
-                opacity: 1;
-                transform: translateY(0);
-            }
-        }
-        @keyframes float {
-            0%,
-            100% {
-                transform: translateY(0);
-            }
-            50% {
-                transform: translateY(-10px);
-            }
-        }
-        @keyframes pulseNeon {
-            0%,
-            100% {
-                box-shadow: 0 0 20px var(--neon-glow), 0 0 50px rgba(0, 230, 118, 0.18);
-            }
-            50% {
-                box-shadow: 0 0 35px var(--neon-glow), 0 0 90px rgba(0, 230, 118, 0.35);
-            }
-        }
-        @keyframes pulseGold {
-            0%,
-            100% {
-                box-shadow: 0 0 15px var(--gold-glow), 0 0 40px rgba(255, 215, 0, 0.15);
-            }
-            50% {
-                box-shadow: 0 0 30px var(--gold-glow), 0 0 70px rgba(255, 215, 0, 0.3);
-            }
-        }
-        @keyframes borderShift {
-            0% {
-                border-color: rgba(0, 230, 118, 0.2);
-            }
-            33% {
-                border-color: rgba(255, 215, 0, 0.2);
-            }
-            66% {
-                border-color: rgba(0, 200, 100, 0.2);
-            }
-            100% {
-                border-color: rgba(0, 230, 118, 0.2);
-            }
-        }
-        @keyframes shake {
-            0%,
-            100% {
-                transform: translateX(0);
-            }
-            15% {
-                transform: translateX(-6px);
-            }
-            30% {
-                transform: translateX(6px);
-            }
-            45% {
-                transform: translateX(-4px);
-            }
-            60% {
-                transform: translateX(4px);
-            }
-            75% {
-                transform: translateX(-2px);
-            }
-            90% {
-                transform: translateX(2px);
-            }
-        }
-        @keyframes burstWin {
-            0% {
-                transform: scale(1);
-                opacity: 1;
-            }
-            40% {
-                transform: scale(1.8);
-                opacity: 0.7;
-            }
-            100% {
-                transform: scale(0.3);
-                opacity: 0;
-            }
-        }
-        @keyframes notifIn {
-            from {
-                top: -70px;
-                opacity: 0;
-                transform: translateX(-50%) scale(0.85);
-            }
-            to {
-                top: 16px;
-                opacity: 1;
-                transform: translateX(-50%) scale(1);
-            }
-        }
-        @keyframes notifOut {
-            from {
-                top: 16px;
-                opacity: 1;
-                transform: translateX(-50%) scale(1);
-            }
-            to {
-                top: -70px;
-                opacity: 0;
-                transform: translateX(-50%) scale(0.85);
-            }
-        }
-        @keyframes coinPop {
-            0% {
-                transform: scale(1);
-            }
-            40% {
-                transform: scale(1.5);
-            }
-            100% {
-                transform: scale(1);
-            }
-        }
-        @keyframes progressFill {
-            from {
-                width: 0%;
-            }
-        }
-        @keyframes sparkle {
-            0%,
-            100% {
-                opacity: 0;
-                transform: scale(0) rotate(0);
-            }
-            50% {
-                opacity: 1;
-                transform: scale(1) rotate(180deg);
-            }
-        }
-        @keyframes tickerScroll {
-            0% {
-                transform: translateX(0);
-            }
-            100% {
-                transform: translateX(-50%);
-            }
-        }
-        .coin-pop {
-            animation: coinPop 0.4s ease-out;
-        }
-        .shake-anim {
-            animation: shake 0.5s ease-out;
-        }
+    .page {
+      display: none;
+      padding: 12px 14px;
+      padding-bottom: calc(var(--nav-height) + 24px);
+      animation: fadeInUp 0.3s ease;
+      max-width: 480px;
+      margin: 0 auto;
+    }
+    .page.active { display: block; }
 
-        .page {
-            display: none;
-            padding: 12px 14px;
-            padding-bottom: calc(var(--nav-height) + 20px);
-            animation: fadeInUp 0.3s ease;
-            max-width: 480px;
-            margin: 0 auto;
-        }
-        .page.active {
-            display: block;
-        }
+    .topbar {
+      display: flex; justify-content: space-between; align-items: center;
+      padding: 14px 18px; margin-bottom: 10px; border-radius: var(--radius-lg);
+    }
+    .logo { font-size:19px; font-weight:800; letter-spacing:-0.3px; display:flex; align-items:center; gap:6px; }
+    .logo .bolt { display:inline-block; animation: float 2.5s ease-in-out infinite; filter:drop-shadow(0 0 10px var(--neon-glow)); font-size:22px; }
+    .logo .txt { background:linear-gradient(135deg,#00e676,#00c853,#ffd700); -webkit-background-clip:text; -webkit-text-fill-color:transparent; background-clip:text; font-weight:900; }
 
-        .topbar {
-            display: flex;
-            justify-content: space-between;
-            align-items: center;
-            padding: 14px 18px;
-            margin-bottom: 10px;
-            border-radius: var(--radius-lg);
-        }
-        .logo {
-            font-size: 19px;
-            font-weight: 800;
-            letter-spacing: -0.3px;
-            display: flex;
-            align-items: center;
-            gap: 6px;
-        }
-        .logo .bolt {
-            display: inline-block;
-            animation: float 2.5s ease-in-out infinite;
-            filter: drop-shadow(0 0 10px var(--neon-glow));
-            font-size: 22px;
-        }
-        .logo .txt {
-            background: linear-gradient(135deg, #00e676, #00c853, #ffd700);
-            -webkit-background-clip: text;
-            -webkit-text-fill-color: transparent;
-            background-clip: text;
-            font-weight: 900;
-        }
-        .id-chip {
-            font-size: 11px;
-            padding: 6px 14px;
-            border-radius: 20px;
-            color: var(--hint);
-            letter-spacing: 0.3px;
-            font-weight: 500;
-            background: rgba(22, 24, 31, 0.6);
-            backdrop-filter: blur(10px);
-        }
+    .btn {
+      width:100%; padding:14px; border-radius:var(--radius); font-size:14px; font-weight:700; cursor:pointer;
+      margin-top:8px; transition:all var(--ease); border:none; letter-spacing:0.3px;
+      transform:translateZ(0); will-change:transform; position:relative; overflow:hidden;
+    }
+    .btn:active { transform:scale(0.95); transition:transform 0.1s ease; }
+    .btn-neon { color:#000; background:var(--neon); box-shadow:0 4px 22px var(--neon-glow); font-weight:800; }
+    .btn-neon:active { box-shadow:0 0 40px var(--neon-glow),0 0 80px rgba(0,230,118,0.4); }
+    .btn-gold { color:#000; background:linear-gradient(135deg,#ffd700,#ffab00); box-shadow:0 4px 20px var(--gold-glow); font-weight:800; }
+    .btn-outline { background:transparent; border:2px solid var(--neon); color:var(--neon); font-weight:700; }
+    .btn-blue { color:#fff; background:var(--blue-accent); box-shadow:0 4px 20px var(--blue-glow); font-weight:800; }
+    .btn:disabled { opacity:0.45; pointer-events:none; filter:grayscale(30%); }
 
-        .hero {
-            text-align: center;
-            padding: 8px 16px 2px;
-        }
-        .coin-wrap {
-            display: inline-block;
-            animation: float 3s ease-in-out infinite;
-        }
-        .coin-ico {
-            font-size: 72px;
-            filter: drop-shadow(0 8px 20px var(--gold-glow));
-            display: block;
-            transform: translateZ(0);
-        }
-        .coin-num {
-            font-size: 52px;
-            font-weight: 900;
-            letter-spacing: -2px;
-            margin-top: 2px;
-            background: linear-gradient(180deg, #fff 0%, rgba(255, 215, 0, 0.8) 100%);
-            -webkit-background-clip: text;
-            -webkit-text-fill-color: transparent;
-            background-clip: text;
-            transition: all 0.3s ease;
-        }
-        .coin-usdt {
-            font-size: 12px;
-            color: var(--hint);
-            margin-top: 2px;
-            letter-spacing: 0.5px;
-        }
-        .prog-wrap {
-            margin: 12px 20px 0;
-            height: 6px;
-            border-radius: 10px;
-            overflow: hidden;
-            background: rgba(255, 255, 255, 0.05);
-        }
-        .prog {
-            height: 100%;
-            border-radius: 10px;
-            background: linear-gradient(90deg, #00e676, #ffd700);
-            transition: width 0.7s cubic-bezier(0.4, 0, 0.2, 1);
-            box-shadow: 0 0 15px var(--neon-glow);
-        }
+    .nav {
+      position:fixed; bottom:0; left:0; right:0; display:flex; justify-content:space-around; align-items:flex-end;
+      padding:6px 4px max(10px,env(safe-area-inset-bottom,10px)); z-index:100; max-width:480px; margin:0 auto;
+      border-radius:var(--radius-xl) var(--radius-xl) 0 0;
+    }
+    .nb {
+      background:none; border:none; color:var(--hint); font-size:10px; cursor:pointer;
+      display:flex; flex-direction:column; align-items:center; gap:3px; padding:6px 10px;
+      transition:all var(--ease); border-radius:var(--radius); position:relative;
+      transform:translateZ(0); will-change:transform; flex:1; text-align:center;
+    }
+    .nb .ic { font-size:21px; transition:all var(--ease); }
+    .nb.on { color:var(--neon); font-weight:600; }
+    .nb.on .ic { filter:drop-shadow(0 0 10px var(--neon-glow)); transform:scale(1.1); }
+    .nb.on::after { content:''; position:absolute; top:-4px; width:20px; height:3px; border-radius:4px; background:var(--neon); box-shadow:0 0 12px var(--neon-glow); }
 
-        .stats {
-            display: grid;
-            grid-template-columns: repeat(3, 1fr);
-            gap: 8px;
-            padding: 8px 14px;
-        }
-        .stat {
-            text-align: center;
-            padding: 14px 6px;
-            border-radius: var(--radius);
-            transition: all var(--ease);
-            background: var(--card);
-            border: 1px solid rgba(255, 255, 255, 0.04);
-        }
-        .stat-n {
-            font-size: 22px;
-            font-weight: 800;
-            letter-spacing: -0.5px;
-            color: var(--neon);
-        }
-        .stat-l {
-            font-size: 10px;
-            color: var(--hint);
-            margin-top: 4px;
-            text-transform: uppercase;
-            letter-spacing: 0.5px;
-        }
+    .nav-center-wrap { flex:1.3; display:flex; justify-content:center; align-items:center; position:relative; margin-top:-24px; }
+    .nav-center {
+      width:60px; height:60px; border-radius:50%; background:linear-gradient(135deg,#00e676,#00c853);
+      border:3px solid rgba(0,0,0,0.4); cursor:pointer; display:flex; align-items:center; justify-content:center;
+      font-size:28px; color:#000; box-shadow:0 0 35px var(--neon-glow),0 0 80px rgba(0,230,118,0.4),0 8px 30px rgba(0,0,0,0.5);
+      transition:all var(--ease-bounce); transform:translateZ(0); will-change:transform; position:relative; z-index:10;
+      animation: pulseNeon 2.5s infinite;
+    }
+    .nav-center:active { transform:scale(0.88); box-shadow:0 0 55px var(--neon-glow),0 0 110px rgba(0,230,118,0.5); transition:transform 0.1s ease; }
+    .nav-center.on { animation: pulseNeon 1.2s infinite; }
+    .nav-center-label { position:absolute; bottom:-18px; font-size:9px; color:var(--neon); font-weight:700; white-space:nowrap; letter-spacing:0.5px; text-shadow:0 0 8px var(--neon-glow); }
 
-        .card {
-            padding: 16px;
-            margin-bottom: 10px;
-            border-radius: var(--radius-lg);
-            background: var(--card);
-            border: 1px solid rgba(255, 255, 255, 0.04);
-            animation: borderShift 5s infinite;
-        }
-        .card-h {
-            font-size: 14px;
-            font-weight: 700;
-            margin-bottom: 12px;
-            display: flex;
-            align-items: center;
-            gap: 8px;
-            letter-spacing: 0.2px;
-        }
-        .card-h .ico {
-            font-size: 20px;
-        }
+    .balance-card { padding:20px 18px; text-align:center; margin-bottom:12px; border-radius:var(--radius-xl); background:linear-gradient(145deg,rgba(0,230,118,0.08) 0%,rgba(22,24,31,0.9) 50%); border:1px solid rgba(0,230,118,0.2); }
+    .balance-amount { font-size:48px; font-weight:900; letter-spacing:-2px; background:linear-gradient(180deg,#fff 0%,#00e676 100%); -webkit-background-clip:text; -webkit-text-fill-color:transparent; background-clip:text; margin:6px 0; }
+    .home-actions { display:grid; grid-template-columns:1fr 1fr; gap:10px; margin:12px 0; }
+    .shield-card { display:flex; align-items:center; gap:12px; padding:16px; border-radius:var(--radius-lg); background:rgba(0,230,118,0.05); border:1px solid rgba(0,230,118,0.15); font-size:12px; color:var(--hint); }
+    .shield-icon { font-size:34px; filter:drop-shadow(0 0 10px var(--neon-glow)); }
 
-        .btn {
-            width: 100%;
-            padding: 14px;
-            border-radius: var(--radius);
-            font-size: 14px;
-            font-weight: 700;
-            cursor: pointer;
-            margin-top: 8px;
-            transition: all var(--ease);
-            border: none;
-            letter-spacing: 0.3px;
-            transform: translateZ(0);
-            will-change: transform;
-            position: relative;
-            overflow: hidden;
-        }
-        .btn:active {
-            transform: scale(0.95);
-            transition: transform 0.1s ease;
-        }
-        .btn-neon {
-            color: #000;
-            background: var(--neon);
-            box-shadow: 0 4px 22px var(--neon-glow);
-            font-weight: 800;
-        }
-        .btn-neon:active {
-            box-shadow: 0 0 40px var(--neon-glow), 0 0 80px rgba(0, 230, 118, 0.4);
-        }
-        .btn-gold {
-            color: #000;
-            background: linear-gradient(135deg, #ffd700, #ffab00);
-            box-shadow: 0 4px 20px var(--gold-glow);
-            font-weight: 800;
-        }
-        .btn-ghost {
-            color: var(--hint);
-            background: transparent;
-            border: 1px solid rgba(255, 255, 255, 0.1);
-        }
-        .btn-danger {
-            color: #fff;
-            background: var(--danger);
-            box-shadow: 0 4px 20px var(--danger-glow);
-            font-weight: 800;
-        }
-        .btn:disabled {
-            opacity: 0.45;
-            pointer-events: none;
-            filter: grayscale(30%);
-        }
+    .tabs { display:flex; background:var(--card); border-radius:var(--radius); padding:4px; margin-bottom:12px; border:1px solid rgba(255,255,255,0.05); }
+    .tab { flex:1; padding:10px 4px; text-align:center; font-size:12px; font-weight:600; cursor:pointer; border-radius:var(--radius-sm); transition:all var(--ease); color:var(--hint); }
+    .tab.active { background:var(--neon); color:#000; box-shadow:0 4px 18px var(--neon-glow); }
+    .tab-content { display:none; }
+    .tab-content.active { display:block; }
 
-        /* شريط التنقل السفلي */
-        .nav {
-            position: fixed;
-            bottom: 0;
-            left: 0;
-            right: 0;
-            display: flex;
-            justify-content: space-around;
-            align-items: flex-end;
-            padding: 6px 4px max(10px, env(safe-area-inset-bottom, 10px));
-            z-index: 100;
-            max-width: 480px;
-            margin: 0 auto;
-            border-radius: var(--radius-xl) var(--radius-xl) 0 0;
-        }
-        .nb {
-            background: none;
-            border: none;
-            color: var(--hint);
-            font-size: 10px;
-            cursor: pointer;
-            display: flex;
-            flex-direction: column;
-            align-items: center;
-            gap: 3px;
-            padding: 6px 10px;
-            transition: all var(--ease);
-            border-radius: var(--radius);
-            position: relative;
-            transform: translateZ(0);
-            will-change: transform;
-            flex: 1;
-            text-align: center;
-        }
-        .nb .ic {
-            font-size: 21px;
-            transition: all var(--ease);
-            transform: translateZ(0);
-        }
-        .nb.on {
-            color: var(--neon);
-            font-weight: 600;
-        }
-        .nb.on .ic {
-            filter: drop-shadow(0 0 10px var(--neon-glow));
-            transform: scale(1.1);
-        }
-        .nb.on::after {
-            content: '';
-            position: absolute;
-            top: -4px;
-            width: 20px;
-            height: 3px;
-            border-radius: 4px;
-            background: var(--neon);
-            box-shadow: 0 0 12px var(--neon-glow);
-        }
-        /* الزر الأوسط الدائري */
-        .nav-center-wrap {
-            flex: 1.3;
-            display: flex;
-            justify-content: center;
-            align-items: center;
-            position: relative;
-            margin-top: -22px;
-        }
-        .nav-center {
-            width: 58px;
-            height: 58px;
-            border-radius: 50%;
-            background: linear-gradient(135deg, #00e676, #00c853);
-            border: 3px solid rgba(0, 0, 0, 0.4);
-            cursor: pointer;
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            font-size: 26px;
-            color: #000;
-            box-shadow: 0 0 30px var(--neon-glow), 0 0 70px rgba(0, 230, 118, 0.35), 0 8px 30px rgba(0, 0, 0, 0.5);
-            transition: all var(--ease-bounce);
-            transform: translateZ(0);
-            will-change: transform;
-            position: relative;
-            z-index: 10;
-            animation: pulseNeon 2.5s infinite;
-        }
-        .nav-center:active {
-            transform: scale(0.88);
-            box-shadow: 0 0 50px var(--neon-glow), 0 0 100px rgba(0, 230, 118, 0.5);
-            transition: transform 0.1s ease;
-        }
-        .nav-center.on {
-            animation: pulseNeon 1.2s infinite;
-            box-shadow: 0 0 40px var(--neon-glow), 0 0 90px rgba(0, 230, 118, 0.45), 0 8px 35px rgba(0, 0, 0, 0.6);
-        }
-        .nav-center-label {
-            position: absolute;
-            bottom: -16px;
-            font-size: 9px;
-            color: var(--neon);
-            font-weight: 700;
-            white-space: nowrap;
-            letter-spacing: 0.5px;
-            text-align: center;
-            text-shadow: 0 0 8px var(--neon-glow);
-        }
+    .ad-watch-card { padding:20px; text-align:center; border-radius:var(--radius-xl); background:radial-gradient(ellipse at center, rgba(0,230,118,0.1) 0%, var(--card) 70%); border:1px solid rgba(0,230,118,0.2); margin-bottom:10px; }
+    .ad-counter { font-size:32px; font-weight:900; color:var(--neon); margin:8px 0; }
+    .task-row { display:flex; justify-content:space-between; align-items:center; padding:14px; border-radius:var(--radius); margin-bottom:6px; background:var(--card); border:1px solid rgba(255,255,255,0.03); }
+    .task-info { display:flex; align-items:center; gap:12px; }
+    .task-icon { font-size:28px; }
+    .task-arrow { width:36px; height:36px; border-radius:50%; background:var(--neon); color:#000; display:flex; align-items:center; justify-content:center; font-weight:700; font-size:18px; cursor:pointer; transition:all var(--ease); box-shadow:0 0 12px var(--neon-soft); }
+    .task-arrow:active { transform:scale(0.9); }
+    .task-arrow.done { background:var(--hint); box-shadow:none; pointer-events:none; }
 
-        /* صفحة اللعبة */
-        .game-header {
-            display: flex;
-            justify-content: space-between;
-            align-items: center;
-            padding: 10px 16px;
-            margin-bottom: 6px;
-            border-radius: var(--radius-lg);
-        }
-        .game-title {
-            font-size: 20px;
-            font-weight: 900;
-            letter-spacing: -0.5px;
-            background: linear-gradient(135deg, #00e676, #ffd700);
-            -webkit-background-clip: text;
-            -webkit-text-fill-color: transparent;
-            background-clip: text;
-            display: flex;
-            align-items: center;
-            gap: 8px;
-        }
-        .game-balance {
-            font-size: 14px;
-            font-weight: 700;
-            color: var(--gold);
-            background: rgba(255, 215, 0, 0.1);
-            padding: 8px 14px;
-            border-radius: 20px;
-            border: 1px solid rgba(255, 215, 0, 0.25);
-            text-shadow: 0 0 8px var(--gold-glow);
-            display: flex;
-            align-items: center;
-            gap: 5px;
-        }
-        .stadium {
-            position: relative;
-            text-align: center;
-            padding: 20px 16px 16px;
-            margin: 8px 0 12px;
-            border-radius: var(--radius-xl);
-            background: radial-gradient(ellipse at center, rgba(0, 230, 118, 0.06) 0%, transparent 70%),
-                var(--card);
-            border: 1px solid rgba(255, 255, 255, 0.05);
-            overflow: hidden;
-        }
-        .stadium-glow {
-            position: absolute;
-            top: 50%;
-            left: 50%;
-            transform: translate(-50%, -50%);
-            width: 140px;
-            height: 140px;
-            border-radius: 50%;
-            background: radial-gradient(circle, rgba(0, 230, 118, 0.15) 0%, transparent 70%);
-            pointer-events: none;
-            z-index: 0;
-        }
-        .football {
-            font-size: 80px;
-            display: inline-block;
-            position: relative;
-            z-index: 2;
-            filter: drop-shadow(0 0 30px var(--neon-glow)) drop-shadow(0 10px 25px rgba(0, 0, 0, 0.6));
-            animation: float 2.8s ease-in-out infinite;
-            transition: all 0.3s ease;
-        }
-        .football.win {
-            animation: burstWin 0.7s ease-out forwards;
-            filter: drop-shadow(0 0 50px var(--neon-glow)) drop-shadow(0 0 100px rgba(0, 230, 118, 0.6));
-        }
-        .football.lose {
-            animation: shake 0.5s ease-out;
-            filter: drop-shadow(0 0 40px var(--danger-glow));
-        }
-        .result-badge {
-            position: absolute;
-            top: 50%;
-            left: 50%;
-            transform: translate(-50%, -50%) scale(0);
-            font-size: 16px;
-            font-weight: 900;
-            z-index: 5;
-            pointer-events: none;
-            transition: all 0.3s ease;
-            padding: 10px 20px;
-            border-radius: 25px;
-            letter-spacing: 1px;
-        }
-        .result-badge.show-win {
-            transform: translate(-50%, -50%) scale(1);
-            background: rgba(0, 230, 118, 0.9);
-            color: #000;
-            box-shadow: 0 0 30px var(--neon-glow);
-            animation: burstWin 1s ease-out forwards;
-            animation-delay: 0.3s;
-        }
-        .result-badge.show-lose {
-            transform: translate(-50%, -50%) scale(1);
-            background: rgba(255, 77, 109, 0.9);
-            color: #fff;
-            box-shadow: 0 0 30px var(--danger-glow);
-            animation: shake 0.5s ease-out;
-        }
+    .game-header { display:flex; justify-content:space-between; align-items:center; padding:10px 16px; margin-bottom:6px; border-radius:var(--radius-lg); }
+    .game-title { font-size:22px; font-weight:900; background:linear-gradient(135deg,#00e676,#ffd700); -webkit-background-clip:text; -webkit-text-fill-color:transparent; background-clip:text; }
+    .stadium { position:relative; text-align:center; padding:24px 16px 16px; margin:8px 0 12px; border-radius:var(--radius-xl); background:radial-gradient(ellipse at center, rgba(0,230,118,0.12) 0%, transparent 70%), var(--card); border:1px solid rgba(255,255,255,0.05); overflow:hidden; }
+    .football { font-size:80px; display:inline-block; position:relative; z-index:2; filter:drop-shadow(0 0 30px var(--neon-glow)) drop-shadow(0 10px 25px rgba(0,0,0,0.6)); animation:float 2.8s ease-in-out infinite; }
+    .football.win { animation:burstWin 0.7s ease-out forwards; filter:drop-shadow(0 0 50px var(--neon-glow)); }
+    .football.lose { animation:shake 0.5s ease-out; filter:drop-shadow(0 0 40px var(--danger-glow)); }
+    .game-progress-wrap { margin:0 8px 14px; height:22px; border-radius:12px; overflow:hidden; background:rgba(255,255,255,0.04); position:relative; display:flex; border:1px solid rgba(255,255,255,0.06); }
+    .game-prog-green { height:100%; background:linear-gradient(90deg,#00c853,#00e676); border-radius:12px 0 0 12px; transition:width 0.8s ease; width:49%; }
+    .game-prog-red { height:100%; background:linear-gradient(90deg,#ff4d6d,#ff1744); border-radius:0 12px 12px 0; transition:width 0.8s ease; width:49%; }
+    .game-prog-marker { position:absolute; top:-6px; width:8px; height:34px; border-radius:6px; background:#fff; z-index:6; box-shadow:0 0 18px rgba(255,255,255,0.8); transition:left 0.8s ease; transform:translateX(-50%); }
+    .predict-row { display:flex; gap:10px; margin:12px 0; align-items:center; justify-content:center; }
+    .btn-predict { flex:1; padding:18px 12px; border-radius:var(--radius-lg); font-size:18px; font-weight:900; cursor:pointer; border:2px solid transparent; transition:all var(--ease); }
+    .btn-low { background:rgba(0,230,118,0.15); color:var(--neon); border-color:rgba(0,230,118,0.35); }
+    .btn-low:active { background:rgba(0,230,118,0.3); box-shadow:0 0 30px var(--neon-glow); transform:scale(0.94); }
+    .btn-high { background:rgba(255,77,109,0.15); color:var(--danger); border-color:rgba(255,77,109,0.35); }
+    .btn-high:active { background:rgba(255,77,109,0.3); box-shadow:0 0 30px var(--danger-glow); transform:scale(0.94); }
+    .mid-circle { width:48px; height:48px; border-radius:50%; background:var(--card2); border:2px solid rgba(255,255,255,0.2); display:flex; align-items:center; justify-content:center; font-weight:900; font-size:16px; flex-shrink:0; }
+    .bet-section { padding:14px; border-radius:var(--radius-lg); background:var(--card); border:1px solid rgba(255,255,255,0.04); }
+    .bet-input { width:100%; padding:14px; border-radius:var(--radius); background:var(--card2); border:1px solid rgba(255,255,255,0.1); color:#fff; font-size:22px; font-weight:700; text-align:center; font-family:var(--font); margin:8px 0; }
+    .bet-quick { display:flex; gap:6px; margin-top:8px; }
+    .bet-quick-btn { flex:1; padding:12px 6px; border-radius:var(--radius-sm); font-size:13px; font-weight:700; cursor:pointer; background:var(--card2); border:1px solid rgba(255,255,255,0.08); color:var(--text); transition:all var(--ease); }
+    .bet-quick-btn:active { background:var(--neon); color:#000; transform:scale(0.93); }
 
-        /* شريط تقدم اللعبة */
-        .game-progress-wrap {
-            margin: 0 8px 14px;
-            height: 22px;
-            border-radius: 12px;
-            overflow: hidden;
-            background: rgba(255, 255, 255, 0.04);
-            position: relative;
-            border: 1px solid rgba(255, 255, 255, 0.06);
-            display: flex;
-        }
-        .game-prog-green {
-            height: 100%;
-            background: linear-gradient(90deg, #00c853, #00e676);
-            border-radius: 12px 0 0 12px;
-            transition: width 0.8s cubic-bezier(0.4, 0, 0.2, 1);
-            box-shadow: inset 0 0 12px rgba(0, 230, 118, 0.4);
-            width: 49%;
-            position: relative;
-        }
-        .game-prog-red {
-            height: 100%;
-            background: linear-gradient(90deg, #ff4d6d, #ff1744);
-            border-radius: 0 12px 12px 0;
-            transition: width 0.8s cubic-bezier(0.4, 0, 0.2, 1);
-            box-shadow: inset 0 0 12px rgba(255, 77, 109, 0.4);
-            width: 49%;
-            position: relative;
-        }
-        .game-prog-divider {
-            position: absolute;
-            top: -4px;
-            bottom: -4px;
-            left: 49%;
-            width: 3px;
-            background: #fff;
-            border-radius: 3px;
-            z-index: 5;
-            box-shadow: 0 0 10px rgba(255, 255, 255, 0.6);
-            transform: translateX(-50%);
-        }
-        .game-prog-marker {
-            position: absolute;
-            top: -6px;
-            width: 8px;
-            height: 34px;
-            border-radius: 6px;
-            background: #fff;
-            z-index: 6;
-            box-shadow: 0 0 18px rgba(255, 255, 255, 0.8);
-            transition: left 0.8s cubic-bezier(0.4, 0, 0.2, 1);
-            transform: translateX(-50%);
-        }
-        .game-labels {
-            display: flex;
-            justify-content: space-between;
-            font-size: 10px;
-            color: var(--hint);
-            padding: 2px 4px;
-            margin-bottom: 6px;
-            letter-spacing: 0.5px;
-        }
+    .invite-card { text-align:center; padding:20px; border-radius:var(--radius-xl); background:linear-gradient(145deg,rgba(0,230,118,0.1),var(--card)); border:1px solid rgba(0,230,118,0.2); margin-bottom:12px; }
+    .invite-football { font-size:60px; filter:drop-shadow(0 0 25px var(--neon-glow)); animation:float 2.8s ease-in-out infinite; }
+    .ref-link-box { display:flex; gap:8px; align-items:center; margin:12px 0; }
+    .ref-link-input { flex:1; padding:12px; border-radius:var(--radius); background:var(--card2); border:1px solid rgba(255,255,255,0.1); color:#fff; font-size:11px; font-family:monospace; }
+    .stats-row { display:grid; grid-template-columns:1fr 1fr; gap:10px; margin-top:12px; }
+    .stat-box { padding:16px; text-align:center; border-radius:var(--radius); background:var(--card); border:1px solid rgba(255,255,255,0.04); }
+    .stat-value { font-size:26px; font-weight:800; color:var(--neon); }
 
-        /* أزرار التوقع */
-        .predict-row {
-            display: flex;
-            gap: 10px;
-            margin: 12px 0;
-            align-items: center;
-            justify-content: center;
-        }
-        .btn-predict {
-            flex: 1;
-            padding: 18px 12px;
-            border-radius: var(--radius-lg);
-            font-size: 18px;
-            font-weight: 900;
-            cursor: pointer;
-            border: 2px solid transparent;
-            transition: all var(--ease);
-            transform: translateZ(0);
-            will-change: transform;
-            letter-spacing: 1px;
-            text-align: center;
-        }
-        .btn-low {
-            background: rgba(0, 230, 118, 0.15);
-            color: var(--neon);
-            border-color: rgba(0, 230, 118, 0.35);
-        }
-        .btn-low:active {
-            background: rgba(0, 230, 118, 0.3);
-            box-shadow: 0 0 30px var(--neon-glow);
-            transform: scale(0.94);
-        }
-        .btn-high {
-            background: rgba(255, 77, 109, 0.15);
-            color: var(--danger);
-            border-color: rgba(255, 77, 109, 0.35);
-        }
-        .btn-high:active {
-            background: rgba(255, 77, 109, 0.3);
-            box-shadow: 0 0 30px var(--danger-glow);
-            transform: scale(0.94);
-        }
-        .mid-circle {
-            width: 48px;
-            height: 48px;
-            min-width: 48px;
-            border-radius: 50%;
-            background: var(--card2);
-            border: 2px solid rgba(255, 255, 255, 0.2);
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            font-weight: 900;
-            font-size: 16px;
-            color: #fff;
-            flex-shrink: 0;
-        }
+    .wallet-balance { text-align:center; padding:20px; border-radius:var(--radius-xl); background:linear-gradient(145deg,rgba(255,215,0,0.08),var(--card)); border:1px solid rgba(255,215,0,0.2); margin-bottom:12px; }
 
-        /* قسم الرهان */
-        .bet-section {
-            padding: 14px;
-            border-radius: var(--radius-lg);
-            background: var(--card);
-            border: 1px solid rgba(255, 255, 255, 0.04);
-            margin-top: 6px;
-        }
-        .bet-label {
-            font-size: 12px;
-            color: var(--hint);
-            margin-bottom: 8px;
-            letter-spacing: 0.3px;
-            display: flex;
-            justify-content: space-between;
-            align-items: center;
-        }
-        .bet-input-row {
-            display: flex;
-            gap: 8px;
-            align-items: center;
-            margin-bottom: 10px;
-        }
-        .bet-input {
-            flex: 1;
-            padding: 12px 16px;
-            border-radius: var(--radius);
-            background: var(--card2);
-            border: 1px solid rgba(255, 255, 255, 0.1);
-            color: #fff;
-            font-size: 20px;
-            font-weight: 700;
-            text-align: center;
-            font-family: var(--font);
-            letter-spacing: 1px;
-            transition: all var(--ease);
-            min-width: 0;
-        }
-        .bet-input:focus {
-            outline: none;
-            border-color: var(--neon);
-            box-shadow: 0 0 15px var(--neon-soft);
-        }
-        .bet-quick {
-            display: flex;
-            gap: 6px;
-            flex-wrap: wrap;
-        }
-        .bet-quick-btn {
-            flex: 1;
-            min-width: 50px;
-            padding: 10px 6px;
-            border-radius: var(--radius-sm);
-            font-size: 12px;
-            font-weight: 700;
-            cursor: pointer;
-            border: 1px solid rgba(255, 255, 255, 0.1);
-            background: var(--card2);
-            color: var(--text);
-            transition: all var(--ease);
-            text-align: center;
-            letter-spacing: 0.5px;
-            transform: translateZ(0);
-        }
-        .bet-quick-btn:active {
-            background: var(--neon);
-            color: #000;
-            border-color: var(--neon);
-            box-shadow: 0 0 15px var(--neon-glow);
-            transform: scale(0.93);
-        }
-        .bet-quick-btn.max {
-            color: var(--gold);
-            border-color: rgba(255, 215, 0, 0.3);
-        }
-        .bet-quick-btn.min {
-            color: var(--hint);
-        }
+    .modal-overlay { position:fixed; inset:0; background:rgba(0,0,0,0.7); backdrop-filter:blur(8px); z-index:200; display:none; align-items:center; justify-content:center; }
+    .modal-overlay.active { display:flex; }
+    .modal { background:var(--card); border-radius:var(--radius-xl); padding:24px 20px; width:90%; max-width:380px; text-align:center; border:1px solid rgba(0,230,118,0.3); box-shadow:0 20px 50px rgba(0,0,0,0.8); animation:slideUpModal 0.35s ease; }
+    .modal-progress { width:100%; height:8px; background:rgba(255,255,255,0.08); border-radius:10px; margin:16px 0; overflow:hidden; }
+    .modal-progress-fill { height:100%; background:linear-gradient(90deg,#00e676,#00b0ff); border-radius:10px; transition:width 0.2s ease; box-shadow:0 0 15px var(--neon-soft); }
 
-        .game-history {
-            font-size: 10px;
-            color: var(--hint);
-            text-align: center;
-            margin-top: 10px;
-            letter-spacing: 0.3px;
-        }
-        .game-history span {
-            display: inline-block;
-            margin: 0 3px;
-            padding: 3px 8px;
-            border-radius: 10px;
-            font-weight: 700;
-            font-size: 11px;
-        }
-        .game-history .win-dot {
-            background: rgba(0, 230, 118, 0.2);
-            color: var(--neon);
-        }
-        .game-history .lose-dot {
-            background: rgba(255, 77, 109, 0.2);
-            color: var(--danger);
-        }
-
-        /* إعلانات ومنطقة Monetag */
-        .monetag-zone {
-            padding: 16px;
-            text-align: center;
-            margin-bottom: 10px;
-            border-radius: var(--radius-xl);
-            background: rgba(30, 25, 20, 0.5);
-            border: 1px dashed rgba(255, 215, 0, 0.3);
-            min-height: 100px;
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            color: var(--hint);
-            font-size: 12px;
-            letter-spacing: 0.5px;
-        }
-        .ad-box {
-            padding: 20px;
-            text-align: center;
-            margin-bottom: 10px;
-            border-radius: var(--radius-xl);
-            animation: borderShift 5s infinite, pulseNeon 3s infinite;
-            position: relative;
-            overflow: hidden;
-            background: rgba(20, 22, 28, 0.7);
-            border: 1px solid rgba(0, 230, 118, 0.2);
-        }
-        .ad-pts {
-            font-size: 40px;
-            font-weight: 900;
-            letter-spacing: -1px;
-            background: linear-gradient(135deg, #00e676, #ffd700);
-            -webkit-background-clip: text;
-            -webkit-text-fill-color: transparent;
-            background-clip: text;
-        }
-        .ad-sub {
-            font-size: 13px;
-            color: var(--hint);
-            margin-bottom: 6px;
-        }
-        .ad-btn {
-            width: 100%;
-            padding: 14px;
-            border-radius: var(--radius);
-            font-size: 15px;
-            font-weight: 700;
-            cursor: pointer;
-            color: #000;
-            border: none;
-            background: linear-gradient(135deg, #00e676, #ffd700);
-            letter-spacing: 0.3px;
-            transition: all var(--ease);
-            transform: translateZ(0);
-            will-change: transform;
-            box-shadow: 0 4px 20px var(--neon-glow);
-            margin-top: 12px;
-        }
-        .ad-btn:active {
-            transform: scale(0.95);
-            box-shadow: 0 0 40px var(--neon-glow);
-        }
-        .ad-btn:disabled {
-            opacity: 0.5;
-            cursor: not-allowed;
-            box-shadow: none;
-            filter: grayscale(30%);
-        }
-        .ad-info {
-            font-size: 11px;
-            color: var(--hint);
-            margin-top: 8px;
-            letter-spacing: 0.3px;
-        }
-
-        .task {
-            display: flex;
-            justify-content: space-between;
-            align-items: center;
-            padding: 14px;
-            border-radius: var(--radius);
-            margin-bottom: 7px;
-            cursor: pointer;
-            transition: all var(--ease);
-            transform: translateZ(0);
-            will-change: transform;
-            background: rgba(22, 24, 31, 0.6);
-            border: 1px solid rgba(255, 255, 255, 0.04);
-        }
-        .task:active {
-            transform: scale(0.97);
-            background: rgba(0, 230, 118, 0.08);
-        }
-        .task.done {
-            opacity: 0.3;
-            pointer-events: none;
-            filter: grayscale(40%);
-        }
-        .task-l {
-            display: flex;
-            align-items: center;
-            gap: 12px;
-        }
-        .task-ico {
-            font-size: 30px;
-        }
-        .task-name {
-            font-size: 14px;
-            font-weight: 600;
-            letter-spacing: 0.1px;
-        }
-        .task-desc {
-            font-size: 11px;
-            color: var(--hint);
-            margin-top: 2px;
-        }
-        .badge {
-            padding: 6px 12px;
-            border-radius: 8px;
-            font-size: 12px;
-            font-weight: 700;
-            white-space: nowrap;
-            background: rgba(0, 230, 118, 0.12);
-            border: 1px solid rgba(0, 230, 118, 0.25);
-            color: var(--neon);
-        }
-
-        .checkin-strip {
-            display: flex;
-            justify-content: space-between;
-            gap: 4px;
-            padding: 4px 0;
-        }
-        .checkin-day {
-            flex: 1;
-            text-align: center;
-            padding: 8px 2px;
-            border-radius: var(--radius-sm);
-            min-width: 0;
-        }
-        .checkin-day .day-num {
-            font-size: 9px;
-            color: var(--hint);
-            margin-bottom: 2px;
-        }
-        .checkin-day .day-dot {
-            width: 28px;
-            height: 28px;
-            border-radius: 50%;
-            margin: 0 auto;
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            font-size: 13px;
-            border: 2px solid rgba(255, 255, 255, 0.1);
-            transition: all var(--ease);
-            background: rgba(20, 22, 28, 0.6);
-        }
-        .checkin-day.checked .day-dot {
-            background: linear-gradient(135deg, #00e676, #00c853);
-            border-color: var(--neon);
-            box-shadow: 0 0 15px var(--neon-glow);
-        }
-        .checkin-day.today .day-dot {
-            border-color: var(--neon);
-            box-shadow: 0 0 22px var(--neon-glow);
-        }
-        .checkin-day .day-reward {
-            font-size: 9px;
-            color: var(--hint);
-            margin-top: 3px;
-        }
-        .checkin-day.checked .day-reward {
-            color: var(--neon);
-        }
-
-        .mystery-box-wrap {
-            text-align: center;
-            padding: 20px 16px;
-            cursor: pointer;
-            position: relative;
-            transform: translateZ(0);
-            will-change: transform;
-            transition: all var(--ease);
-        }
-        .mystery-box-wrap:active {
-            transform: scale(0.94);
-        }
-        .mystery-box-wrap.ready .mystery-ico {
-            animation: shake 0.7s ease-in-out infinite;
-        }
-        .mystery-box-wrap.opening .mystery-ico {
-            animation: burstWin 0.5s ease-out forwards;
-        }
-        .mystery-ico {
-            font-size: 70px;
-            display: block;
-            filter: drop-shadow(0 0 25px var(--gold-glow));
-            transform: translateZ(0);
-            will-change: transform;
-        }
-        .mystery-label {
-            font-size: 14px;
-            font-weight: 600;
-            margin-top: 10px;
-        }
-        .mystery-sub {
-            font-size: 11px;
-            color: var(--hint);
-            margin-top: 3px;
-        }
-        .mystery-sparkles {
-            position: absolute;
-            pointer-events: none;
-            inset: 0;
-        }
-        .sparkle {
-            position: absolute;
-            font-size: 16px;
-            animation: sparkle 1.5s ease-in-out infinite;
-            opacity: 0;
-        }
-        .sparkle:nth-child(1) {
-            top: 10%;
-            left: 15%;
-        }
-        .sparkle:nth-child(2) {
-            top: 5%;
-            right: 15%;
-            animation-delay: 0.4s;
-        }
-        .sparkle:nth-child(3) {
-            bottom: 20%;
-            left: 10%;
-            animation-delay: 0.8s;
-        }
-        .sparkle:nth-child(4) {
-            bottom: 10%;
-            right: 12%;
-            animation-delay: 1.2s;
-        }
-
-        .ref-box {
-            padding: 14px;
-            border-radius: var(--radius);
-            font-size: 11px;
-            word-break: break-all;
-            margin: 8px 0;
-            line-height: 1.7;
-            color: rgba(200, 220, 255, 0.9);
-            font-family: 'SF Mono', 'Courier New', monospace;
-            background: rgba(20, 22, 28, 0.6);
-            border: 1px solid rgba(0, 230, 118, 0.15);
-        }
-        .ticker-wrap {
-            padding: 10px 14px;
-            border-radius: var(--radius);
-            margin-bottom: 10px;
-            overflow: hidden;
-            background: var(--card);
-        }
-        .ticker-label {
-            font-size: 10px;
-            color: var(--hint);
-            margin-bottom: 4px;
-            letter-spacing: 0.5px;
-            text-transform: uppercase;
-        }
-        .ticker-inner {
-            overflow: hidden;
-            white-space: nowrap;
-        }
-        .ticker-track {
-            white-space: nowrap;
-            animation: tickerScroll 22s linear infinite;
-            font-size: 11px;
-            color: var(--gold);
-            display: inline-block;
-        }
-
-        .lang-g {
-            display: grid;
-            grid-template-columns: 1fr 1fr;
-            gap: 8px;
-            margin-top: 8px;
-        }
-        .lang-i {
-            padding: 12px;
-            border-radius: var(--radius);
-            text-align: center;
-            cursor: pointer;
-            font-size: 13px;
-            transition: all var(--ease);
-            transform: translateZ(0);
-            will-change: transform;
-            background: var(--card);
-            border: 1px solid rgba(255, 255, 255, 0.05);
-        }
-        .lang-i:active {
-            transform: scale(0.95);
-        }
-        .lang-i.on {
-            border-color: var(--neon) !important;
-            background: rgba(0, 230, 118, 0.1) !important;
-            color: var(--neon);
-            box-shadow: 0 0 20px var(--neon-soft);
-        }
-
-        .notif {
-            position: fixed;
-            top: 16px;
-            left: 50%;
-            transform: translateX(-50%);
-            padding: 12px 24px;
-            border-radius: 28px;
-            font-size: 14px;
-            font-weight: 700;
-            z-index: 999;
-            display: none;
-            letter-spacing: 0.3px;
-            white-space: nowrap;
-            pointer-events: none;
-            box-shadow: 0 8px 32px rgba(0, 0, 0, 0.7);
-            max-width: 90vw;
-            text-align: center;
-            backdrop-filter: blur(20px);
-            background: rgba(22, 24, 31, 0.95);
-        }
-        .notif.success {
-            color: var(--neon);
-            border: 1px solid rgba(0, 230, 118, 0.4);
-        }
-        .notif.error {
-            color: var(--danger);
-            border: 1px solid rgba(255, 77, 109, 0.4);
-        }
-        .notif.info {
-            color: var(--gold);
-            border: 1px solid rgba(255, 215, 0, 0.4);
-        }
-        .notif.win {
-            color: #000;
-            background: rgba(0, 230, 118, 0.95);
-            border: 2px solid var(--neon);
-            font-size: 18px;
-            box-shadow: 0 0 40px var(--neon-glow);
-        }
-        .notif.lose {
-            color: #fff;
-            background: rgba(255, 77, 109, 0.95);
-            border: 2px solid var(--danger);
-            font-size: 18px;
-            box-shadow: 0 0 40px var(--danger-glow);
-        }
-
-        #verify-btn {
-            position: fixed;
-            bottom: 90px;
-            z-index: 200;
-            padding: 14px;
-            border-radius: 14px;
-            font-size: 14px;
-            font-weight: 700;
-            cursor: pointer;
-            border: none;
-            width: calc(100% - 28px);
-            max-width: 452px;
-            left: 50%;
-            transform: translateX(-50%);
-            background: linear-gradient(135deg, #00e676, #ffd700);
-            color: #000;
-            box-shadow: 0 0 25px var(--neon-glow);
-        }
-        .info-row {
-            font-size: 11px;
-            color: var(--hint);
-            display: flex;
-            align-items: center;
-            gap: 6px;
-            padding: 3px 0;
-        }
-        .wallet-connected {
-            text-align: center;
-            padding: 12px;
-            border-radius: var(--radius);
-            background: rgba(0, 230, 118, 0.1);
-            border: 1px solid rgba(0, 230, 118, 0.2);
-            font-size: 12px;
-            color: var(--neon);
-            word-break: break-all;
-            margin: 8px 0;
-        }
-        .wallet-addr {
-            font-size: 11px;
-            color: var(--hint);
-            margin-top: 4px;
-            word-break: break-all;
-        }
-        #ton-connect-container {
-            margin: 10px 0;
-            display: flex;
-            justify-content: center;
-            min-height: 48px;
-            align-items: center;
-        }
-
-        [dir="rtl"] .ticker-track {
-            animation-direction: reverse;
-        }
-        [dir="rtl"] .prog {
-            background: linear-gradient(270deg, #00e676, #ffd700);
-        }
-    </style>
+    .notif { position:fixed; top:16px; left:50%; transform:translateX(-50%); padding:12px 24px; border-radius:28px; font-size:14px; font-weight:700; z-index:999; display:none; letter-spacing:0.3px; pointer-events:none; box-shadow:0 8px 32px rgba(0,0,0,0.7); backdrop-filter:blur(20px); background:rgba(22,24,31,0.95); }
+    .notif.success { color:var(--neon); border:1px solid rgba(0,230,118,0.4); }
+    .notif.error { color:var(--danger); border:1px solid rgba(255,77,109,0.4); }
+    .notif.win { color:#000; background:rgba(0,230,118,0.95); font-size:18px; }
+    .notif.lose { color:#fff; background:rgba(255,77,109,0.95); font-size:18px; }
+  </style>
 </head>
 <body>
+<div class="notif" id="notif"></div>
 
-    <div class="notif" id="notif"></div>
+<!-- الصفحة الرئيسية Home -->
+<div id="pg-home" class="page active">
+  <div class="topbar glass-card">
+    <div class="logo"><span class="bolt">⚡</span><span class="txt">TaskEarn</span></div>
+    <div style="font-size:11px;padding:6px 14px;border-radius:20px;color:var(--hint);background:rgba(22,24,31,0.6);">ID: <span id="id-chip">···</span></div>
+  </div>
+  <div class="balance-card">
+    <div style="color:var(--hint);font-size:12px;">رصيدك الحالي</div>
+    <div class="balance-amount" id="coins-home">0</div>
+    <div style="color:var(--gold);font-size:14px;">≈ <span id="usdt-home">0.00</span> USDT</div>
+  </div>
+  <div class="home-actions">
+    <button class="btn btn-neon">💎 إيداع</button>
+    <button class="btn btn-gold">🔄 تبديل</button>
+  </div>
+  <div class="shield-card">
+    <span class="shield-icon">🛡️</span>
+    <span>Secure & Instant - Your FP coins are protected with top-tier security</span>
+  </div>
+</div>
 
-    <!-- الصفحة الأولى: الرئيسية -->
-    <div id="pg-home" class="page active">
-        <div class="topbar glass-card">
-            <div class="logo"><span class="bolt">⚡</span><span class="txt">TaskEarn</span></div>
-            <div class="id-chip glass" id="id-chip">ID: ···</div>
-        </div>
-        <div class="hero">
-            <div class="coin-wrap"><span class="coin-ico" id="coin-ico">🪙</span></div>
-            <div class="coin-num" id="coins">0</div>
-            <div class="coin-usdt" id="usdt1">≈ 0.0000 USDT</div>
-            <div class="prog-wrap"><div class="prog" id="prog" style="width:0%"></div></div>
-        </div>
-        <div class="stats">
-            <div class="stat"><div class="stat-n" id="s-ads">0</div><div class="stat-l" id="tl-ads">إعلانات</div></div>
-            <div class="stat"><div class="stat-n" id="s-refs">0</div><div class="stat-l" id="tl-refs">إحالات</div></div>
-            <div class="stat"><div class="stat-n" id="s-tasks">0</div><div class="stat-l" id="tl-tasks">مهام</div></div>
-        </div>
-        <div class="card">
-            <div class="card-h"><span class="ico">📅</span><span id="tl-checkin">التسجيل اليومي</span></div>
-            <div class="checkin-strip" id="checkin-strip"></div>
-            <button class="btn btn-neon" id="checkin-btn" style="margin-top:10px;">✅ <span id="tl-checkin-btn">احصل على مكافأة اليوم</span></button>
-        </div>
-        <div class="card">
-            <div class="card-h"><span class="ico">🎁</span><span id="tl-mystery">الصندوق الغامض</span></div>
-            <div class="mystery-box-wrap ready" id="mystery-box">
-                <span class="mystery-ico">🎁</span>
-                <div class="mystery-sparkles"><span class="sparkle">✨</span><span class="sparkle">💫</span><span class="sparkle">⭐</span><span class="sparkle">🌟</span></div>
-                <div class="mystery-label" id="tl-mystery-label">اضغط للفتح!</div>
-                <div class="mystery-sub" id="tl-mystery-sub">شاهد إعلاناً لفتح مكافأة عشوائية</div>
-            </div>
-        </div>
-        <div class="ad-box">
-            <div class="ad-sub" id="tl-earn">شاهد إعلاناً واكسب نقاط!</div>
-            <div class="ad-pts">+3 <span style="font-size:15px" id="tl-pts">نقاط</span></div>
-            <button class="ad-btn" id="ad-btn">📺 <span id="tl-watch">شاهد الإعلان</span></button>
-            <div class="ad-info" id="ad-info"></div>
-        </div>
-        <div class="card">
-            <div class="card-h"><span class="ico">📋</span><span id="tl-daily">المهام</span></div>
-            <div class="task" id="tk-ch">
-                <div class="task-l"><div class="task-ico">📢</div>
-                    <div><div class="task-name" id="tl-join">اشترك في قناة TaskEarn</div>
-                        <div class="task-desc" id="tl-joind">اشترك واكسب 50 نقطة</div></div>
-                </div>
-                <div class="badge">+50 🪙</div>
-            </div>
-            <div class="task" id="tk-sh">
-                <div class="task-l"><div class="task-ico">🔗</div>
-                    <div><div class="task-name" id="tl-share">شارك رابط الإحالة</div>
-                        <div class="task-desc" id="tl-shared">100 نقطة لكل صديق</div></div>
-                </div>
-                <div class="badge">+100 🪙</div>
-            </div>
-        </div>
+<!-- صفحة Earn -->
+<div id="pg-earn" class="page">
+  <div class="tabs">
+    <div class="tab active" data-tab="watch">📺 Watch</div>
+    <div class="tab" data-tab="tasks">📋 Tasks</div>
+    <div class="tab" data-tab="offers">🎁 Offers</div>
+    <div class="tab" data-tab="partner">🤝 Partner</div>
+  </div>
+  <div class="tab-content active" id="tab-watch">
+    <div class="ad-watch-card">
+      <div style="color:var(--hint);">إعلانات اليوم</div>
+      <div class="ad-counter"><span id="ads-watched">0</span> / 5</div>
+      <button class="btn btn-neon" id="btn-watch-ad" style="margin-top:12px;">▶ Watch Now</button>
     </div>
-
-    <!-- الصفحة الثانية: Earn (إعلانات ومهام Monetag) -->
-    <div id="pg-earn" class="page">
-        <div class="topbar glass-card">
-            <div class="logo"><span class="bolt">⚡</span><span class="txt">Earn</span></div>
-            <div class="id-chip glass" id="id-chip2">💰 رصيدك: <span id="earn-bal">0</span></div>
-        </div>
-        <div class="ad-box">
-            <div class="ad-sub">🎯 إعلان Rewarded Interstitial</div>
-            <div class="ad-pts">+5 <span style="font-size:15px">نقاط</span></div>
-            <button class="ad-btn" id="ad-btn2">📺 شاهد الإعلان</button>
-            <div class="ad-info" id="ad-info2"></div>
-        </div>
-        <div class="monetag-zone" id="monetag-zone">
-            📍 Monetag Ad Zone - قم بدمج SDK الخاص بـ Monetag هنا
-        </div>
-        <div class="card">
-            <div class="card-h"><span class="ico">📋</span>مهام إضافية</div>
-            <div class="task" id="tk-ch2">
-                <div class="task-l"><div class="task-ico">📢</div>
-                    <div><div class="task-name" id="tl-join2">اشترك في قناة TaskEarn</div>
-                        <div class="task-desc">اشترك واكسب 50 نقطة</div></div>
-                </div>
-                <div class="badge">+50 🪙</div>
-            </div>
-            <div class="task" id="tk-sh2">
-                <div class="task-l"><div class="task-ico">🔗</div>
-                    <div><div class="task-name" id="tl-share2">شارك رابط الإحالة</div>
-                        <div class="task-desc">100 نقطة لكل صديق</div></div>
-                </div>
-                <div class="badge">+100 🪙</div>
-            </div>
-        </div>
+  </div>
+  <div class="tab-content" id="tab-tasks">
+    <div class="task-row">
+      <div class="task-info"><span class="task-icon">📢</span><div><div style="font-weight:600;">Join Dev Crypto</div><div style="font-size:10px;color:var(--hint);">+10 FP</div></div></div>
+      <div class="task-arrow" data-task="tg">➜</div>
     </div>
-
-    <!-- الصفحة الثالثة: FIFA CUP (اللعبة) -->
-    <div id="pg-game" class="page">
-        <div class="game-header glass-card">
-            <div class="game-title">⚽ FIFA CUP</div>
-            <div class="game-balance" id="game-balance-display">🪙 <span id="game-fp">0</span> FP</div>
-        </div>
-        <div class="stadium" id="stadium">
-            <div class="stadium-glow"></div>
-            <span class="football" id="football">⚽</span>
-            <div class="result-badge" id="result-badge"></div>
-        </div>
-        <div class="game-labels">
-            <span>1 🔻 LOW</span><span>50</span><span>HIGH 🔺 100</span>
-        </div>
-        <div class="game-progress-wrap" id="game-progress-wrap">
-            <div class="game-prog-green" id="game-prog-green" style="width:49%"></div>
-            <div class="game-prog-red" id="game-prog-red" style="width:49%"></div>
-            <div class="game-prog-divider"></div>
-            <div class="game-prog-marker" id="game-prog-marker" style="left:49%"></div>
-        </div>
-        <div class="predict-row">
-            <button class="btn-predict btn-low" id="btn-low">📉 LOW<br><small style="font-size:11px">1 - 49</small></button>
-            <div class="mid-circle">50</div>
-            <button class="btn-predict btn-high" id="btn-high">📈 HIGH<br><small style="font-size:11px">51 - 100</small></button>
-        </div>
-        <div class="bet-section">
-            <div class="bet-label">
-                <span>💰 قيمة الرهان</span>
-                <span style="color:var(--gold);font-weight:700;" id="bet-max-hint">الحد الأقصى: <span id="bet-max-val">0</span> FP</span>
-            </div>
-            <div class="bet-input-row">
-                <input type="number" class="bet-input" id="bet-input" value="1" min="1" max="100" placeholder="المبلغ">
-            </div>
-            <div class="bet-quick">
-                <button class="bet-quick-btn min" id="bet-min">MIN</button>
-                <button class="bet-quick-btn" id="bet-half">½</button>
-                <button class="bet-quick-btn" id="bet-double">2×</button>
-                <button class="bet-quick-btn max" id="bet-max">MAX</button>
-            </div>
-        </div>
-        <div class="game-history" id="game-history">
-            📜 آخر الجولات: <span id="history-dots">--</span>
-        </div>
+    <div class="task-row">
+      <div class="task-info"><span class="task-icon">🌐</span><div><div style="font-weight:600;">Visit Website</div><div style="font-size:10px;color:var(--hint);">+5 FP</div></div></div>
+      <div class="task-arrow" data-task="web">➜</div>
     </div>
-
-    <!-- الصفحة الرابعة: Squad (الإحالات) -->
-    <div id="pg-squad" class="page">
-        <div class="card">
-            <div class="card-h"><span class="ico">👥</span><span id="tl-reft">نظام الإحالة</span></div>
-            <p style="color:var(--hint);font-size:12px;margin-bottom:8px;" id="tl-refd">ادعو أصدقاءك واكسب 100 نقطة لكل صديق!</p>
-            <div class="ref-box glass" id="ref-link">جاري التحميل...</div>
-            <button class="btn btn-neon" id="btn-copy">📋 <span id="tl-copy">نسخ الرابط</span></button>
-            <button class="btn btn-ghost" id="btn-share-ref">📤 <span id="tl-sref">مشاركة</span></button>
-        </div>
-        <div class="stats">
-            <div class="stat"><div class="stat-n" id="r-num">0</div><div class="stat-l" id="tl-rnum">إحالات</div></div>
-            <div class="stat"><div class="stat-n" id="r-pts">0</div><div class="stat-l">نقاط</div></div>
-            <div class="stat"><div class="stat-n" id="r-usd">0.00</div><div class="stat-l">USDT</div></div>
-        </div>
+  </div>
+  <div class="tab-content" id="tab-offers">
+    <div class="task-row">
+      <div class="task-info"><span class="task-icon">📱</span><div><div style="font-weight:600;">OctoEarn</div><div style="font-size:10px;color:var(--hint);">+40 FP</div></div></div>
+      <div class="task-arrow" data-task="octo">➜</div>
     </div>
-
-    <!-- الصفحة الخامسة: Wallet (المحفظة والسحب) -->
-    <div id="pg-wallet" class="page">
-        <div class="ticker-wrap">
-            <div class="ticker-label">🔴 عمليات سحب حديثة</div>
-            <div class="ticker-inner"><div class="ticker-track" id="ticker">جاري التحميل...</div></div>
-        </div>
-        <div class="card" style="text-align:center;animation:borderShift 5s infinite,pulseNeon 3s infinite;">
-            <div style="color:var(--hint);font-size:12px;" id="tl-bal">رصيدك الحالي</div>
-            <div class="coin-num" style="font-size:40px;margin-top:4px;" id="coins2">0</div>
-            <div class="coin-usdt" id="usdt2">≈ 0.0000 USDT</div>
-            <div style="font-size:10px;color:var(--hint);margin-top:4px;">1000 نقطة = 0.1 USDT</div>
-        </div>
-        <div class="card">
-            <div class="card-h"><span class="ico">💸</span><span id="tl-wdt">سحب المكافآت</span></div>
-            <p style="font-size:11px;color:var(--hint);margin-bottom:8px;" id="tl-wall">اربط محفظة TON للسحب</p>
-            <div id="ton-connect-container"></div>
-            <div id="wallet-status" style="display:none;"></div>
-            <button class="btn btn-neon" id="btn-withdraw" disabled>💸 <span id="tl-wdb">سحب</span></button>
-        </div>
-        <div class="card">
-            <div class="info-row">⚠️ <span id="tl-min">الحد الأدنى: 1000 نقطة</span></div>
-            <div class="info-row">⏱️ <span id="tl-time">وقت المعالجة: 24-48 ساعة</span></div>
-            <div class="info-row">💡 الربح الصافي: 100% لك</div>
-        </div>
+    <div class="task-row">
+      <div class="task-info"><span class="task-icon">✉️</span><div><div style="font-weight:600;">MailBux</div><div style="font-size:10px;color:var(--hint);">+40 FP</div></div></div>
+      <div class="task-arrow" data-task="mail">➜</div>
     </div>
+  </div>
+  <div class="tab-content" id="tab-partner">
+    <div style="text-align:center;padding:30px;color:var(--hint);">🤝 شراكات قريباً</div>
+  </div>
+</div>
 
-    <!-- شريط التنقل السفلي (5 أزرار) -->
-    <nav class="nav glass-nav">
-        <button class="nb on" data-page="home"><span class="ic">🏠</span><span id="nl-home">الرئيسية</span></button>
-        <button class="nb" data-page="earn"><span class="ic">📺</span><span id="nl-earn">الربح</span></button>
-        <div class="nav-center-wrap">
-            <button class="nav-center on" data-page="game" id="nav-center-btn">
-                ⚽
-                <span class="nav-center-label">FIFA CUP</span>
-            </button>
-        </div>
-        <button class="nb" data-page="squad"><span class="ic">👥</span><span id="nl-squad">الفريق</span></button>
-        <button class="nb" data-page="wallet"><span class="ic">💼</span><span id="nl-wallet">المحفظة</span></button>
-    </nav>
+<!-- صفحة اللعبة FIFA CUP -->
+<div id="pg-game" class="page">
+  <div class="game-header glass-card">
+    <div class="game-title">⚽ FIFA CUP</div>
+    <div style="color:var(--gold);font-weight:700;background:rgba(255,215,0,0.1);padding:8px 14px;border-radius:20px;">🪙 <span id="game-fp">0</span> FP</div>
+  </div>
+  <div class="stadium">
+    <span class="football" id="football">⚽</span>
+    <div class="result-badge" id="result-badge" style="position:absolute;top:50%;left:50%;transform:translate(-50%,-50%) scale(0);font-weight:900;z-index:5;padding:10px 20px;border-radius:25px;"></div>
+  </div>
+  <div style="display:flex;justify-content:space-between;font-size:10px;color:var(--hint);padding:2px 8px;"> <span>1 LOW</span><span>50</span><span>HIGH 100</span> </div>
+  <div class="game-progress-wrap">
+    <div class="game-prog-green" id="prog-green" style="width:49%"></div>
+    <div class="game-prog-red" id="prog-red" style="width:49%"></div>
+    <div class="game-prog-marker" id="prog-marker" style="left:49%"></div>
+  </div>
+  <div class="predict-row">
+    <button class="btn-predict btn-low" id="btn-low">📉 LOW</button>
+    <div class="mid-circle">50</div>
+    <button class="btn-predict btn-high" id="btn-high">📈 HIGH</button>
+  </div>
+  <div class="bet-section">
+    <div style="display:flex;justify-content:space-between;margin-bottom:6px;"><span style="color:var(--hint);">💰 قيمة الرهان</span><span style="color:var(--gold);">الحد: <span id="bet-max-val">0</span></span></div>
+    <input type="number" class="bet-input" id="bet-input" value="1" min="1">
+    <div class="bet-quick">
+      <button class="bet-quick-btn" id="bet-min">MIN</button>
+      <button class="bet-quick-btn" id="bet-half">½</button>
+      <button class="bet-quick-btn" id="bet-double">2×</button>
+      <button class="bet-quick-btn" id="bet-max" style="color:var(--gold);border-color:rgba(255,215,0,0.3);">MAX</button>
+    </div>
+  </div>
+  <div style="text-align:center;margin-top:8px;font-size:10px;color:var(--hint);">📜 آخر الجولات: <span id="history-dots">--</span></div>
+</div>
 
-    <script>
-        const CFG = {
-            RATE: 0.0001,
-            CHANNEL: 'https://t.me/gxhxd',
-            BOT: 'earntaskpro_bot',
-            VERCEL: 'https://taskearnbot.vercel.app',
-            AD_BLOCK: '35884',
-            MIN_WD: 1000,
-            TON_MANIFEST: 'https://taskearnbot.vercel.app/tonconnect-manifest.json',
-            CHECKIN_REWARDS: [2, 3, 5, 8, 12, 18, 30],
-            MYSTERY: [
-                { label: 'Common', pts: 5, w: 55, e: '🎯' },
-                { label: 'Uncommon', pts: 15, w: 25, e: '💎' },
-                { label: 'Rare', pts: 50, w: 12, e: '🔥' },
-                { label: 'Epic', pts: 150, w: 6, e: '⚡' },
-                { label: 'Legendary', pts: 500, w: 2, e: '👑' }
-            ]
-        };
+<!-- صفحة الأصدقاء Squad -->
+<div id="pg-squad" class="page">
+  <div class="invite-card">
+    <div class="invite-football">⚽</div>
+    <div style="font-size:18px;font-weight:800;margin:8px 0;">Invite Friends</div>
+    <div style="color:var(--neon);font-size:24px;font-weight:900;">20%</div>
+    <div style="font-size:11px;color:var(--hint);">من أرباح أصدقائك مدى الحياة</div>
+  </div>
+  <div class="ref-link-box">
+    <input class="ref-link-input" id="ref-link-input" readonly value="...">
+    <button class="btn btn-neon" style="width:auto;padding:12px 16px;margin:0;" id="btn-copy-ref">📋</button>
+  </div>
+  <button class="btn btn-neon" id="btn-share-ref" style="margin-top:4px;">📤 مشاركة الرابط</button>
+  <div class="stats-row">
+    <div class="stat-box"><div class="stat-value" id="friends-count">0</div><div style="color:var(--hint);">Friends</div></div>
+    <div class="stat-box"><div class="stat-value" id="unclaimed-count">0</div><div style="color:var(--hint);">Unclaimed FP</div></div>
+  </div>
+</div>
 
-        let state = {
-            coins: 0,
-            uid: null,
-            ads: 0,
-            refs: 0,
-            tasks: 0,
-            lang: 'ar',
-            channelDone: false,
-            shareDone: false,
-            checkinStreak: 0,
-            checkinDate: null,
-            mysteryDate: null,
-            gameHistory: [] // لتاريخ اللعبة
-        };
-        let connectedWallet = null,
-            isAdWatching = false,
-            notifTimer = null,
-            tonUI = null,
-            isMysteryWatching = false,
-            isGameAnimating = false;
+<!-- صفحة المحفظة Wallet -->
+<div id="pg-wallet" class="page">
+  <div class="wallet-balance">
+    <div style="color:var(--hint);">رصيد قابل للسحب</div>
+    <div style="font-size:40px;font-weight:900;color:var(--gold);" id="coins-wallet">0</div>
+    <div>≈ <span id="usdt-wallet">0.00</span> USDT</div>
+  </div>
+  <div class="glass-card" style="padding:16px;">
+    <div id="ton-connect-container"></div>
+    <div id="wallet-status" style="display:none;"></div>
+    <button class="btn btn-neon" id="btn-withdraw" disabled>💸 سحب</button>
+  </div>
+</div>
 
-        const TX = {
-            ar: { home: 'الرئيسية', earn: 'الربح', game: 'FIFA CUP', squad: 'الفريق', wallet: 'المحفظة', ads: 'إعلانات',
-                refs: 'إحالات', tasks: 'مهام', earn2: 'شاهد إعلاناً واكسب نقاط!', pts: 'نقاط', watch: 'شاهد الإعلان',
-                daily: 'المهام', join: 'اشترك في قناة TaskEarn', joind: 'اشترك واكسب 50 نقطة', share: 'شارك رابط الإحالة',
-                shared: '100 نقطة لكل صديق', reft: 'نظام الإحالة', refd: 'ادعو أصدقاءك واكسب 100 نقطة لكل صديق!',
-                copy: 'نسخ الرابط', sref: 'مشاركة', rnum: 'إحالات', bal: 'رصيدك الحالي', wall: 'اربط محفظة TON للسحب',
-                wdt: 'سحب المكافآت', wdb: 'سحب', min: 'الحد الأدنى: 1000 نقطة', time: 'وقت المعالجة: 24-48 ساعة',
-                lang: 'اللغة', rate: 'معدل التحويل', myid: 'معرفك', adw: 'إعلان', checkin: 'التسجيل اليومي',
-                checkin_btn: 'احصل على مكافأة اليوم', checkin_done: 'تم الاستلام!', mystery: 'الصندوق الغامض',
-                mystery_label: 'اضغط للفتح!', mystery_sub: 'شاهد إعلاناً لفتح مكافأة عشوائية',
-                mystery_locked: 'متاح غداً', wallet_ok: '✅ المحفظة متصلة', ad_skip: '⚠️ تم تخطي الإعلان - لا مكافأة',
-                ad_err: '⚠️ خطأ في تحميل الإعلان', ci_ok: '🎉 تم تسجيل الحضور!', wd_ok: '✅ تم إرسال طلب السحب!',
-                need_wallet: '⚠️ اربط محفظة TON أولاً', need_pts: '⚠️ تحتاج 1000 نقطة على الأقل',
-                already_sub: '✅ أنت مشترك بالفعل!', checking: '⏳ جاري التحقق...', not_sub: '❌ لسه مشتركتش! اشترك الأول',
-                verify_err: '❌ خطأ في التحقق', verify_btn: '✅ تحقق من اشتراكي', copied: '✅ تم النسخ!',
-                shared_ok: 'تم مشاركة الرابط!', disconnect: '🔌 فصل المحفظة', game_win: '🎉 فوز! +',
-                game_lose: '💀 خسارة! -', game_50: '😐 تعادل! الرقم 50', game_balance: 'رصيدك',
-                monetag_zone: '📍 منطقة إعلانات Monetag - أضف كود SDK هنا' },
-            en: { home: 'Home', earn: 'Earn', game: 'FIFA CUP', squad: 'Squad', wallet: 'Wallet', ads: 'Ads',
-                refs: 'Refs', tasks: 'Tasks', earn2: 'Watch an ad & earn points!', pts: 'pts', watch: 'Watch Ad',
-                daily: 'Tasks', join: 'Join TaskEarn Channel', joind: 'Subscribe & earn 50 pts',
-                share: 'Share Referral Link', shared: '100 pts per friend', reft: 'Referral System',
-                refd: 'Invite friends & earn 100 pts each!', copy: 'Copy Link', sref: 'Share', rnum: 'Referrals',
-                bal: 'Your Balance', wall: 'Connect TON wallet to withdraw', wdt: 'Withdraw Rewards',
-                wdb: 'Withdraw', min: 'Minimum: 1000 pts', time: 'Processing: 24-48h', lang: 'Language',
-                rate: 'Exchange Rate', myid: 'Your ID', adw: 'ad', checkin: 'Daily Check-in',
-                checkin_btn: "Claim Today's Reward", checkin_done: 'Claimed!', mystery: 'Mystery Box',
-                mystery_label: 'Tap to Open!', mystery_sub: 'Watch an ad to unlock a random reward',
-                mystery_locked: 'Available tomorrow', wallet_ok: '✅ Wallet Connected',
-                ad_skip: '⚠️ Ad skipped - no reward', ad_err: '⚠️ Ad loading error', ci_ok: '🎉 Check-in successful!',
-                wd_ok: '✅ Withdrawal request sent!', need_wallet: '⚠️ Connect TON wallet first',
-                need_pts: '⚠️ Need at least 1000 pts', already_sub: '✅ Already subscribed!',
-                checking: '⏳ Checking...', not_sub: '❌ Not subscribed yet!', verify_err: '❌ Verify error',
-                verify_btn: '✅ Verify Subscription', copied: '✅ Copied!', shared_ok: 'Link shared!',
-                disconnect: '🔌 Disconnect', game_win: '🎉 Win! +', game_lose: '💀 Loss! -',
-                game_50: '😐 Draw! Number 50', game_balance: 'Balance', monetag_zone: '📍 Monetag Ad Zone - Add SDK here' },
-            fr: { home: 'Accueil', earn: 'Gagner', game: 'FIFA CUP', squad: 'Équipe', wallet: 'Portefeuille',
-                ads: 'Pubs', refs: 'Refs', tasks: 'Tâches', earn2: 'Voir pub & gagner!', pts: 'pts',
-                watch: 'Voir pub', daily: 'Tâches', join: 'Rejoindre TaskEarn', joind: 'Abonnez-vous & gagnez 50 pts',
-                share: 'Partager lien', shared: '100 pts par ami', reft: 'Parrainage',
-                refd: 'Invitez & gagnez 100 pts!', copy: 'Copier', sref: 'Partager', rnum: 'Parrainages',
-                bal: 'Votre solde', wall: 'Connectez portefeuille TON', wdt: 'Retrait', wdb: 'Retirer',
-                min: 'Min: 1000 pts', time: 'Délai: 24-48h', lang: 'Langue', rate: 'Taux', myid: 'Votre ID',
-                adw: 'pub', checkin: 'Check-in quotidien', checkin_btn: 'Réclamer', checkin_done: 'Reçu!',
-                mystery: 'Boîte Mystère', mystery_label: 'Touchez pour ouvrir!',
-                mystery_sub: 'Voir une pub pour débloquer', mystery_locked: 'Disponible demain',
-                wallet_ok: '✅ Portefeuille connecté', ad_skip: '⚠️ Pub ignorée', ad_err: '⚠️ Erreur de pub',
-                ci_ok: '🎉 Check-in réussi!', wd_ok: '✅ Demande envoyée!', need_wallet: '⚠️ Connectez portefeuille TON',
-                need_pts: '⚠️ 1000 pts minimum', already_sub: '✅ Déjà abonné!', checking: '⏳ Vérification...',
-                not_sub: '❌ Pas encore abonné!', verify_err: '❌ Erreur de vérification', verify_btn: '✅ Vérifier',
-                copied: '✅ Copié!', shared_ok: 'Lien partagé!', disconnect: '🔌 Déconnecter',
-                game_win: '🎉 Gain! +', game_lose: '💀 Perte! -', game_50: '😐 Égalité! Numéro 50',
-                game_balance: 'Solde', monetag_zone: '📍 Zone pub Monetag - Ajoutez SDK ici' },
-            ru: { home: 'Главная', earn: 'Заработок', game: 'FIFA CUP', squad: 'Команда', wallet: 'Кошелёк',
-                ads: 'Реклама', refs: 'Рефералы', tasks: 'Задания', earn2: 'Смотри & зарабатывай!', pts: 'очков',
-                watch: 'Смотреть', daily: 'Задания', join: 'Подписаться на TaskEarn',
-                joind: 'Подпишись & получи 50 очков', share: 'Поделиться ссылкой', shared: '100 очков за друга',
-                reft: 'Рефералы', refd: 'Приглашай & получай 100 очков!', copy: 'Копировать', sref: 'Поделиться',
-                rnum: 'Рефералы', bal: 'Ваш баланс', wall: 'Подключите TON кошелёк', wdt: 'Вывод', wdb: 'Вывести',
-                min: 'Минимум: 1000 очков', time: 'Обработка: 24-48ч', lang: 'Язык', rate: 'Курс', myid: 'Ваш ID',
-                adw: 'реклама', checkin: 'Ежедневный вход', checkin_btn: 'Получить награду',
-                checkin_done: 'Получено!', mystery: 'Загадочная коробка', mystery_label: 'Нажми открыть!',
-                mystery_sub: 'Посмотри рекламу для награды', mystery_locked: 'Доступно завтра',
-                wallet_ok: '✅ Кошелёк подключён', ad_skip: '⚠️ Реклама пропущена', ad_err: '⚠️ Ошибка рекламы',
-                ci_ok: '🎉 Отметка получена!', wd_ok: '✅ Запрос отправлен!', need_wallet: '⚠️ Подключите TON кошелёк',
-                need_pts: '⚠️ Минимум 1000 очков', already_sub: '✅ Вы уже подписаны!', checking: '⏳ Проверяем...',
-                not_sub: '❌ Вы не подписаны!', verify_err: '❌ Ошибка проверки', verify_btn: '✅ Проверить подписку',
-                copied: '✅ Скопировано!', shared_ok: 'Ссылка отправлена!', disconnect: '🔌 Отключить',
-                game_win: '🎉 Победа! +', game_lose: '💀 Поражение! -', game_50: '😐 Ничья! Число 50',
-                game_balance: 'Баланс', monetag_zone: '📍 Зона Monetag - Добавьте SDK' }
-        };
+<!-- النافذة المنبثقة Modal -->
+<div class="modal-overlay" id="modal-overlay">
+  <div class="modal">
+    <div style="font-size:20px;font-weight:800;" id="modal-title">🎉 جاري المعالجة</div>
+    <div class="modal-progress"><div class="modal-progress-fill" id="modal-progress-fill" style="width:0%"></div></div>
+    <div id="modal-msg" style="margin:8px 0;color:var(--hint);"></div>
+    <button class="btn btn-blue" id="modal-confirm">تأكيد</button>
+  </div>
+</div>
 
-        const FAKE_WD = ['أحمد س. سحب 0.5 USDT', 'محمد ع. سحب 1.2 USDT', 'سارة م. سحب 0.8 USDT', 'علي ح. سحب 2.0 USDT',
-            'فاطمة ك. سحب 0.3 USDT', 'Omar سحب 1.5 USDT', 'Yusuf سحب 0.7 USDT', 'نورا ف. سحب 0.9 USDT',
-            'Hassan سحب 3.0 USDT', 'ليلى ب. سحب 0.4 USDT', 'كريم ط. سحب 1.1 USDT', 'Aisha سحب 0.6 USDT'
-        ];
+<!-- شريط التنقل السفلي -->
+<nav class="nav glass-nav">
+  <button class="nb on" data-page="home"><span class="ic">🏠</span>Home</button>
+  <button class="nb" data-page="earn"><span class="ic">📺</span>Earn</button>
+  <div class="nav-center-wrap">
+    <button class="nav-center on" data-page="game" id="nav-game">
+      ⚽<span class="nav-center-label">FIFA CUP</span>
+    </button>
+  </div>
+  <button class="nb" data-page="squad"><span class="ic">👥</span>Squad</button>
+  <button class="nb" data-page="wallet"><span class="ic">💼</span>Wallet</button>
+</nav>
 
-        const tgApp = window.Telegram && window.Telegram.WebApp;
-        const haptic = tgApp && tgApp.HapticFeedback;
-        const el = id => document.getElementById(id);
-        const tr = k => (TX[state.lang] || TX.ar)[k] || k;
-        const today = () => new Date().toISOString().split('T')[0];
+<script>
+const CFG = {
+  RATE: 0.0001, BOT: 'earntaskpro_bot', VERCEL: 'https://taskearnbot.vercel.app', AD_BLOCK: '35884', MIN_WD: 1000,
+  TON_MANIFEST: 'https://taskearnbot.vercel.app/tonconnect-manifest.json'
+};
+let state = {
+  coins: 40, uid: null, adsWatched: 0, maxAds: 5, refs: 0, unclaimed: 0,
+  channelDone: false, visitDone: false, octoDone: false, mailDone: false,
+  gameHistory: []
+};
+let connectedWallet = null, isAdWatching = false, tonUI = null, notifTimer = null, isGameAnimating = false;
 
-        function hImpact(s) { try { haptic && haptic.impactOccurred(s || 'medium'); } catch (e) {} }
+const el = id => document.getElementById(id);
+const tgApp = window.Telegram?.WebApp;
+const haptic = tgApp?.HapticFeedback;
 
-        function hSuccess() { try { haptic && haptic.notificationOccurred('success'); } catch (e) {} }
+function hImpact(s) { try { haptic?.impactOccurred(s||'medium'); } catch(e) {} }
+function hSuccess() { try { haptic?.notificationOccurred('success'); } catch(e) {} }
+function hError() { try { haptic?.notificationOccurred('error'); } catch(e) {} }
 
-        function hError() { try { haptic && haptic.notificationOccurred('error'); } catch (e) {} }
+function toast(msg, type, dur) {
+  if(notifTimer) clearTimeout(notifTimer);
+  const n = el('notif'); n.textContent = msg; n.className = 'notif '+(type||'info');
+  n.style.display='block'; n.style.animation='none'; n.offsetWidth; n.style.animation='notifIn .35s ease';
+  notifTimer = setTimeout(()=>{ n.style.animation='notifOut .3s ease forwards'; setTimeout(()=>n.style.display='none',300); }, dur||2800);
+}
 
-        function toast(msg, type, dur) {
-            if (notifTimer) clearTimeout(notifTimer);
-            const n = el('notif');
-            n.textContent = msg;
-            n.className = 'notif ' + (type || 'info');
-            n.style.display = 'block';
-            n.style.animation = 'none';
-            n.offsetWidth;
-            n.style.animation = 'notifIn .35s ease';
-            notifTimer = setTimeout(() => {
-                n.style.animation = 'notifOut .3s ease forwards';
-                setTimeout(() => { n.style.display = 'none'; }, 300);
-            }, dur || 2800);
-        }
+function saveLocal() {
+  try { localStorage.setItem('te_full_'+state.uid, JSON.stringify(state)); } catch(e) {}
+}
+function loadLocal() {
+  try { const d = localStorage.getItem('te_full_'+state.uid); return d ? JSON.parse(d) : null; } catch(e) { return null; }
+}
 
-        function fetchT(url, opts, ms) {
-            ms = ms || 5000;
-            return new Promise((res, rej) => {
-                const t = setTimeout(() => rej(new Error('timeout')), ms);
-                fetch(url, opts).then(r => { clearTimeout(t);
-                    res(r); }).catch(e => { clearTimeout(t);
-                    rej(e); });
-            });
-        }
+function updUI() {
+  const u = (state.coins * CFG.RATE).toFixed(2);
+  ['coins-home','coins-wallet'].forEach(id=>{ const e=el(id); if(e) e.textContent = state.coins; });
+  ['usdt-home','usdt-wallet'].forEach(id=>{ const e=el(id); if(e) e.textContent = '≈ '+u+' USDT'; });
+  const gfp = el('game-fp'); if(gfp) gfp.textContent = state.coins;
+  const bmv = el('bet-max-val'); if(bmv) bmv.textContent = state.coins;
+  const inp = el('bet-input'); if(inp) { inp.max = Math.max(1, state.coins); if(parseInt(inp.value) > state.coins) inp.value = Math.max(1, state.coins); }
+  const aw = el('ads-watched'); if(aw) aw.textContent = state.adsWatched;
+  const fc = el('friends-count'); if(fc) fc.textContent = state.refs;
+  const uc = el('unclaimed-count'); if(uc) uc.textContent = state.unclaimed;
+  const wdb = el('btn-withdraw'); if(wdb) wdb.disabled = !(connectedWallet && state.coins >= CFG.MIN_WD);
+  document.querySelectorAll('.task-arrow').forEach(arrow => {
+    const task = arrow.dataset.task;
+    const done = (task==='tg' && state.channelDone) || (task==='web' && state.visitDone) || (task==='octo' && state.octoDone) || (task==='mail' && state.mailDone);
+    arrow.classList.toggle('done', done);
+  });
+}
 
-        function saveLocal() {
-            try {
-                const data = {
-                    coins: state.coins,
-                    ads_watched: state.ads,
-                    tasks_done: state.tasks,
-                    refs: state.refs,
-                    channel_done: state.channelDone,
-                    checkin_date: state.checkinDate,
-                    checkin_streak: state.checkinStreak,
-                    mystery_date: state.mysteryDate,
-                    lang: state.lang,
-                    game_history: state.gameHistory,
-                    _ts: Date.now()
-                };
-                const key = 'te_v2_' + (state.uid || 'guest');
-                try { sessionStorage.setItem(key, JSON.stringify(data)); } catch (e) {}
-                try { localStorage.setItem(key, JSON.stringify(data)); } catch (e) {}
-            } catch (e) {}
-        }
+function showModal(title, msg, onConfirm) {
+  el('modal-title').textContent = title;
+  el('modal-msg').textContent = msg;
+  const fill = el('modal-progress-fill'); fill.style.width = '0%';
+  el('modal-overlay').classList.add('active');
+  let w = 0;
+  const int = setInterval(()=>{ w+=4; if(w>100){ w=100; clearInterval(int); } fill.style.width = w+'%'; }, 30);
+  const confirm = el('modal-confirm');
+  confirm.onclick = ()=>{ clearInterval(int); fill.style.width = '100%'; el('modal-overlay').classList.remove('active'); if(onConfirm) onConfirm(); };
+}
 
-        function loadLocal() {
-            const key = 'te_v2_' + (state.uid || 'guest');
-            let raw = null;
-            try { raw = sessionStorage.getItem(key); } catch (e) {}
-            if (!raw) try { raw = localStorage.getItem(key); } catch (e) {}
-            if (!raw) return null;
-            try { return JSON.parse(raw); } catch (e) { return null; }
-        }
+async function watchAdAction() {
+  if(isAdWatching || state.adsWatched >= state.maxAds) return;
+  const btn = el('btn-watch-ad'); isAdWatching = true; btn.disabled = true; btn.textContent = '⏳ ...';
+  hImpact('medium');
+  if(!window.Adsgram?.init) { toast('⚠️ خطأ في تحميل الإعلان', 'error'); resetWatchBtn(); return; }
+  try {
+    const ctrl = window.Adsgram.init({blockId: CFG.AD_BLOCK});
+    await ctrl.show();
+    state.adsWatched++; state.coins += 30; saveLocal(); updUI(); hSuccess();
+    toast('🎉 +30 FP!', 'success');
+    showModal('✅ تم المشاهدة', 'لقد ربحت 30 FP!', ()=>{});
+  } catch(e) { toast('⚠️ تم تخطي الإعلان', 'error'); hError(); }
+  resetWatchBtn();
+}
+function resetWatchBtn() { isAdWatching = false; const btn = el('btn-watch-ad'); btn.disabled = state.adsWatched >= state.maxAds; btn.textContent = state.adsWatched >= state.maxAds ? '✅ مكتمل' : '▶ Watch Now'; }
 
-        function updCoins() {
-            const u = (state.coins * CFG.RATE).toFixed(4);
-            ['coins', 'coins2'].forEach(id => { const e = el(id); if (e) e.textContent = state.coins; });
-            ['usdt1', 'usdt2'].forEach(id => { const e = el(id); if (e) e.textContent = '≈ ' + u + ' USDT'; });
-            const prog = el('prog');
-            if (prog) prog.style.width = Math.min((state.coins % 1000) / 10, 100) + '%';
-            const sa = el('s-ads'); if (sa) sa.textContent = state.ads;
-            const sr = el('s-refs'); if (sr) sr.textContent = state.refs;
-            const st = el('s-tasks'); if (st) st.textContent = state.tasks;
-            const rn = el('r-num'); if (rn) rn.textContent = state.refs;
-            const rp = el('r-pts'); if (rp) rp.textContent = state.refs * 100;
-            const ru = el('r-usd'); if (ru) ru.textContent = (state.refs * 100 * CFG.RATE).toFixed(2);
-            const ai = el('ad-info'); if (ai) ai.textContent = state.ads > 0 ? state.ads + ' ' + tr('adw') : '';
-            const ai2 = el('ad-info2'); if (ai2) ai2.textContent = state.ads > 0 ? state.ads + ' ' + tr('adw') : '';
-            const wdb = el('btn-withdraw');
-            if (wdb) wdb.disabled = !(connectedWallet && state.coins >= CFG.MIN_WD);
-            const eb = el('earn-bal'); if (eb) eb.textContent = state.coins;
-            const gfp = el('game-fp'); if (gfp) gfp.textContent = state.coins;
-            const gbd = el('game-balance-display');
-            if (gbd) gbd.innerHTML = '🪙 <span id="game-fp">' + state.coins + '</span> FP';
-            const bmv = el('bet-max-val'); if (bmv) bmv.textContent = state.coins;
-            updateBetInputMax();
-        }
+function doTask(type, pts) {
+  const map = { tg: 'channelDone', web: 'visitDone', octo: 'octoDone', mail: 'mailDone' };
+  if(state[map[type]]) return;
+  state[map[type]] = true; state.coins += pts; saveLocal(); updUI(); hSuccess();
+  toast('🎉 +'+pts+' FP!', 'success');
+  showModal('✅ مهمة مكتملة', 'لقد ربحت '+pts+' FP!', ()=>{});
+}
 
-        function animateCoinPop() {
-            const ico = el('coin-ico');
-            if (!ico) return;
-            ico.classList.remove('coin-pop');
-            void ico.offsetWidth;
-            ico.classList.add('coin-pop');
-            setTimeout(() => ico.classList.remove('coin-pop'), 400);
-        }
+function placeBet(pred) {
+  if(isGameAnimating) return;
+  const bet = parseInt(el('bet-input').value) || 0;
+  if(bet < 1 || bet > state.coins) { toast('⚠️ رصيد غير كافٍ', 'error'); return; }
+  isGameAnimating = true; hImpact('heavy');
+  state.coins -= bet; updUI();
+  const num = Math.floor(Math.random()*100)+1;
+  let won = false, draw = false, profit = 0;
+  if(num === 50) { draw = true; profit = Math.floor(bet/2); state.coins += profit; }
+  else if((pred==='low' && num<50) || (pred==='high' && num>50)) { won = true; profit = bet*2; state.coins += profit; }
+  saveLocal(); updUI();
+  el('prog-marker').style.left = num+'%';
+  el('prog-green').style.width = num+'%';
+  el('prog-red').style.width = (100-num)+'%';
+  const fb = el('football');
+  setTimeout(()=>{
+    if(draw) { fb.classList.add('lose'); toast('😐 تعادل! استرداد '+profit, 'info'); }
+    else if(won) { fb.classList.add('win'); toast('🎉 فوز! +'+profit+' FP', 'win'); }
+    else { fb.classList.add('lose'); toast('💀 خسارة! -'+bet+' FP', 'lose'); }
+    state.gameHistory.unshift({num,won,bet,pred,draw});
+    if(state.gameHistory.length>10) state.gameHistory.length=10;
+    updateHistory();
+  },400);
+  setTimeout(()=>{
+    fb.classList.remove('win','lose'); isGameAnimating = false;
+    el('prog-marker').style.left='49%'; el('prog-green').style.width='49%'; el('prog-red').style.width='49%';
+  },1800);
+}
+function updateHistory() {
+  const hd = el('history-dots'); if(!hd) return;
+  hd.innerHTML = state.gameHistory.slice(0,6).map(h=> h.draw?'<span style="color:#888;">50</span>' : (h.won? `<span style="color:var(--neon);">+${h.bet*2}</span>` : `<span style="color:var(--danger);">-${h.bet}</span>`) ).join(' ');
+}
 
-        function updateBetInputMax() {
-            const inp = el('bet-input');
-            if (inp) {
-                inp.max = Math.max(1, state.coins);
-                if (parseInt(inp.value) > state.coins) inp.value = Math.max(1, state.coins);
-                if (parseInt(inp.value) < 1 && state.coins > 0) inp.value = 1;
-            }
-        }
+function navigate(pg) {
+  document.querySelectorAll('.page').forEach(p=>p.classList.remove('active'));
+  document.querySelectorAll('.nb,.nav-center').forEach(b=>b.classList.remove('on'));
+  el('pg-'+pg)?.classList.add('active');
+  document.querySelector(`.nb[data-page="${pg}"]`)?.classList.add('on');
+  if(pg==='game') el('nav-game')?.classList.add('on');
+  window.scrollTo(0,0);
+}
 
-        // ==================== FIFA CUP GAME LOGIC ====================
-        function resetGameUI() {
-            const marker = el('game-prog-marker');
-            const green = el('game-prog-green');
-            const red = el('game-prog-red');
-            if (marker) marker.style.left = '49%';
-            if (green) green.style.width = '49%';
-            if (red) red.style.width = '49%';
-            const badge = el('result-badge');
-            if (badge) { badge.className = 'result-badge';
-                badge.textContent = ''; }
-            const fb = el('football');
-            if (fb) { fb.classList.remove('win', 'lose');
-                fb.style.animation = 'float 2.8s ease-in-out infinite'; }
-        }
+function wireEvents() {
+  el('btn-watch-ad')?.addEventListener('click', watchAdAction);
+  el('btn-low')?.addEventListener('click', ()=>placeBet('low'));
+  el('btn-high')?.addEventListener('click', ()=>placeBet('high'));
+  el('bet-half')?.addEventListener('click', ()=>{ const i=el('bet-input'); i.value = Math.max(1, Math.floor(parseInt(i.value)/2)); });
+  el('bet-double')?.addEventListener('click', ()=>{ const i=el('bet-input'); i.value = Math.min(state.coins, parseInt(i.value)*2); });
+  el('bet-max')?.addEventListener('click', ()=>{ el('bet-input').value = state.coins; });
+  el('bet-min')?.addEventListener('click', ()=>{ el('bet-input').value = 1; });
+  el('btn-copy-ref')?.addEventListener('click', ()=>{ navigator.clipboard.writeText(el('ref-link-input').value); toast('✅ تم النسخ','success'); });
+  el('btn-share-ref')?.addEventListener('click', ()=>{ if(navigator.share) navigator.share({url: el('ref-link-input').value}); });
+  document.querySelectorAll('.task-arrow').forEach(a=>a.addEventListener('click', function(){
+    const t = this.dataset.task;
+    if(t==='tg') doTask('tg', 10);
+    else if(t==='web') doTask('web', 5);
+    else if(t==='octo') doTask('octo', 40);
+    else if(t==='mail') doTask('mail', 40);
+  }));
+  document.querySelectorAll('.tab').forEach(t=>t.addEventListener('click', function(){
+    document.querySelectorAll('.tab').forEach(x=>x.classList.remove('active'));
+    this.classList.add('active');
+    document.querySelectorAll('.tab-content').forEach(c=>c.classList.remove('active'));
+    el('tab-'+this.dataset.tab)?.classList.add('active');
+  }));
+  document.querySelectorAll('.nb').forEach(b=>b.addEventListener('click', ()=>navigate(b.dataset.page)));
+  el('nav-game')?.addEventListener('click', ()=>navigate('game'));
+  el('btn-withdraw')?.addEventListener('click', ()=>{
+    if(!connectedWallet) return toast('⚠️ اربط المحفظة أولاً','error');
+    showModal('💸 طلب سحب', 'جاري المعالجة...', ()=>{ toast('✅ تم إرسال الطلب','success'); state.coins = 0; saveLocal(); updUI(); });
+  });
+  document.querySelectorAll('.btn-neon, .btn-gold, .btn-outline, .btn-blue').forEach(b=>{
+    b.addEventListener('touchstart', function(){ this.style.transform = 'scale(0.94)'; });
+    b.addEventListener('touchend', function(){ this.style.transform = ''; });
+    b.addEventListener('touchcancel', function(){ this.style.transform = ''; });
+  });
+}
 
-        function animateGameResult(randomNum, won, isDraw) {
-            isGameAnimating = true;
-            const marker = el('game-prog-marker');
-            const green = el('game-prog-green');
-            const red = el('game-prog-red');
-            const fb = el('football');
-            const badge = el('result-badge');
-            const stadium = el('stadium');
+function initTon() {
+  if(typeof TonConnectUI === 'undefined') return;
+  tonUI = new TonConnectUI({manifestUrl: CFG.TON_MANIFEST});
+  tonUI.onStatusChange(w=>{ connectedWallet = w; updUI(); });
+  const container = el('ton-connect-container');
+  const btn = document.createElement('button'); btn.className = 'btn btn-neon'; btn.textContent = '👛 Connect TON';
+  btn.onclick = ()=> tonUI.openModal();
+  container.appendChild(btn);
+}
 
-            // تحريك المؤشر
-            const targetPercent = randomNum; // 1-100
-            if (marker) marker.style.left = targetPercent + '%';
-            if (green) green.style.width = targetPercent + '%';
-            if (red) red.style.width = (100 - targetPercent) + '%';
-
-            // تأثيرات بعد الحركة
-            setTimeout(() => {
-                if (isDraw) {
-                    if (fb) { fb.classList.add('lose');
-                        fb.style.animation = ''; }
-                    if (badge) { badge.textContent = '50';
-                        badge.className = 'result-badge show-lose'; }
-                    if (stadium) stadium.classList.add('shake-anim');
-                } else if (won) {
-                    if (fb) { fb.classList.add('win');
-                        fb.style.animation = ''; }
-                    if (badge) { badge.textContent = '✓';
-                        badge.className = 'result-badge show-win'; }
-                } else {
-                    if (fb) { fb.classList.add('lose');
-                        fb.style.animation = ''; }
-                    if (badge) { badge.textContent = '✗';
-                        badge.className = 'result-badge show-lose'; }
-                    if (stadium) stadium.classList.add('shake-anim');
-                }
-                if (stadium) setTimeout(() => stadium.classList.remove('shake-anim'), 500);
-            }, 400);
-
-            setTimeout(() => {
-                isGameAnimating = false;
-                resetGameUI();
-                updCoins();
-                updateGameHistory();
-            }, 1800);
-        }
-
-        function placeBet(prediction) {
-            if (isGameAnimating) return;
-            const betInput = el('bet-input');
-            let betAmount = parseInt(betInput.value) || 0;
-            if (betAmount < 1) { toast('⚠️ أدخل مبلغ رهان صحيح', 'error');
-                hError(); return; }
-            if (betAmount > state.coins) { toast('⚠️ رصيدك غير كافٍ!', 'error');
-                hError(); return; }
-            if (state.coins <= 0) { toast('⚠️ لا يوجد رصيد للمراهنة', 'error');
-                hError(); return; }
-
-            hImpact('heavy');
-            resetGameUI();
-
-            // خصم الرهان مؤقتاً
-            state.coins -= betAmount;
-            updCoins();
-
-            // توليد رقم عشوائي
-            const randomNum = Math.floor(Math.random() * 100) + 1;
-            let won = false;
-            let isDraw = false;
-
-            if (randomNum === 50) {
-                isDraw = true;
-                // استرداد نصف الرهان فقط
-                state.coins += Math.floor(betAmount / 2);
-                saveLocal();
-                updCoins();
-                animateGameResult(randomNum, false, true);
-                hError();
-                toast(tr('game_50') + ' | استرداد ' + Math.floor(betAmount / 2) + ' FP', 'info', 3000);
-            } else if (prediction === 'low' && randomNum >= 1 && randomNum <= 49) {
-                won = true;
-                const profit = betAmount * 2;
-                state.coins += profit;
-                saveLocal();
-                updCoins();
-                animateGameResult(randomNum, true, false);
-                hSuccess();
-                toast(tr('game_win') + profit + ' FP 🎉', 'win', 3000);
-            } else if (prediction === 'high' && randomNum >= 51 && randomNum <= 100) {
-                won = true;
-                const profit = betAmount * 2;
-                state.coins += profit;
-                saveLocal();
-                updCoins();
-                animateGameResult(randomNum, true, false);
-                hSuccess();
-                toast(tr('game_win') + profit + ' FP 🎉', 'win', 3000);
-            } else {
-                won = false;
-                saveLocal();
-                updCoins();
-                animateGameResult(randomNum, false, false);
-                hError();
-                toast(tr('game_lose') + betAmount + ' FP', 'lose', 3000);
-            }
-
-            // تسجيل في تاريخ اللعبة
-            state.gameHistory.unshift({ num: randomNum, won: won, bet: betAmount, pred: prediction, draw: isDraw });
-            if (state.gameHistory.length > 15) state.gameHistory.length = 15;
-            updateGameHistory();
-        }
-
-        function updateGameHistory() {
-            const container = el('history-dots');
-            if (!container) return;
-            if (state.gameHistory.length === 0) { container.textContent = '--'; return; }
-            container.innerHTML = state.gameHistory.slice(0, 8).map(h => {
-                if (h.draw) return '<span class="lose-dot">50</span>';
-                return h.won ? '<span class="win-dot">+' + (h.bet * 2) + '</span>' :
-                    '<span class="lose-dot">-' + h.bet + '</span>';
-            }).join('');
-        }
-
-        // ==================== أحداث المراهنة ====================
-        function wireGameEvents() {
-            const btnLow = el('btn-low');
-            const btnHigh = el('btn-high');
-            const betInput = el('bet-input');
-            const betHalf = el('bet-half');
-            const betDouble = el('bet-double');
-            const betMax = el('bet-max');
-            const betMin = el('bet-min');
-
-            if (btnLow) btnLow.addEventListener('click', () => placeBet('low'));
-            if (btnHigh) btnHigh.addEventListener('click', () => placeBet('high'));
-
-            if (betHalf) betHalf.addEventListener('click', () => {
-                const v = parseInt(betInput.value) || 0;
-                betInput.value = Math.max(1, Math.floor(v / 2));
-                hImpact('light');
-            });
-            if (betDouble) betDouble.addEventListener('click', () => {
-                const v = parseInt(betInput.value) || 0;
-                betInput.value = Math.min(state.coins, v * 2);
-                hImpact('light');
-            });
-            if (betMax) betMax.addEventListener('click', () => {
-                betInput.value = Math.max(1, state.coins);
-                hImpact('light');
-            });
-            if (betMin) betMin.addEventListener('click', () => {
-                betInput.value = 1;
-                hImpact('light');
-            });
-            if (betInput) {
-                betInput.addEventListener('change', () => {
-                    let v = parseInt(betInput.value) || 0;
-                    if (v < 1) v = 1;
-                    if (v > state.coins) v = state.coins;
-                    betInput.value = v;
-                });
-            }
-        }
-
-        // ==================== الإعلانات ====================
-        async function watchAd(btnId, points) {
-            if (isAdWatching) return;
-            const btn = el(btnId || 'ad-btn');
-            isAdWatching = true;
-            btn.disabled = true;
-            btn.innerHTML = '⏳ ...';
-            hImpact('medium');
-            if (!window.Adsgram || !window.Adsgram.init) {
-                toast(tr('ad_err'), 'error');
-                resetAdButton(btn, btnId);
-                return;
-            }
-            let ctrl;
-            try { ctrl = window.Adsgram.init({ blockId: CFG.AD_BLOCK }); } catch (e) {
-                toast(tr('ad_err'), 'error');
-                resetAdButton(btn, btnId);
-                return;
-            }
-            ctrl.show().then(async () => {
-                try {
-                    const initData = (tgApp && tgApp.initData) || '';
-                    const res = await fetchT(CFG.VERCEL + '/api/ad-watched', {
-                        method: 'POST',
-                        headers: { 'Content-Type': 'application/json', 'Authorization': 'Bearer ' +
-                                initData },
-                        body: JSON.stringify({ uid: state.uid })
-                    }, 5000);
-                    const data = await res.json();
-                    if (data.success) {
-                        state.coins = data.newBalance;
-                        state.ads = data.adsWatched;
-                    }
-                } catch (e) {}
-                state.coins += (points || 3);
-                state.ads += 1;
-                saveLocal();
-                updCoins();
-                hSuccess();
-                animateCoinPop();
-                toast('🎉 +' + (points || 3) + ' ' + tr('pts') + '!', 'success');
-                resetAdButton(btn, btnId);
-            }).catch(() => {
-                hError();
-                toast(tr('ad_skip'), 'error');
-                resetAdButton(btn, btnId);
-            });
-        }
-
-        function resetAdButton(btn, btnId) {
-            isAdWatching = false;
-            btn.disabled = false;
-            const label = btnId === 'ad-btn2' ? '📺 شاهد الإعلان' : '📺 <span>' + tr('watch') + '</span>';
-            btn.innerHTML = label;
-        }
-
-        // ==================== صندوق الغموض ====================
-        function pickMysteryReward() {
-            const total = CFG.MYSTERY.reduce((s, m) => s + m.w, 0);
-            let r = Math.random() * total;
-            for (const m of CFG.MYSTERY) { r -= m.w; if (r <= 0) return m; }
-            return CFG.MYSTERY[0];
-        }
-        async function openMysteryBox() {
-            if (isMysteryWatching) return;
-            const box = el('mystery-box');
-            if (!box.classList.contains('ready')) return;
-            if (state.mysteryDate === today()) { toast(tr('mystery_locked'), 'info'); return; }
-            if (!window.Adsgram || !window.Adsgram.init) { toast(tr('ad_err'), 'error'); return; }
-            isMysteryWatching = true;
-            hImpact('medium');
-            let ctrl;
-            try { ctrl = window.Adsgram.init({ blockId: CFG.AD_BLOCK }); } catch (e) {
-                toast(tr('ad_err'), 'error');
-                isMysteryWatching = false;
-                return;
-            }
-            ctrl.show().then(async () => {
-                const reward = pickMysteryReward();
-                box.classList.remove('ready');
-                box.classList.add('opening');
-                hSuccess();
-                setTimeout(() => {
-                    state.coins += reward.pts;
-                    state.mysteryDate = today();
-                    saveLocal();
-                    updCoins();
-                    animateCoinPop();
-                    box.classList.remove('opening');
-                    const lbl = el('tl-mystery-label');
-                    const sub = el('tl-mystery-sub');
-                    if (lbl) lbl.textContent = reward.e + ' +' + reward.pts + ' ' + tr('pts') + '!';
-                    if (sub) sub.textContent = reward.label + ' Reward';
-                    toast(reward.e + ' +' + reward.pts + ' ' + tr('pts') + '!', 'success', 3500);
-                    setTimeout(() => renderMysteryBox(), 3000);
-                }, 500);
-                isMysteryWatching = false;
-            }).catch(() => {
-                hError();
-                toast(tr('ad_skip'), 'error');
-                isMysteryWatching = false;
-            });
-        }
-        function renderMysteryBox() {
-            const box = el('mystery-box');
-            const lbl = el('tl-mystery-label');
-            const sub = el('tl-mystery-sub');
-            if (!box) return;
-            const locked = state.mysteryDate === today();
-            box.classList.toggle('ready', !locked);
-            if (lbl) lbl.textContent = locked ? tr('mystery_locked') : tr('mystery_label');
-            if (sub) sub.textContent = locked ? '' : tr('mystery_sub');
-        }
-
-        // ==================== التسجيل اليومي ====================
-        function renderCheckin() {
-            const strip = el('checkin-strip');
-            if (!strip) return;
-            strip.innerHTML = '';
-            const days = ['S', 'M', 'T', 'W', 'T', 'F', 'S'];
-            const rewards = CFG.CHECKIN_REWARDS;
-            const streak = state.checkinStreak || 0;
-            for (let i = 0; i < 7; i++) {
-                const d = document.createElement('div');
-                d.className = 'checkin-day' + (i < streak ? ' checked' : '') + (i === streak ? ' today' : '');
-                d.innerHTML = '<div class="day-num">' + days[i] +
-                    '</div><div class="day-dot">' + (i < streak ? '✓' : '') +
-                    '</div><div class="day-reward">+' + rewards[i] + '</div>';
-                strip.appendChild(d);
-            }
-            const btn = el('checkin-btn');
-            if (btn) {
-                const done = state.checkinDate === today();
-                btn.disabled = done;
-                const sp = btn.querySelector('#tl-checkin-btn');
-                if (sp) sp.textContent = done ? tr('checkin_done') : tr('checkin_btn');
-            }
-        }
-        async function claimCheckin() {
-            if (state.checkinDate === today()) { toast(tr('checkin_done'), 'info'); return; }
-            hImpact('medium');
-            const streak = Math.min(state.checkinStreak, 6);
-            const reward = CFG.CHECKIN_REWARDS[streak];
-            state.coins += reward;
-            state.checkinDate = today();
-            state.checkinStreak = (state.checkinStreak < 7) ? state.checkinStreak + 1 : 1;
-            saveLocal();
-            updCoins();
-            animateCoinPop();
-            hSuccess();
-            renderCheckin();
-            toast(tr('ci_ok') + ' +' + reward, 'success');
-            try {
-                const initData = (tgApp && tgApp.initData) || '';
-                fetchT(CFG.VERCEL + '/api/checkin', {
-                    method: 'POST',
-                    headers: { 'Content-Type': 'application/json', 'Authorization': 'Bearer ' + initData },
-                    body: JSON.stringify({ uid: state.uid, reward, streak: state.checkinStreak })
-                }, 4000).catch(() => {});
-            } catch (e) {}
-        }
-
-        // ==================== التحقق من القناة ====================
-        async function verifyChannel() {
-            const vBtn = el('verify-btn');
-            if (vBtn) { vBtn.disabled = true;
-                vBtn.textContent = tr('checking'); }
-            hImpact('light');
-            try {
-                const initData = (tgApp && tgApp.initData) || '';
-                const res = await fetchT(CFG.VERCEL + '/api/check-channel', {
-                    method: 'POST',
-                    headers: { 'Content-Type': 'application/json', 'Authorization': 'Bearer ' + initData },
-                    body: JSON.stringify({ uid: state.uid })
-                }, 6000);
-                const data = await res.json();
-                if (data.subscribed || data.success) {
-                    state.channelDone = true;
-                    state.coins += 50;
-                    state.tasks += 1;
-                    saveLocal();
-                    updCoins();
-                    animateCoinPop();
-                    hSuccess();
-                    el('tk-ch').classList.add('done');
-                    if (el('tk-ch2')) el('tk-ch2').classList.add('done');
-                    if (vBtn) vBtn.remove();
-                    toast('🎉 +50 ' + tr('pts') + '!', 'success');
-                } else {
-                    hError();
-                    toast(tr('not_sub'), 'error');
-                    if (vBtn) { vBtn.disabled = false;
-                        vBtn.textContent = tr('verify_btn'); }
-                }
-            } catch (e) {
-                state.channelDone = true;
-                state.coins += 50;
-                state.tasks += 1;
-                saveLocal();
-                updCoins();
-                animateCoinPop();
-                hSuccess();
-                el('tk-ch').classList.add('done');
-                if (el('tk-ch2')) el('tk-ch2').classList.add('done');
-                if (vBtn) vBtn.remove();
-                toast('🎉 +50 ' + tr('pts') + '!', 'success');
-            }
-        }
-
-        // ==================== الإحالة ====================
-        function copyRef() {
-            const link = 'https://t.me/' + CFG.BOT + '?start=' + state.uid;
-            hImpact('light');
-            try {
-                navigator.clipboard.writeText(link).then(() => toast(tr('copied'), 'success')).catch(() => {
-                    const ta = document.createElement('textarea');
-                    ta.value = link;
-                    document.body.appendChild(ta);
-                    ta.select();
-                    document.execCommand('copy');
-                    document.body.removeChild(ta);
-                    toast(tr('copied'), 'success');
-                });
-            } catch (e) { toast(tr('copied'), 'success'); }
-        }
-        function shareRef() {
-            const link = 'https://t.me/' + CFG.BOT + '?start=' + state.uid;
-            hImpact('medium');
-            if (tgApp && tgApp.openTelegramLink) {
-                tgApp.openTelegramLink('https://t.me/share/url?url=' + encodeURIComponent(link) +
-                    '&text=' + encodeURIComponent('انضم لـ TaskEarn واكسب TON! 🚀'));
-            } else if (navigator.share) {
-                navigator.share({ title: 'TaskEarn', text: 'انضم لـ TaskEarn واكسب TON! 🚀', url: link }).catch(
-                    () => {});
-            } else copyRef();
-        }
-        function shareTask() {
-            hImpact('medium');
-            if (!state.shareDone) {
-                state.shareDone = true;
-                state.tasks += 1;
-                saveLocal();
-                updCoins();
-                el('tk-sh').classList.add('done');
-                if (el('tk-sh2')) el('tk-sh2').classList.add('done');
-            }
-            shareRef();
-        }
-
-        // ==================== TON Connect ====================
-        function initTonConnect() {
-            if (typeof TonConnectUI === 'undefined') { renderConnectBtn(false); return; }
-            try {
-                tonUI = new TonConnectUI({ manifestUrl: CFG.TON_MANIFEST });
-                tonUI.onStatusChange(wallet => { connectedWallet = wallet;
-                    updWalletStatus();
-                    updCoins(); });
-                const w = tonUI.wallet;
-                if (w) { connectedWallet = w; }
-            } catch (e) { renderConnectBtn(false); return; }
-            renderConnectBtn(true);
-        }
-        function renderConnectBtn(ready) {
-            const container = el('ton-connect-container');
-            if (!container) return;
-            container.innerHTML = '';
-            const btn = document.createElement('button');
-            btn.id = 'ton-connect-btn';
-            btn.className = 'btn btn-neon';
-            btn.style.marginTop = '0';
-            if (!ready) {
-                btn.innerHTML = '⚠️ TON Connect غير متاح';
-                btn.disabled = true;
-            } else {
-                btn.innerHTML = connectedWallet ? '🔌 ' + tr('disconnect') : '👛 Connect TON Wallet';
-                btn.addEventListener('click', () => {
-                    if (!tonUI) return;
-                    if (connectedWallet) { tonUI.disconnect();
-                        connectedWallet = null;
-                        updWalletStatus();
-                        updCoins(); } else { tonUI.openModal(); }
-                });
-            }
-            container.appendChild(btn);
-        }
-        function updWalletStatus() {
-            const statusEl = el('wallet-status');
-            if (connectedWallet && connectedWallet.account) {
-                const addr = connectedWallet.account.address;
-                const short = addr.substring(0, 6) + '...' + addr.substring(addr.length - 4);
-                if (statusEl) {
-                    statusEl.style.display = 'block';
-                    statusEl.className = 'wallet-connected';
-                    statusEl.innerHTML = tr('wallet_ok') + '<div class="wallet-addr">' + short + '</div>';
-                }
-                const btn = el('ton-connect-btn');
-                if (btn) btn.innerHTML = '🔌 ' + tr('disconnect');
-            } else {
-                if (statusEl) { statusEl.style.display = 'none';
-                    statusEl.innerHTML = ''; }
-                const btn = el('ton-connect-btn');
-                if (btn) btn.innerHTML = '👛 Connect TON Wallet';
-            }
-            updCoins();
-        }
-        async function withdraw() {
-            if (!connectedWallet) { toast(tr('need_wallet'), 'error');
-                hError(); return; }
-            if (state.coins < CFG.MIN_WD) { toast(tr('need_pts'), 'error');
-                hError(); return; }
-            const btn = el('btn-withdraw');
-            btn.disabled = true;
-            btn.innerHTML = '⏳ ...';
-            hImpact('heavy');
-            try {
-                const initData = (tgApp && tgApp.initData) || '';
-                const addr = connectedWallet.account.address;
-                const res = await fetchT(CFG.VERCEL + '/api/withdraw', {
-                    method: 'POST',
-                    headers: { 'Content-Type': 'application/json', 'Authorization': 'Bearer ' + initData },
-                    body: JSON.stringify({ uid: state.uid, coins: state.coins, wallet: addr })
-                }, 8000);
-                const data = await res.json();
-                if (data.success) { hSuccess();
-                    toast(tr('wd_ok'), 'success', 4000);
-                    state.coins = 0;
-                    saveLocal();
-                    updCoins(); } else { throw new Error(data.error || 'failed'); }
-            } catch (e) { hSuccess();
-                toast(tr('wd_ok'), 'success', 4000);
-                state.coins = 0;
-                saveLocal();
-                updCoins(); }
-            btn.innerHTML = '💸 <span>' + tr('wdb') + '</span>';
-        }
-
-        function initTicker() {
-            const track = el('ticker');
-            if (!track) return;
-            const items = FAKE_WD.join(' • ');
-            track.textContent = items + ' • ' + items;
-        }
-
-        // ==================== اللغة والتنقل ====================
-        function setLang(l, activeEl) {
-            hImpact('light');
-            state.lang = l;
-            document.querySelectorAll('.lang-i').forEach(i => i.classList.remove('on'));
-            if (activeEl) activeEl.classList.add('on');
-            document.documentElement.dir = l === 'ar' ? 'rtl' : 'ltr';
-            document.documentElement.lang = l;
-            const map = {
-                'nl-home': 'home',
-                'nl-earn': 'earn',
-                'nl-squad': 'squad',
-                'nl-wallet': 'wallet',
-                'tl-ads': 'ads',
-                'tl-refs': 'refs',
-                'tl-tasks': 'tasks',
-                'tl-earn': 'earn2',
-                'tl-pts': 'pts',
-                'tl-watch': 'watch',
-                'tl-daily': 'daily',
-                'tl-join': 'join',
-                'tl-joind': 'joind',
-                'tl-join2': 'join',
-                'tl-share': 'share',
-                'tl-share2': 'share',
-                'tl-shared': 'shared',
-                'tl-reft': 'reft',
-                'tl-refd': 'refd',
-                'tl-copy': 'copy',
-                'tl-sref': 'sref',
-                'tl-rnum': 'rnum',
-                'tl-bal': 'bal',
-                'tl-wall': 'wall',
-                'tl-wdt': 'wdt',
-                'tl-wdb': 'wdb',
-                'tl-min': 'min',
-                'tl-time': 'time',
-                'tl-lang': 'lang',
-                'tl-rate': 'rate',
-                'tl-myid': 'myid',
-                'tl-checkin': 'checkin',
-                'tl-checkin-btn': 'checkin_btn',
-                'tl-mystery': 'mystery',
-                'tl-mystery-label': 'mystery_label',
-                'tl-mystery-sub': 'mystery_sub'
-            };
-            Object.keys(map).forEach(id => { const e = el(id); if (e) e.textContent = tr(map[id]); });
-            // Monetag zone
-            const mz = el('monetag-zone');
-            if (mz) mz.textContent = tr('monetag_zone');
-            saveLocal();
-            renderCheckin();
-            renderMysteryBox();
-            updCoins();
-            updateGameHistory();
-        }
-
-        function navigateTo(pg) {
-            document.querySelectorAll('.page').forEach(p => p.classList.remove('active'));
-            document.querySelectorAll('.nb').forEach(b => b.classList.remove('on'));
-            const navCenter = el('nav-center-btn');
-            if (navCenter) navCenter.classList.remove('on');
-
-            const pageEl = el('pg-' + pg);
-            if (pageEl) pageEl.classList.add('active');
-            const navBtn = document.querySelector('.nb[data-page="' + pg + '"]');
-            if (navBtn) navBtn.classList.add('on');
-            if (pg === 'game' && navCenter) navCenter.classList.add('on');
-            if (pg === 'wallet') updWalletStatus();
-            if (pg === 'game') { updCoins();
-                updateBetInputMax(); }
-            window.scrollTo(0, 0);
-        }
-
-        function wireEvents() {
-            el('ad-btn').addEventListener('click', () => watchAd('ad-btn', 3));
-            const adBtn2 = el('ad-btn2');
-            if (adBtn2) adBtn2.addEventListener('click', () => watchAd('ad-btn2', 5));
-            el('checkin-btn').addEventListener('click', claimCheckin);
-            el('mystery-box').addEventListener('click', openMysteryBox);
-            el('btn-copy').addEventListener('click', copyRef);
-            el('btn-share-ref').addEventListener('click', shareRef);
-            el('btn-withdraw').addEventListener('click', withdraw);
-            el('tk-sh').addEventListener('click', shareTask);
-            const tkSh2 = el('tk-sh2');
-            if (tkSh2) tkSh2.addEventListener('click', shareTask);
-            el('tk-ch').addEventListener('click', function() {
-                if (state.channelDone) return;
-                hImpact('medium');
-                if (tgApp && tgApp.openLink) tgApp.openLink(CFG.CHANNEL);
-                else window.open(CFG.CHANNEL, '_blank');
-                setTimeout(() => {
-                    if (el('verify-btn')) return;
-                    const btn = document.createElement('button');
-                    btn.id = 'verify-btn';
-                    btn.textContent = tr('verify_btn');
-                    btn.addEventListener('click', verifyChannel);
-                    document.body.appendChild(btn);
-                    setTimeout(() => { const b = el('verify-btn'); if (b) b.remove(); }, 40000);
-                }, 2000);
-            });
-            const tkCh2 = el('tk-ch2');
-            if (tkCh2) tkCh2.addEventListener('click', function() {
-                if (state.channelDone) return;
-                hImpact('medium');
-                if (tgApp && tgApp.openLink) tgApp.openLink(CFG.CHANNEL);
-                else window.open(CFG.CHANNEL, '_blank');
-                setTimeout(() => {
-                    if (el('verify-btn')) return;
-                    const btn = document.createElement('button');
-                    btn.id = 'verify-btn';
-                    btn.textContent = tr('verify_btn');
-                    btn.addEventListener('click', verifyChannel);
-                    document.body.appendChild(btn);
-                    setTimeout(() => { const b = el('verify-btn'); if (b) b.remove(); }, 40000);
-                }, 2000);
-            });
-            document.querySelectorAll('.nb').forEach(btn => {
-                btn.addEventListener('click', function() { hImpact('light');
-                    navigateTo(this.getAttribute('data-page')); });
-            });
-            const navCenter = el('nav-center-btn');
-            if (navCenter) {
-                navCenter.addEventListener('click', function() { hImpact('medium');
-                    navigateTo('game'); });
-            }
-            document.querySelectorAll('.lang-i').forEach(langEl => {
-                langEl.addEventListener('click', function() { setLang(this.getAttribute('data-lang'), this); });
-            });
-            wireGameEvents();
-        }
-
-        // ==================== التهيئة ====================
-        function init() {
-            if (tgApp) { tgApp.ready();
-                tgApp.expand(); try { tgApp.setHeaderColor('secondary_bg_color'); } catch (e) {} }
-            const u = tgApp && tgApp.initDataUnsafe && tgApp.initDataUnsafe.user;
-            if (u) { state.uid = String(u.id); } else {
-                try {
-                    state.uid = localStorage.getItem('te_guest') || ('guest_' + Date.now());
-                    localStorage.setItem('te_guest', state.uid);
-                } catch (e) { state.uid = 'guest_' + Date.now(); }
-            }
-            const idChip = el('id-chip'); if (idChip) idChip.textContent = 'ID: ' + state.uid;
-            const idChip2 = el('id-chip2'); if (idChip2) idChip2.textContent = '💰 رصيدك: ' + state.coins;
-            const myId = el('my-id'); if (myId) myId.textContent = state.uid;
-            const refLink = el('ref-link');
-            if (refLink) refLink.textContent = 'https://t.me/' + CFG.BOT + '?start=' + state.uid;
-            const saved = loadLocal();
-            if (saved) {
-                state.coins = saved.coins || 0;
-                state.ads = saved.ads_watched || 0;
-                state.tasks = saved.tasks_done || 0;
-                state.refs = saved.refs || 0;
-                state.channelDone = saved.channel_done || false;
-                state.checkinDate = saved.checkin_date || null;
-                state.checkinStreak = saved.checkin_streak || 0;
-                state.mysteryDate = saved.mystery_date || null;
-                state.gameHistory = saved.game_history || [];
-                if (saved.lang && TX[saved.lang]) state.lang = saved.lang;
-            }
-            if (state.channelDone) {
-                const tk = el('tk-ch'); if (tk) tk.classList.add('done');
-                const tk2 = el('tk-ch2'); if (tk2) tk2.classList.add('done');
-            }
-            if (state.shareDone) {
-                const ts = el('tk-sh'); if (ts) ts.classList.add('done');
-                const ts2 = el('tk-sh2'); if (ts2) ts2.classList.add('done');
-            }
-            if (!saved || !saved.lang) {
-                const tgLang = u && u.language_code;
-                if (tgLang) {
-                    if (TX[tgLang]) state.lang = tgLang;
-                    else if (tgLang.indexOf('ar') === 0) state.lang = 'ar';
-                    else state.lang = 'en';
-                }
-            }
-            document.documentElement.dir = state.lang === 'ar' ? 'rtl' : 'ltr';
-            document.documentElement.lang = state.lang;
-            document.querySelectorAll('.lang-i').forEach(li => li.classList.toggle('on', li.getAttribute('data-lang') ===
-                state.lang));
-            wireEvents();
-            setLang(state.lang, document.querySelector('.lang-i[data-lang="' + state.lang + '"]'));
-            initTicker();
-            initTonConnect();
-            updCoins();
-            renderCheckin();
-            renderMysteryBox();
-            updateGameHistory();
-            updateBetInputMax();
-            if (u) {
-                const initData = (tgApp && tgApp.initData) || '';
-                fetchT(CFG.VERCEL + '/api/user?uid=' + state.uid, { headers: { 'Authorization': 'Bearer ' +
-                            initData } }, 5000).then(r => r.json()).then(data => {
-                    if (data && data.coins !== undefined) {
-                        state.coins = data.coins;
-                        state.ads = data.ads_watched || state.ads;
-                        state.tasks = data.tasks_done || state.tasks;
-                        state.refs = data.refs || state.refs;
-                        state.channelDone = data.channel_bonus || state.channelDone;
-                        state.checkinDate = data.checkin_date || state.checkinDate;
-                        state.checkinStreak = data.checkin_streak || state.checkinStreak;
-                        state.mysteryDate = data.mystery_date || state.mysteryDate;
-                        saveLocal();
-                        updCoins();
-                        renderCheckin();
-                        renderMysteryBox();
-                        updateBetInputMax();
-                        if (state.channelDone) {
-                            const tk = el('tk-ch'); if (tk) tk.classList.add('done');
-                            const tk2 = el('tk-ch2'); if (tk2) tk2.classList.add('done');
-                        }
-                    }
-                }).catch(() => {});
-            }
-        }
-        init();
-    </script>
+function init() {
+  if(tgApp) { tgApp.ready(); tgApp.expand(); }
+  const u = tgApp?.initDataUnsafe?.user;
+  state.uid = u ? String(u.id) : ('guest_'+Date.now());
+  const saved = loadLocal(); if(saved) Object.assign(state, saved);
+  el('id-chip').textContent = state.uid;
+  el('ref-link-input').value = 'https://t.me/'+CFG.BOT+'?start='+state.uid;
+  wireEvents(); initTon(); updUI(); updateHistory();
+  document.querySelectorAll('.tab-content').forEach(c=>c.classList.remove('active'));
+  el('tab-watch')?.classList.add('active');
+  document.querySelector('.tab[data-tab="watch"]')?.classList.add('active');
+}
+init();
+</script>
 </body>
 </html>
