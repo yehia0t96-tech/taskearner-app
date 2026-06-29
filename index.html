@@ -1087,7 +1087,8 @@
             not_sub: '❌ لسه مشتركتش! اشترك الأول', verify_err: '❌ خطأ في التحقق', verify_btn: '✅ تحقق من اشتراكي',
             copied: '✅ تم النسخ!', shared_ok: 'تم مشاركة الرابط!', disconnect: '🔌 فصل المحفظة',
             bet_amount: 'مبلغ الرهان', game_win: '🎉 فوز! +', game_lose: '💔 خسارة! -',
-            game_need_coins: '⚠️ رصيد غير كافي!', game_in_progress: '⏳ جاري اللعب...' },
+            game_need_coins: '⚠️ رصيد غير كافي!', min_bet_error: '⚠️ الحد الأدنى للرهان 10 نقاط',
+            game_in_progress: '⏳ جاري اللعب...' },
         en: { home: 'Home', earn: 'Earn', squad: 'Squad', wallet: 'Wallet', ads: 'Ads', refs: 'Refs', tasks: 'Tasks',
             earn_title: 'Watch an ad & earn points!', pts: 'pts', watch: 'Watch Ad', daily: 'Tasks',
             join: 'Join TaskEarn Channel', joind: 'Subscribe & earn 50 pts', share: 'Share Referral Link',
@@ -1105,7 +1106,7 @@
             verify_err: '❌ Verify error', verify_btn: '✅ Verify Subscription', copied: '✅ Copied!',
             shared_ok: 'Link shared!', disconnect: '🔌 Disconnect', bet_amount: 'Bet Amount',
             game_win: '🎉 Win! +', game_lose: '💔 Loss! -', game_need_coins: '⚠️ Insufficient balance!',
-            game_in_progress: '⏳ Playing...' },
+            min_bet_error: '⚠️ Minimum bet is 10 points', game_in_progress: '⏳ Playing...' },
         fr: { home: 'Accueil', earn: 'Gagner', squad: 'Équipe', wallet: 'Portefeuille', ads: 'Pubs', refs: 'Refs',
             tasks: 'Tâches', earn_title: 'Voir pub & gagner!', pts: 'pts', watch: 'Voir pub', daily: 'Tâches',
             join: 'Rejoindre TaskEarn', joind: 'Abonnez-vous & gagnez 50 pts', share: 'Partager lien',
@@ -1121,7 +1122,7 @@
             not_sub: '❌ Pas encore abonné!', verify_err: '❌ Erreur de vérification', verify_btn: '✅ Vérifier',
             copied: '✅ Copié!', shared_ok: 'Lien partagé!', disconnect: '🔌 Déconnecter', bet_amount: 'Mise',
             game_win: '🎉 Gain! +', game_lose: '💔 Perte! -', game_need_coins: '⚠️ Solde insuffisant!',
-            game_in_progress: '⏳ En cours...' },
+            min_bet_error: '⚠️ La mise minimale est de 10 points', game_in_progress: '⏳ En cours...' },
         ru: { home: 'Главная', earn: 'Заработок', squad: 'Команда', wallet: 'Кошелёк', ads: 'Реклама',
             refs: 'Рефералы', tasks: 'Задания', earn_title: 'Смотри & зарабатывай!', pts: 'очков', watch: 'Смотреть',
             daily: 'Задания', join: 'Подписаться на TaskEarn', joind: 'Подпишись & получи 50 очков',
@@ -1139,7 +1140,7 @@
             verify_err: '❌ Ошибка проверки', verify_btn: '✅ Проверить подписку', copied: '✅ Скопировано!',
             shared_ok: 'Ссылка отправлена!', disconnect: '🔌 Отключить', bet_amount: 'Ставка',
             game_win: '🎉 Победа! +', game_lose: '💔 Поражение! -', game_need_coins: '⚠️ Недостаточно средств!',
-            game_in_progress: '⏳ Идёт игра...' }
+            min_bet_error: '⚠️ Минимальная ставка 10 очков', game_in_progress: '⏳ Идёт игра...' }
     };
     const FAKE_WD = ['أحمد س. سحب 0.5 USDT', 'محمد ع. سحب 1.2 USDT', 'سارة م. سحب 0.8 USDT', 'علي ح. سحب 2.0 USDT',
         'فاطمة ك. سحب 0.3 USDT', 'Omar سحب 1.5 USDT', 'Yusuf سحب 0.7 USDT', 'نورا ف. سحب 0.9 USDT',
@@ -1196,7 +1197,7 @@
         try { return JSON.parse(raw); } catch (e) { return null; }
     }
 
-    // الدالة المساعدة لتصحيح قيمة الرهان
+    // تصحيح قيمة الرهان للعرض فقط، لا يستخدم في اللعب
     function correctBetValue(val) {
         let num = parseInt(val);
         if (isNaN(num) || num < CFG.MIN_BET) num = CFG.MIN_BET;
@@ -1220,7 +1221,7 @@
         const betMax = el('bet-max'); if (betMax) betMax.textContent = 'MAX (' + state.coins + ')';
         const betInput = el('bet-amount');
         if (betInput && document.activeElement !== betInput) {
-            // لا نغير القيمة إذا كان المستخدم يكتب الآن، فقط عند التحديث العام
+            // تصحيح فقط إذا لم يكن الحقل نشطاً
             const current = parseInt(betInput.value);
             if (isNaN(current) || current < CFG.MIN_BET || current > state.coins) {
                 betInput.value = correctBetValue(betInput.value);
@@ -1252,11 +1253,21 @@
     async function playGame(choice) {
         if (isGameInProgress) return;
         const betInput = el('bet-amount');
-        // تصحيح القيمة قبل اللعب
-        betInput.value = correctBetValue(betInput.value);
-        const bet = parseInt(betInput.value) || CFG.MIN_BET;
-        if (bet < CFG.MIN_BET) { toast(tr('game_need_coins'), 'error'); hError(); return; }
-        if (bet > state.coins) { toast(tr('game_need_coins'), 'error'); hError(); return; }
+        // نقرأ القيمة الخام
+        const rawBet = parseInt(betInput.value);
+        // التحقق من الحد الأدنى
+        if (isNaN(rawBet) || rawBet < CFG.MIN_BET) {
+            toast(tr('min_bet_error'), 'error');
+            hError();
+            return;
+        }
+        // التحقق من الرصيد
+        if (rawBet > state.coins) {
+            toast(tr('game_need_coins'), 'error');
+            hError();
+            return;
+        }
+        const bet = rawBet;
         isGameInProgress = true;
         const btnLow = el('btn-low');
         const btnHigh = el('btn-high');
@@ -1392,23 +1403,19 @@
         el('bet-min').addEventListener('click', () => { const inp = el('bet-amount'); inp.value = CFG.MIN_BET; hImpact('light'); });
 
         const betInput = el('bet-amount');
-        // حدث blur: عند الخروج من الحقل، صحح القيمة إذا لزم الأمر
         betInput.addEventListener('blur', () => {
             betInput.value = correctBetValue(betInput.value);
-            updCoins(); // لتحديث أي أزرار MAX مرتبطة
+            updCoins();
         });
-        // حدث input: لا نجبر القيمة، نسمح بمسحها، فقط نمنع القيم الأقل من 1 مؤقتًا (اختياري)
         betInput.addEventListener('input', () => {
-            // نسمح بحقل فارغ (يعني مسح) حتى لا نحبس المستخدم
-            if (betInput.value === '') return;
+            if (betInput.value === '') return; // اسمح بالمسح
             let val = parseInt(betInput.value);
             if (isNaN(val)) {
                 betInput.value = '';
                 return;
             }
-            // نمنع فقط الأرقام السالبة أو الصفر، لكن نترك التصحيح النهائي لـ blur أو play
             if (val < 0) betInput.value = CFG.MIN_BET;
-            // لا نجبر الحد الأقصى هنا حتى يتمكن من كتابة أي رقم مؤقتًا
+            // لا نجبر الحد الأعلى هنا
         });
     }
 
@@ -1435,7 +1442,7 @@
         renderMysteryBox();
         renderGameHistory();
         const betInput = el('bet-amount');
-        if (betInput) betInput.value = correctBetValue(betInput.value); // ضبط أولي
+        if (betInput) betInput.value = correctBetValue(betInput.value);
         if (u) { const initData = (tgApp && tgApp.initData) || ''; fetchT(CFG.VERCEL + '/api/user?uid=' + state.uid, { headers: { 'Authorization': 'Bearer ' + initData } }, 5000).then(r => r.json()).then(data => { if (data && data.coins !== undefined) { state.coins = data.coins; state.ads = data.ads_watched || state.ads; state.tasks = data.tasks_done || state.tasks; state.refs = data.refs || state.refs; state.channelDone = data.channel_bonus || state.channelDone; state.checkinDate = data.checkin_date || state.checkinDate; state.checkinStreak = data.checkin_streak || state.checkinStreak; state.mysteryDate = data.mystery_date || state.mysteryDate; saveLocal(); updCoins(); renderCheckin(); renderMysteryBox(); renderGameHistory(); if (state.channelDone) { const tk = el('tk-ch'); if (tk) tk.classList.add('done'); } } }).catch(() => {}); }
     }
     init();
