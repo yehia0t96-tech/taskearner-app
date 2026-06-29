@@ -16,24 +16,22 @@
       --text: #eaeaea;
       --hint: #8a8fa0;
       --neon: #00e676;
-      --neon-glow: rgba(0, 230, 118, 0.55);
-      --neon-soft: rgba(0, 230, 118, 0.25);
+      --neon-glow: 0 0 15px rgba(0, 230, 118, 0.6), 0 0 40px rgba(0, 230, 118, 0.3);
+      --neon-intense: 0 0 20px rgba(0, 230, 118, 0.8), 0 0 60px rgba(0, 230, 118, 0.5);
       --gold: #ffd700;
-      --gold-glow: rgba(255, 215, 0, 0.5);
+      --gold-glow: 0 0 15px rgba(255, 215, 0, 0.5);
       --danger: #ff4d6d;
-      --danger-glow: rgba(255, 77, 109, 0.45);
-      --blue-accent: #00b0ff;
-      --blue-glow: rgba(0, 176, 255, 0.5);
-      --radius-sm: 10px;
+      --danger-glow: 0 0 15px rgba(255, 77, 109, 0.5);
+      --blue: #00b0ff;
+      --blue-glow: 0 0 15px rgba(0, 176, 255, 0.5);
       --radius: 14px;
       --radius-lg: 18px;
       --radius-xl: 24px;
       --nav-height: 82px;
       --font: 'Inter', -apple-system, BlinkMacSystemFont, 'Segoe UI', 'Noto Sans Arabic', sans-serif;
-      --ease: 0.25s cubic-bezier(0.4, 0, 0.2, 1);
-      --ease-bounce: 0.4s cubic-bezier(0.34, 1.56, 0.64, 1);
+      --ease: 0.3s cubic-bezier(0.4, 0, 0.2, 1);
     }
-    * { margin:0; padding:0; box-sizing:border-box; -webkit-tap-highlight-color:transparent; -webkit-user-select:none; user-select:none; }
+    * { margin:0; padding:0; box-sizing:border-box; -webkit-tap-highlight-color:transparent; user-select:none; }
     body {
       font-family: var(--font);
       background: var(--bg);
@@ -41,157 +39,281 @@
       min-height: 100vh; min-height: 100dvh;
       overflow-x: hidden;
       -webkit-font-smoothing: antialiased;
-      background-image: radial-gradient(ellipse at 30% 5%, rgba(0,230,118,0.07) 0%, transparent 55%),
+      background-image: radial-gradient(ellipse at 30% 5%, rgba(0,230,118,0.08) 0%, transparent 55%),
         radial-gradient(ellipse at 70% 90%, rgba(255,215,0,0.05) 0%, transparent 55%),
-        radial-gradient(ellipse at 50% 50%, rgba(0,0,0,0.5) 0%, transparent 100%);
+        radial-gradient(ellipse at 50% 50%, rgba(0,0,0,0.6) 0%, transparent 100%);
       background-attachment: fixed;
     }
     .glass-card {
       background: var(--card);
       border: 1px solid rgba(255,255,255,0.05);
       border-radius: var(--radius-lg);
-      transform: translateZ(0);
     }
     .glass-nav {
       background: rgba(14,14,18,0.94);
-      backdrop-filter: blur(28px) saturate(200%);
-      -webkit-backdrop-filter: blur(28px) saturate(200%);
+      backdrop-filter: blur(28px);
+      -webkit-backdrop-filter: blur(28px);
       border-top: 1px solid rgba(255,255,255,0.06);
-      transform: translateZ(0);
     }
     @keyframes fadeInUp { from { opacity:0; transform:translateY(14px); } to { opacity:1; transform:translateY(0); } }
-    @keyframes float { 0%,100% { transform:translateY(0); } 50% { transform:translateY(-10px); } }
-    @keyframes pulseNeon { 0%,100% { box-shadow:0 0 20px var(--neon-glow),0 0 50px rgba(0,230,118,0.18); } 50% { box-shadow:0 0 35px var(--neon-glow),0 0 90px rgba(0,230,118,0.35); } }
-    @keyframes pulseGold { 0%,100% { box-shadow:0 0 15px var(--gold-glow),0 0 40px rgba(255,215,0,0.15); } 50% { box-shadow:0 0 30px var(--gold-glow),0 0 70px rgba(255,215,0,0.3); } }
-    @keyframes shake { 0%,100% { transform:translateX(0); } 15% { transform:translateX(-6px); } 30% { transform:translateX(6px); } 45% { transform:translateX(-4px); } 60% { transform:translateX(4px); } 75% { transform:translateX(-2px); } 90% { transform:translateX(2px); } }
-    @keyframes burstWin { 0% { transform:scale(1); opacity:1; } 40% { transform:scale(1.8); opacity:0.7; } 100% { transform:scale(0.3); opacity:0; } }
-    @keyframes notifIn { from { top:-70px; opacity:0; transform:translateX(-50%) scale(0.85); } to { top:16px; opacity:1; transform:translateX(-50%) scale(1); } }
-    @keyframes notifOut { from { top:16px; opacity:1; transform:translateX(-50%) scale(1); } to { top:-70px; opacity:0; transform:translateX(-50%) scale(0.85); } }
-    @keyframes coinPop { 0% { transform:scale(1); } 40% { transform:scale(1.5); } 100% { transform:scale(1); } }
-    @keyframes slideUpModal { from { transform:translate(-50%,20px); opacity:0; } to { transform:translate(-50%,0); opacity:1; } }
-    .coin-pop { animation: coinPop 0.4s ease-out; }
-    .shake-anim { animation: shake 0.5s ease-out; }
-
+    @keyframes float { 0%,100% { transform:translateY(0); } 50% { transform:translateY(-8px); } }
+    @keyframes pulseNeon { 0%,100% { box-shadow: var(--neon-glow); } 50% { box-shadow: var(--neon-intense); } }
+    @keyframes shake { 0%,100% { transform:translateX(0); } 20% { transform:translateX(-6px); } 40% { transform:translateX(6px); } 60% { transform:translateX(-3px); } 80% { transform:translateX(3px); } }
+    @keyframes burstWin { 0% { transform:scale(1); opacity:1; } 40% { transform:scale(1.8); opacity:0.6; } 100% { transform:scale(0.2); opacity:0; } }
+    @keyframes slideUp { from { transform:translate(-50%, 20px); opacity:0; } to { transform:translate(-50%, 0); opacity:1; } }
+    @keyframes notifIn { from { top:-60px; opacity:0; transform:translateX(-50%) scale(0.8); } to { top:16px; opacity:1; transform:translateX(-50%) scale(1); } }
+    @keyframes notifOut { from { top:16px; opacity:1; transform:translateX(-50%) scale(1); } to { top:-60px; opacity:0; transform:translateX(-50%) scale(0.8); } }
     .page {
       display: none;
       padding: 12px 14px;
       padding-bottom: calc(var(--nav-height) + 24px);
-      animation: fadeInUp 0.3s ease;
+      animation: fadeInUp 0.35s ease;
       max-width: 480px;
       margin: 0 auto;
     }
     .page.active { display: block; }
-
-    .topbar {
-      display: flex; justify-content: space-between; align-items: center;
-      padding: 14px 18px; margin-bottom: 10px; border-radius: var(--radius-lg);
-    }
-    .logo { font-size:19px; font-weight:800; letter-spacing:-0.3px; display:flex; align-items:center; gap:6px; }
-    .logo .bolt { display:inline-block; animation: float 2.5s ease-in-out infinite; filter:drop-shadow(0 0 10px var(--neon-glow)); font-size:22px; }
-    .logo .txt { background:linear-gradient(135deg,#00e676,#00c853,#ffd700); -webkit-background-clip:text; -webkit-text-fill-color:transparent; background-clip:text; font-weight:900; }
-
     .btn {
       width:100%; padding:14px; border-radius:var(--radius); font-size:14px; font-weight:700; cursor:pointer;
-      margin-top:8px; transition:all var(--ease); border:none; letter-spacing:0.3px;
+      margin-top:8px; transition: all var(--ease); border:none; letter-spacing:0.3px;
       transform:translateZ(0); will-change:transform; position:relative; overflow:hidden;
     }
     .btn:active { transform:scale(0.95); transition:transform 0.1s ease; }
-    .btn-neon { color:#000; background:var(--neon); box-shadow:0 4px 22px var(--neon-glow); font-weight:800; }
-    .btn-neon:active { box-shadow:0 0 40px var(--neon-glow),0 0 80px rgba(0,230,118,0.4); }
-    .btn-gold { color:#000; background:linear-gradient(135deg,#ffd700,#ffab00); box-shadow:0 4px 20px var(--gold-glow); font-weight:800; }
-    .btn-outline { background:transparent; border:2px solid var(--neon); color:var(--neon); font-weight:700; }
-    .btn-blue { color:#fff; background:var(--blue-accent); box-shadow:0 4px 20px var(--blue-glow); font-weight:800; }
-    .btn:disabled { opacity:0.45; pointer-events:none; filter:grayscale(30%); }
+    .btn-neon {
+      background: var(--neon); color:#000; box-shadow: var(--neon-glow);
+      font-weight:800; border: 2px solid rgba(255,255,255,0.2);
+    }
+    .btn-neon:active { box-shadow: var(--neon-intense); }
+    .btn-gold {
+      background: linear-gradient(135deg, #ffd700, #ffab00); color:#000;
+      box-shadow: var(--gold-glow); font-weight:800;
+    }
+    .btn-outline {
+      background: transparent; border: 2px solid var(--neon); color: var(--neon);
+      font-weight:700; box-shadow: 0 0 8px rgba(0,230,118,0.3);
+    }
+    .btn-blue {
+      background: var(--blue); color:#fff; box-shadow: var(--blue-glow);
+      font-weight:800;
+    }
+    .btn:disabled { opacity:0.5; pointer-events:none; filter:grayscale(30%); }
 
+    /* شريط التنقل */
     .nav {
-      position:fixed; bottom:0; left:0; right:0; display:flex; justify-content:space-around; align-items:flex-end;
-      padding:6px 4px max(10px,env(safe-area-inset-bottom,10px)); z-index:100; max-width:480px; margin:0 auto;
-      border-radius:var(--radius-xl) var(--radius-xl) 0 0;
+      position:fixed; bottom:0; left:0; right:0; display:flex; justify-content:space-around;
+      align-items:flex-end; padding:6px 4px max(10px, env(safe-area-inset-bottom,10px));
+      z-index:100; max-width:480px; margin:0 auto;
+      border-radius: var(--radius-xl) var(--radius-xl) 0 0;
     }
     .nb {
       background:none; border:none; color:var(--hint); font-size:10px; cursor:pointer;
-      display:flex; flex-direction:column; align-items:center; gap:3px; padding:6px 10px;
-      transition:all var(--ease); border-radius:var(--radius); position:relative;
-      transform:translateZ(0); will-change:transform; flex:1; text-align:center;
+      display:flex; flex-direction:column; align-items:center; gap:3px; padding:6px 8px;
+      transition:all var(--ease); border-radius:var(--radius); flex:1; text-align:center;
     }
     .nb .ic { font-size:21px; transition:all var(--ease); }
     .nb.on { color:var(--neon); font-weight:600; }
-    .nb.on .ic { filter:drop-shadow(0 0 10px var(--neon-glow)); transform:scale(1.1); }
-    .nb.on::after { content:''; position:absolute; top:-4px; width:20px; height:3px; border-radius:4px; background:var(--neon); box-shadow:0 0 12px var(--neon-glow); }
-
-    .nav-center-wrap { flex:1.3; display:flex; justify-content:center; align-items:center; position:relative; margin-top:-24px; }
+    .nb.on .ic { filter:drop-shadow(0 0 8px var(--neon)); transform:scale(1.1); }
+    .nb.on::after {
+      content:''; position:absolute; top:-4px; width:20px; height:3px;
+      border-radius:4px; background:var(--neon); box-shadow:0 0 12px var(--neon);
+    }
+    .nav-center-wrap {
+      flex:1.3; display:flex; justify-content:center; align-items:center;
+      position:relative; margin-top:-24px;
+    }
     .nav-center {
-      width:60px; height:60px; border-radius:50%; background:linear-gradient(135deg,#00e676,#00c853);
-      border:3px solid rgba(0,0,0,0.4); cursor:pointer; display:flex; align-items:center; justify-content:center;
-      font-size:28px; color:#000; box-shadow:0 0 35px var(--neon-glow),0 0 80px rgba(0,230,118,0.4),0 8px 30px rgba(0,0,0,0.5);
-      transition:all var(--ease-bounce); transform:translateZ(0); will-change:transform; position:relative; z-index:10;
+      width:60px; height:60px; border-radius:50%;
+      background: linear-gradient(135deg, #00e676, #00c853);
+      border:3px solid rgba(0,0,0,0.4); cursor:pointer;
+      display:flex; align-items:center; justify-content:center;
+      font-size:28px; color:#000;
+      box-shadow: 0 0 25px rgba(0,230,118,0.7), 0 0 60px rgba(0,230,118,0.4), 0 8px 30px rgba(0,0,0,0.5);
+      transition:all 0.3s ease; z-index:10;
       animation: pulseNeon 2.5s infinite;
     }
-    .nav-center:active { transform:scale(0.88); box-shadow:0 0 55px var(--neon-glow),0 0 110px rgba(0,230,118,0.5); transition:transform 0.1s ease; }
-    .nav-center.on { animation: pulseNeon 1.2s infinite; }
-    .nav-center-label { position:absolute; bottom:-18px; font-size:9px; color:var(--neon); font-weight:700; white-space:nowrap; letter-spacing:0.5px; text-shadow:0 0 8px var(--neon-glow); }
+    .nav-center:active { transform:scale(0.88); box-shadow: 0 0 40px rgba(0,230,118,0.9); }
+    .nav-center.on { animation: pulseNeon 1.5s infinite; }
+    .nav-center-label {
+      position:absolute; bottom:-18px; font-size:9px; color:var(--neon);
+      font-weight:700; white-space:nowrap; text-shadow:0 0 8px var(--neon);
+    }
 
-    .balance-card { padding:20px 18px; text-align:center; margin-bottom:12px; border-radius:var(--radius-xl); background:linear-gradient(145deg,rgba(0,230,118,0.08) 0%,rgba(22,24,31,0.9) 50%); border:1px solid rgba(0,230,118,0.2); }
-    .balance-amount { font-size:48px; font-weight:900; letter-spacing:-2px; background:linear-gradient(180deg,#fff 0%,#00e676 100%); -webkit-background-clip:text; -webkit-text-fill-color:transparent; background-clip:text; margin:6px 0; }
+    /* صفحة Home */
+    .balance-card {
+      padding:20px; text-align:center; margin-bottom:12px;
+      border-radius:var(--radius-xl);
+      background: linear-gradient(145deg, rgba(0,230,118,0.1) 0%, var(--card) 60%);
+      border:1px solid rgba(0,230,118,0.25);
+    }
+    .balance-amount {
+      font-size:52px; font-weight:900; letter-spacing:-2px;
+      background: linear-gradient(180deg, #fff 0%, #00e676 100%);
+      -webkit-background-clip:text; -webkit-text-fill-color:transparent;
+      background-clip:text; margin:6px 0;
+    }
     .home-actions { display:grid; grid-template-columns:1fr 1fr; gap:10px; margin:12px 0; }
-    .shield-card { display:flex; align-items:center; gap:12px; padding:16px; border-radius:var(--radius-lg); background:rgba(0,230,118,0.05); border:1px solid rgba(0,230,118,0.15); font-size:12px; color:var(--hint); }
-    .shield-icon { font-size:34px; filter:drop-shadow(0 0 10px var(--neon-glow)); }
+    .shield-card {
+      display:flex; align-items:center; gap:12px; padding:16px;
+      border-radius:var(--radius-lg); background:rgba(0,230,118,0.05);
+      border:1px solid rgba(0,230,118,0.2); font-size:12px; color:var(--hint);
+    }
+    .shield-icon { font-size:34px; filter:drop-shadow(0 0 12px var(--neon)); }
 
-    .tabs { display:flex; background:var(--card); border-radius:var(--radius); padding:4px; margin-bottom:12px; border:1px solid rgba(255,255,255,0.05); }
-    .tab { flex:1; padding:10px 4px; text-align:center; font-size:12px; font-weight:600; cursor:pointer; border-radius:var(--radius-sm); transition:all var(--ease); color:var(--hint); }
-    .tab.active { background:var(--neon); color:#000; box-shadow:0 4px 18px var(--neon-glow); }
+    /* Earn */
+    .tabs {
+      display:flex; background:var(--card); border-radius:var(--radius);
+      padding:4px; margin-bottom:12px; border:1px solid rgba(255,255,255,0.05);
+    }
+    .tab {
+      flex:1; padding:10px 4px; text-align:center; font-size:12px; font-weight:600;
+      cursor:pointer; border-radius:var(--radius); transition:all var(--ease); color:var(--hint);
+    }
+    .tab.active { background:var(--neon); color:#000; box-shadow:0 0 18px var(--neon-glow); }
     .tab-content { display:none; }
     .tab-content.active { display:block; }
-
-    .ad-watch-card { padding:20px; text-align:center; border-radius:var(--radius-xl); background:radial-gradient(ellipse at center, rgba(0,230,118,0.1) 0%, var(--card) 70%); border:1px solid rgba(0,230,118,0.2); margin-bottom:10px; }
+    .ad-watch-card {
+      padding:20px; text-align:center; border-radius:var(--radius-xl);
+      background: radial-gradient(ellipse at center, rgba(0,230,118,0.15) 0%, var(--card) 70%);
+      border:1px solid rgba(0,230,118,0.3); margin-bottom:10px;
+    }
     .ad-counter { font-size:32px; font-weight:900; color:var(--neon); margin:8px 0; }
-    .task-row { display:flex; justify-content:space-between; align-items:center; padding:14px; border-radius:var(--radius); margin-bottom:6px; background:var(--card); border:1px solid rgba(255,255,255,0.03); }
+    .task-row {
+      display:flex; justify-content:space-between; align-items:center;
+      padding:14px; border-radius:var(--radius); margin-bottom:6px;
+      background:var(--card); border:1px solid rgba(255,255,255,0.03);
+    }
     .task-info { display:flex; align-items:center; gap:12px; }
     .task-icon { font-size:28px; }
-    .task-arrow { width:36px; height:36px; border-radius:50%; background:var(--neon); color:#000; display:flex; align-items:center; justify-content:center; font-weight:700; font-size:18px; cursor:pointer; transition:all var(--ease); box-shadow:0 0 12px var(--neon-soft); }
+    .task-arrow {
+      width:36px; height:36px; border-radius:50%; background:var(--neon);
+      color:#000; display:flex; align-items:center; justify-content:center;
+      font-weight:700; font-size:18px; cursor:pointer;
+      box-shadow:0 0 12px var(--neon-soft); transition:all var(--ease);
+    }
     .task-arrow:active { transform:scale(0.9); }
     .task-arrow.done { background:var(--hint); box-shadow:none; pointer-events:none; }
 
-    .game-header { display:flex; justify-content:space-between; align-items:center; padding:10px 16px; margin-bottom:6px; border-radius:var(--radius-lg); }
-    .game-title { font-size:22px; font-weight:900; background:linear-gradient(135deg,#00e676,#ffd700); -webkit-background-clip:text; -webkit-text-fill-color:transparent; background-clip:text; }
-    .stadium { position:relative; text-align:center; padding:24px 16px 16px; margin:8px 0 12px; border-radius:var(--radius-xl); background:radial-gradient(ellipse at center, rgba(0,230,118,0.12) 0%, transparent 70%), var(--card); border:1px solid rgba(255,255,255,0.05); overflow:hidden; }
-    .football { font-size:80px; display:inline-block; position:relative; z-index:2; filter:drop-shadow(0 0 30px var(--neon-glow)) drop-shadow(0 10px 25px rgba(0,0,0,0.6)); animation:float 2.8s ease-in-out infinite; }
-    .football.win { animation:burstWin 0.7s ease-out forwards; filter:drop-shadow(0 0 50px var(--neon-glow)); }
-    .football.lose { animation:shake 0.5s ease-out; filter:drop-shadow(0 0 40px var(--danger-glow)); }
-    .game-progress-wrap { margin:0 8px 14px; height:22px; border-radius:12px; overflow:hidden; background:rgba(255,255,255,0.04); position:relative; display:flex; border:1px solid rgba(255,255,255,0.06); }
+    /* Game */
+    .game-header {
+      display:flex; justify-content:space-between; align-items:center;
+      padding:10px 16px; margin-bottom:6px; border-radius:var(--radius-lg);
+    }
+    .game-title {
+      font-size:24px; font-weight:900;
+      background: linear-gradient(135deg, #00e676, #ffd700);
+      -webkit-background-clip:text; -webkit-text-fill-color:transparent;
+      background-clip:text;
+    }
+    .stadium {
+      position:relative; text-align:center; padding:24px 16px 16px;
+      margin:8px 0 12px; border-radius:var(--radius-xl);
+      background: radial-gradient(ellipse at center, rgba(0,230,118,0.12) 0%, transparent 70%), var(--card);
+      border:1px solid rgba(255,255,255,0.05); overflow:hidden;
+    }
+    .football {
+      font-size:80px; display:inline-block; position:relative; z-index:2;
+      filter:drop-shadow(0 0 25px var(--neon-glow)) drop-shadow(0 10px 20px rgba(0,0,0,0.6));
+      animation:float 2.8s ease-in-out infinite;
+    }
+    .football.win { animation:burstWin 0.7s ease-out forwards; filter:drop-shadow(0 0 40px var(--neon-glow)); }
+    .football.lose { animation:shake 0.5s ease-out; filter:drop-shadow(0 0 30px var(--danger-glow)); }
+    .game-progress-wrap {
+      margin:0 8px 14px; height:22px; border-radius:12px; overflow:hidden;
+      background:rgba(255,255,255,0.04); position:relative; display:flex;
+      border:1px solid rgba(255,255,255,0.06);
+    }
     .game-prog-green { height:100%; background:linear-gradient(90deg,#00c853,#00e676); border-radius:12px 0 0 12px; transition:width 0.8s ease; width:49%; }
     .game-prog-red { height:100%; background:linear-gradient(90deg,#ff4d6d,#ff1744); border-radius:0 12px 12px 0; transition:width 0.8s ease; width:49%; }
-    .game-prog-marker { position:absolute; top:-6px; width:8px; height:34px; border-radius:6px; background:#fff; z-index:6; box-shadow:0 0 18px rgba(255,255,255,0.8); transition:left 0.8s ease; transform:translateX(-50%); }
+    .game-prog-marker {
+      position:absolute; top:-6px; width:8px; height:34px; border-radius:6px;
+      background:#fff; z-index:6; box-shadow:0 0 18px rgba(255,255,255,0.8);
+      transition:left 0.8s ease; transform:translateX(-50%);
+    }
     .predict-row { display:flex; gap:10px; margin:12px 0; align-items:center; justify-content:center; }
-    .btn-predict { flex:1; padding:18px 12px; border-radius:var(--radius-lg); font-size:18px; font-weight:900; cursor:pointer; border:2px solid transparent; transition:all var(--ease); }
-    .btn-low { background:rgba(0,230,118,0.15); color:var(--neon); border-color:rgba(0,230,118,0.35); }
+    .btn-predict {
+      flex:1; padding:18px 12px; border-radius:var(--radius-lg); font-size:18px;
+      font-weight:900; cursor:pointer; border:2px solid transparent; transition:all var(--ease);
+    }
+    .btn-low { background:rgba(0,230,118,0.15); color:var(--neon); border-color:rgba(0,230,118,0.4); }
     .btn-low:active { background:rgba(0,230,118,0.3); box-shadow:0 0 30px var(--neon-glow); transform:scale(0.94); }
-    .btn-high { background:rgba(255,77,109,0.15); color:var(--danger); border-color:rgba(255,77,109,0.35); }
+    .btn-high { background:rgba(255,77,109,0.15); color:var(--danger); border-color:rgba(255,77,109,0.4); }
     .btn-high:active { background:rgba(255,77,109,0.3); box-shadow:0 0 30px var(--danger-glow); transform:scale(0.94); }
-    .mid-circle { width:48px; height:48px; border-radius:50%; background:var(--card2); border:2px solid rgba(255,255,255,0.2); display:flex; align-items:center; justify-content:center; font-weight:900; font-size:16px; flex-shrink:0; }
-    .bet-section { padding:14px; border-radius:var(--radius-lg); background:var(--card); border:1px solid rgba(255,255,255,0.04); }
-    .bet-input { width:100%; padding:14px; border-radius:var(--radius); background:var(--card2); border:1px solid rgba(255,255,255,0.1); color:#fff; font-size:22px; font-weight:700; text-align:center; font-family:var(--font); margin:8px 0; }
+    .mid-circle {
+      width:48px; height:48px; border-radius:50%; background:var(--card2);
+      border:2px solid rgba(255,255,255,0.2); display:flex; align-items:center;
+      justify-content:center; font-weight:900; font-size:16px; flex-shrink:0;
+    }
+    .bet-section {
+      padding:14px; border-radius:var(--radius-lg); background:var(--card);
+      border:1px solid rgba(255,255,255,0.04);
+    }
+    .bet-input {
+      width:100%; padding:14px; border-radius:var(--radius); background:var(--card2);
+      border:1px solid rgba(255,255,255,0.1); color:#fff; font-size:22px; font-weight:700;
+      text-align:center; font-family:var(--font); margin:8px 0;
+    }
     .bet-quick { display:flex; gap:6px; margin-top:8px; }
-    .bet-quick-btn { flex:1; padding:12px 6px; border-radius:var(--radius-sm); font-size:13px; font-weight:700; cursor:pointer; background:var(--card2); border:1px solid rgba(255,255,255,0.08); color:var(--text); transition:all var(--ease); }
+    .bet-quick-btn {
+      flex:1; padding:12px 6px; border-radius:var(--radius); font-size:13px;
+      font-weight:700; cursor:pointer; background:var(--card2);
+      border:1px solid rgba(255,255,255,0.08); color:var(--text); transition:all var(--ease);
+    }
     .bet-quick-btn:active { background:var(--neon); color:#000; transform:scale(0.93); }
 
-    .invite-card { text-align:center; padding:20px; border-radius:var(--radius-xl); background:linear-gradient(145deg,rgba(0,230,118,0.1),var(--card)); border:1px solid rgba(0,230,118,0.2); margin-bottom:12px; }
-    .invite-football { font-size:60px; filter:drop-shadow(0 0 25px var(--neon-glow)); animation:float 2.8s ease-in-out infinite; }
+    /* Squad */
+    .invite-card {
+      text-align:center; padding:20px; border-radius:var(--radius-xl);
+      background: linear-gradient(145deg, rgba(0,230,118,0.12), var(--card));
+      border:1px solid rgba(0,230,118,0.25); margin-bottom:12px;
+    }
+    .invite-football { font-size:60px; filter:drop-shadow(0 0 20px var(--neon-glow)); animation:float 2.8s infinite; }
     .ref-link-box { display:flex; gap:8px; align-items:center; margin:12px 0; }
-    .ref-link-input { flex:1; padding:12px; border-radius:var(--radius); background:var(--card2); border:1px solid rgba(255,255,255,0.1); color:#fff; font-size:11px; font-family:monospace; }
+    .ref-link-input {
+      flex:1; padding:12px; border-radius:var(--radius); background:var(--card2);
+      border:1px solid rgba(255,255,255,0.1); color:#fff; font-size:11px; font-family:monospace;
+    }
     .stats-row { display:grid; grid-template-columns:1fr 1fr; gap:10px; margin-top:12px; }
-    .stat-box { padding:16px; text-align:center; border-radius:var(--radius); background:var(--card); border:1px solid rgba(255,255,255,0.04); }
+    .stat-box {
+      padding:16px; text-align:center; border-radius:var(--radius); background:var(--card);
+      border:1px solid rgba(255,255,255,0.04);
+    }
     .stat-value { font-size:26px; font-weight:800; color:var(--neon); }
 
-    .wallet-balance { text-align:center; padding:20px; border-radius:var(--radius-xl); background:linear-gradient(145deg,rgba(255,215,0,0.08),var(--card)); border:1px solid rgba(255,215,0,0.2); margin-bottom:12px; }
+    /* Wallet */
+    .wallet-balance {
+      text-align:center; padding:20px; border-radius:var(--radius-xl);
+      background: linear-gradient(145deg, rgba(255,215,0,0.08), var(--card));
+      border:1px solid rgba(255,215,0,0.2); margin-bottom:12px;
+    }
 
-    .modal-overlay { position:fixed; inset:0; background:rgba(0,0,0,0.7); backdrop-filter:blur(8px); z-index:200; display:none; align-items:center; justify-content:center; }
+    /* Modal */
+    .modal-overlay {
+      position:fixed; inset:0; background:rgba(0,0,0,0.7); backdrop-filter:blur(8px);
+      z-index:200; display:none; align-items:center; justify-content:center;
+    }
     .modal-overlay.active { display:flex; }
-    .modal { background:var(--card); border-radius:var(--radius-xl); padding:24px 20px; width:90%; max-width:380px; text-align:center; border:1px solid rgba(0,230,118,0.3); box-shadow:0 20px 50px rgba(0,0,0,0.8); animation:slideUpModal 0.35s ease; }
-    .modal-progress { width:100%; height:8px; background:rgba(255,255,255,0.08); border-radius:10px; margin:16px 0; overflow:hidden; }
-    .modal-progress-fill { height:100%; background:linear-gradient(90deg,#00e676,#00b0ff); border-radius:10px; transition:width 0.2s ease; box-shadow:0 0 15px var(--neon-soft); }
+    .modal {
+      background:var(--card); border-radius:var(--radius-xl); padding:24px 20px;
+      width:90%; max-width:380px; text-align:center;
+      border:1px solid rgba(0,230,118,0.3); box-shadow:0 20px 50px rgba(0,0,0,0.8);
+      animation:slideUp 0.35s ease;
+    }
+    .modal-progress {
+      width:100%; height:8px; background:rgba(255,255,255,0.08);
+      border-radius:10px; margin:16px 0; overflow:hidden;
+    }
+    .modal-progress-fill {
+      height:100%; background:linear-gradient(90deg,#00e676,#00b0ff);
+      border-radius:10px; transition:width 0.2s ease;
+      box-shadow:0 0 15px var(--neon-soft);
+    }
 
-    .notif { position:fixed; top:16px; left:50%; transform:translateX(-50%); padding:12px 24px; border-radius:28px; font-size:14px; font-weight:700; z-index:999; display:none; letter-spacing:0.3px; pointer-events:none; box-shadow:0 8px 32px rgba(0,0,0,0.7); backdrop-filter:blur(20px); background:rgba(22,24,31,0.95); }
+    .notif {
+      position:fixed; top:16px; left:50%; transform:translateX(-50%);
+      padding:12px 24px; border-radius:28px; font-size:14px; font-weight:700;
+      z-index:999; display:none; letter-spacing:0.3px; pointer-events:none;
+      box-shadow:0 8px 32px rgba(0,0,0,0.7); backdrop-filter:blur(20px);
+      background:rgba(22,24,31,0.95); white-space:nowrap;
+    }
     .notif.success { color:var(--neon); border:1px solid rgba(0,230,118,0.4); }
     .notif.error { color:var(--danger); border:1px solid rgba(255,77,109,0.4); }
     .notif.win { color:#000; background:rgba(0,230,118,0.95); font-size:18px; }
@@ -199,18 +321,22 @@
   </style>
 </head>
 <body>
+
 <div class="notif" id="notif"></div>
 
-<!-- الصفحة الرئيسية Home -->
+<!-- الصفحة الرئيسية -->
 <div id="pg-home" class="page active">
-  <div class="topbar glass-card">
-    <div class="logo"><span class="bolt">⚡</span><span class="txt">TaskEarn</span></div>
-    <div style="font-size:11px;padding:6px 14px;border-radius:20px;color:var(--hint);background:rgba(22,24,31,0.6);">ID: <span id="id-chip">···</span></div>
+  <div class="topbar glass-card" style="display:flex;justify-content:space-between;align-items:center;padding:14px 18px;margin-bottom:10px;">
+    <div class="logo" style="display:flex;align-items:center;gap:6px;">
+      <span class="bolt" style="display:inline-block;animation:float 2.5s infinite;filter:drop-shadow(0 0 10px var(--neon));font-size:22px;">⚡</span>
+      <span class="txt" style="background:linear-gradient(135deg,#00e676,#ffd700);-webkit-background-clip:text;-webkit-text-fill-color:transparent;font-weight:900;">TaskEarn</span>
+    </div>
+    <div style="font-size:11px;padding:6px 14px;border-radius:20px;color:var(--hint);background:rgba(22,24,31,0.6);">ID: 1829170332</div>
   </div>
   <div class="balance-card">
     <div style="color:var(--hint);font-size:12px;">رصيدك الحالي</div>
-    <div class="balance-amount" id="coins-home">0</div>
-    <div style="color:var(--gold);font-size:14px;">≈ <span id="usdt-home">0.00</span> USDT</div>
+    <div class="balance-amount" id="coins-home">135</div>
+    <div style="color:var(--gold);font-size:14px;">≈ <span id="usdt-home">0.01</span> USDT</div>
   </div>
   <div class="home-actions">
     <button class="btn btn-neon">💎 إيداع</button>
@@ -236,10 +362,14 @@
       <div class="ad-counter"><span id="ads-watched">0</span> / 5</div>
       <button class="btn btn-neon" id="btn-watch-ad" style="margin-top:12px;">▶ Watch Now</button>
     </div>
+    <!-- Monetag Zone placeholder -->
+    <div class="monetag-zone" style="padding:16px;border:1px dashed rgba(0,230,118,0.3);border-radius:var(--radius-lg);text-align:center;color:var(--hint);margin-top:10px;">
+      Monetag Rewarded Interstitial Zone
+    </div>
   </div>
   <div class="tab-content" id="tab-tasks">
     <div class="task-row">
-      <div class="task-info"><span class="task-icon">📢</span><div><div style="font-weight:600;">Join Dev Crypto</div><div style="font-size:10px;color:var(--hint);">+10 FP</div></div></div>
+      <div class="task-info"><span class="task-icon">📢</span><div><div style="font-weight:600;">Join Dev Crypto Telegram</div><div style="font-size:10px;color:var(--hint);">+10 FP</div></div></div>
       <div class="task-arrow" data-task="tg">➜</div>
     </div>
     <div class="task-row">
@@ -262,15 +392,15 @@
   </div>
 </div>
 
-<!-- صفحة اللعبة FIFA CUP -->
+<!-- لعبة FIFA CUP -->
 <div id="pg-game" class="page">
   <div class="game-header glass-card">
     <div class="game-title">⚽ FIFA CUP</div>
-    <div style="color:var(--gold);font-weight:700;background:rgba(255,215,0,0.1);padding:8px 14px;border-radius:20px;">🪙 <span id="game-fp">0</span> FP</div>
+    <div style="color:var(--gold);font-weight:700;background:rgba(255,215,0,0.1);padding:8px 14px;border-radius:20px;">🪙 <span id="game-fp">135</span> FP</div>
   </div>
   <div class="stadium">
     <span class="football" id="football">⚽</span>
-    <div class="result-badge" id="result-badge" style="position:absolute;top:50%;left:50%;transform:translate(-50%,-50%) scale(0);font-weight:900;z-index:5;padding:10px 20px;border-radius:25px;"></div>
+    <div id="result-badge" style="position:absolute;top:50%;left:50%;transform:translate(-50%,-50%) scale(0);font-weight:900;z-index:5;padding:10px 20px;border-radius:25px;transition:0.3s;"></div>
   </div>
   <div style="display:flex;justify-content:space-between;font-size:10px;color:var(--hint);padding:2px 8px;"> <span>1 LOW</span><span>50</span><span>HIGH 100</span> </div>
   <div class="game-progress-wrap">
@@ -284,8 +414,8 @@
     <button class="btn-predict btn-high" id="btn-high">📈 HIGH</button>
   </div>
   <div class="bet-section">
-    <div style="display:flex;justify-content:space-between;margin-bottom:6px;"><span style="color:var(--hint);">💰 قيمة الرهان</span><span style="color:var(--gold);">الحد: <span id="bet-max-val">0</span></span></div>
-    <input type="number" class="bet-input" id="bet-input" value="1" min="1">
+    <div style="display:flex;justify-content:space-between;margin-bottom:6px;"><span style="color:var(--hint);">💰 قيمة الرهان</span><span style="color:var(--gold);">الحد: <span id="bet-max-val">135</span></span></div>
+    <input type="number" class="bet-input" id="bet-input" value="1" min="1" max="135">
     <div class="bet-quick">
       <button class="bet-quick-btn" id="bet-min">MIN</button>
       <button class="bet-quick-btn" id="bet-half">½</button>
@@ -296,7 +426,7 @@
   <div style="text-align:center;margin-top:8px;font-size:10px;color:var(--hint);">📜 آخر الجولات: <span id="history-dots">--</span></div>
 </div>
 
-<!-- صفحة الأصدقاء Squad -->
+<!-- الأصدقاء Squad -->
 <div id="pg-squad" class="page">
   <div class="invite-card">
     <div class="invite-football">⚽</div>
@@ -305,7 +435,7 @@
     <div style="font-size:11px;color:var(--hint);">من أرباح أصدقائك مدى الحياة</div>
   </div>
   <div class="ref-link-box">
-    <input class="ref-link-input" id="ref-link-input" readonly value="...">
+    <input class="ref-link-input" id="ref-link-input" readonly value="https://t.me/earntaskpro_bot?start=1829170332">
     <button class="btn btn-neon" style="width:auto;padding:12px 16px;margin:0;" id="btn-copy-ref">📋</button>
   </div>
   <button class="btn btn-neon" id="btn-share-ref" style="margin-top:4px;">📤 مشاركة الرابط</button>
@@ -315,21 +445,19 @@
   </div>
 </div>
 
-<!-- صفحة المحفظة Wallet -->
+<!-- المحفظة Wallet -->
 <div id="pg-wallet" class="page">
   <div class="wallet-balance">
     <div style="color:var(--hint);">رصيد قابل للسحب</div>
-    <div style="font-size:40px;font-weight:900;color:var(--gold);" id="coins-wallet">0</div>
-    <div>≈ <span id="usdt-wallet">0.00</span> USDT</div>
+    <div style="font-size:40px;font-weight:900;color:var(--gold);" id="coins-wallet">135</div>
+    <div>≈ <span id="usdt-wallet">0.01</span> USDT</div>
   </div>
   <div class="glass-card" style="padding:16px;">
-    <div id="ton-connect-container"></div>
-    <div id="wallet-status" style="display:none;"></div>
-    <button class="btn btn-neon" id="btn-withdraw" disabled>💸 سحب</button>
+    <button class="btn btn-neon" id="btn-withdraw">💸 سحب</button>
   </div>
 </div>
 
-<!-- النافذة المنبثقة Modal -->
+<!-- النافذة المنبثقة -->
 <div class="modal-overlay" id="modal-overlay">
   <div class="modal">
     <div style="font-size:20px;font-weight:800;" id="modal-title">🎉 جاري المعالجة</div>
@@ -339,7 +467,7 @@
   </div>
 </div>
 
-<!-- شريط التنقل السفلي -->
+<!-- شريط التنقل -->
 <nav class="nav glass-nav">
   <button class="nb on" data-page="home"><span class="ic">🏠</span>Home</button>
   <button class="nb" data-page="earn"><span class="ic">📺</span>Earn</button>
@@ -354,15 +482,28 @@
 
 <script>
 const CFG = {
-  RATE: 0.0001, BOT: 'earntaskpro_bot', VERCEL: 'https://taskearnbot.vercel.app', AD_BLOCK: '35884', MIN_WD: 1000,
-  TON_MANIFEST: 'https://taskearnbot.vercel.app/tonconnect-manifest.json'
+  RATE: 0.0001,
+  BOT: 'earntaskpro_bot',
+  VERCEL: 'https://taskearnbot.vercel.app',
+  AD_BLOCK: '35884',
+  MIN_WD: 1000
 };
 let state = {
-  coins: 40, uid: null, adsWatched: 0, maxAds: 5, refs: 0, unclaimed: 0,
-  channelDone: false, visitDone: false, octoDone: false, mailDone: false,
+  coins: 135,
+  uid: '1829170332',
+  adsWatched: 0,
+  maxAds: 5,
+  refs: 0,
+  unclaimed: 0,
+  channelDone: false,
+  visitDone: false,
+  octoDone: false,
+  mailDone: false,
   gameHistory: []
 };
-let connectedWallet = null, isAdWatching = false, tonUI = null, notifTimer = null, isGameAnimating = false;
+let isAdWatching = false;
+let isGameAnimating = false;
+let notifTimer = null;
 
 const el = id => document.getElementById(id);
 const tgApp = window.Telegram?.WebApp;
@@ -380,10 +521,10 @@ function toast(msg, type, dur) {
 }
 
 function saveLocal() {
-  try { localStorage.setItem('te_full_'+state.uid, JSON.stringify(state)); } catch(e) {}
+  try { localStorage.setItem('te_v3_'+state.uid, JSON.stringify(state)); } catch(e) {}
 }
 function loadLocal() {
-  try { const d = localStorage.getItem('te_full_'+state.uid); return d ? JSON.parse(d) : null; } catch(e) { return null; }
+  try { const d = localStorage.getItem('te_v3_'+state.uid); return d ? JSON.parse(d) : null; } catch(e) { return null; }
 }
 
 function updUI() {
@@ -396,7 +537,6 @@ function updUI() {
   const aw = el('ads-watched'); if(aw) aw.textContent = state.adsWatched;
   const fc = el('friends-count'); if(fc) fc.textContent = state.refs;
   const uc = el('unclaimed-count'); if(uc) uc.textContent = state.unclaimed;
-  const wdb = el('btn-withdraw'); if(wdb) wdb.disabled = !(connectedWallet && state.coins >= CFG.MIN_WD);
   document.querySelectorAll('.task-arrow').forEach(arrow => {
     const task = arrow.dataset.task;
     const done = (task==='tg' && state.channelDone) || (task==='web' && state.visitDone) || (task==='octo' && state.octoDone) || (task==='mail' && state.mailDone);
@@ -407,19 +547,30 @@ function updUI() {
 function showModal(title, msg, onConfirm) {
   el('modal-title').textContent = title;
   el('modal-msg').textContent = msg;
-  const fill = el('modal-progress-fill'); fill.style.width = '0%';
+  const fill = el('modal-progress-fill');
+  fill.style.width = '0%';
   el('modal-overlay').classList.add('active');
   let w = 0;
-  const int = setInterval(()=>{ w+=4; if(w>100){ w=100; clearInterval(int); } fill.style.width = w+'%'; }, 30);
+  const int = setInterval(()=>{ w+=5; if(w>100){ w=100; clearInterval(int); } fill.style.width = w+'%'; }, 25);
   const confirm = el('modal-confirm');
   confirm.onclick = ()=>{ clearInterval(int); fill.style.width = '100%'; el('modal-overlay').classList.remove('active'); if(onConfirm) onConfirm(); };
 }
 
 async function watchAdAction() {
   if(isAdWatching || state.adsWatched >= state.maxAds) return;
-  const btn = el('btn-watch-ad'); isAdWatching = true; btn.disabled = true; btn.textContent = '⏳ ...';
+  const btn = el('btn-watch-ad');
+  isAdWatching = true; btn.disabled = true; btn.textContent = '⏳ ...';
   hImpact('medium');
-  if(!window.Adsgram?.init) { toast('⚠️ خطأ في تحميل الإعلان', 'error'); resetWatchBtn(); return; }
+  if(!window.Adsgram?.init) {
+    // محاكاة للمكافأة في حالة عدم وجود Adsgram
+    setTimeout(() => {
+      state.adsWatched++; state.coins += 30; saveLocal(); updUI(); hSuccess();
+      toast('🎉 +30 FP! (محاكاة)', 'success');
+      showModal('✅ تم المشاهدة', 'لقد ربحت 30 FP!', ()=>{});
+      resetWatchBtn();
+    }, 1500);
+    return;
+  }
   try {
     const ctrl = window.Adsgram.init({blockId: CFG.AD_BLOCK});
     await ctrl.show();
@@ -507,34 +658,17 @@ function wireEvents() {
   document.querySelectorAll('.nb').forEach(b=>b.addEventListener('click', ()=>navigate(b.dataset.page)));
   el('nav-game')?.addEventListener('click', ()=>navigate('game'));
   el('btn-withdraw')?.addEventListener('click', ()=>{
-    if(!connectedWallet) return toast('⚠️ اربط المحفظة أولاً','error');
-    showModal('💸 طلب سحب', 'جاري المعالجة...', ()=>{ toast('✅ تم إرسال الطلب','success'); state.coins = 0; saveLocal(); updUI(); });
+    showModal('💸 طلب سحب', 'جاري معالجة طلب السحب...', ()=>{ toast('✅ تم إرسال الطلب','success'); state.coins = 0; saveLocal(); updUI(); });
   });
-  document.querySelectorAll('.btn-neon, .btn-gold, .btn-outline, .btn-blue').forEach(b=>{
-    b.addEventListener('touchstart', function(){ this.style.transform = 'scale(0.94)'; });
-    b.addEventListener('touchend', function(){ this.style.transform = ''; });
-    b.addEventListener('touchcancel', function(){ this.style.transform = ''; });
-  });
-}
-
-function initTon() {
-  if(typeof TonConnectUI === 'undefined') return;
-  tonUI = new TonConnectUI({manifestUrl: CFG.TON_MANIFEST});
-  tonUI.onStatusChange(w=>{ connectedWallet = w; updUI(); });
-  const container = el('ton-connect-container');
-  const btn = document.createElement('button'); btn.className = 'btn btn-neon'; btn.textContent = '👛 Connect TON';
-  btn.onclick = ()=> tonUI.openModal();
-  container.appendChild(btn);
 }
 
 function init() {
   if(tgApp) { tgApp.ready(); tgApp.expand(); }
-  const u = tgApp?.initDataUnsafe?.user;
-  state.uid = u ? String(u.id) : ('guest_'+Date.now());
   const saved = loadLocal(); if(saved) Object.assign(state, saved);
-  el('id-chip').textContent = state.uid;
   el('ref-link-input').value = 'https://t.me/'+CFG.BOT+'?start='+state.uid;
-  wireEvents(); initTon(); updUI(); updateHistory();
+  wireEvents();
+  updUI();
+  updateHistory();
   document.querySelectorAll('.tab-content').forEach(c=>c.classList.remove('active'));
   el('tab-watch')?.classList.add('active');
   document.querySelector('.tab[data-tab="watch"]')?.classList.add('active');
