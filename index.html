@@ -1,1451 +1,795 @@
 <!DOCTYPE html>
 <html lang="ar" dir="rtl">
 <head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=no, viewport-fit=cover">
-    <title>TaskEarn ⚡</title>
-    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;600;700;900&display=swap" rel="stylesheet">
-    <script src="https://telegram.org/js/telegram-web-app.js">
-    </script>
-    <script src="https://unpkg.com/@tonconnect/ui@latest/dist/tonconnect-ui.min.js">
-    </script>
-    <script src="https://sad.adsgram.ai/js/sad.min.js">
-    </script>
-    <style>
-        :root {
-            --bg: #0e0e12;
-            --surface: #14141a;
-            --neon: #00e676;
-            --neon-glow: rgba(0, 230, 118, 0.55);
-            --neon-soft: rgba(0, 230, 118, 0.15);
-            --gold: #ffd700;
-            --gold-glow: rgba(255, 215, 0, 0.5);
-            --danger: #ff1744;
-            --danger-glow: rgba(255, 23, 68, 0.6);
-            --text: #e0e0e0;
-            --hint: #888;
-            --radius-sm: 10px;
-            --radius: 14px;
-            --radius-lg: 18px;
-            --radius-xl: 22px;
-            --nav-height: 78px;
-            --font: 'Inter', -apple-system, BlinkMacSystemFont, 'Segoe UI', 'Noto Sans Arabic', sans-serif;
-            --ease: 0.25s cubic-bezier(0.4, 0, 0.2, 1);
-            --glass-bg: rgba(20, 20, 30, 0.7);
-            --glass-border: rgba(0, 230, 118, 0.18);
-            --glass-hover: rgba(0, 230, 118, 0.08);
-        }
-        * {
-            margin: 0;
-            padding: 0;
-            box-sizing: border-box;
-            -webkit-tap-highlight-color: transparent;
-            -webkit-user-select: none;
-            user-select: none;
-        }
-        body {
-            font-family: var(--font);
-            background: var(--bg);
-            color: var(--text);
-            min-height: 100vh;
-            min-height: 100dvh;
-            overflow-x: hidden;
-            -webkit-font-smoothing: antialiased;
-            background-image: radial-gradient(ellipse at 30% 10%, rgba(0, 230, 118, 0.06) 0%, transparent 55%), radial-gradient(ellipse at 70% 80%, rgba(0, 230, 118, 0.04) 0%, transparent 55%), radial-gradient(ellipse at 50% 50%, rgba(0, 0, 0, 0.5) 0%, transparent 100%);
-            background-attachment: fixed;
-        }
-        .glass {
-            background: var(--glass-bg);
-            backdrop-filter: blur(18px) saturate(180%);
-            -webkit-backdrop-filter: blur(18px) saturate(180%);
-            border: 1px solid var(--glass-border);
-            transform: translateZ(0);
-        }
-        .glass-card {
-            background: var(--glass-bg);
-            backdrop-filter: blur(18px) saturate(180%);
-            -webkit-backdrop-filter: blur(18px) saturate(180%);
-            border: 1px solid var(--glass-border);
-            border-radius: var(--radius-lg);
-            transform: translateZ(0);
-            transition: border-color var(--ease), box-shadow var(--ease);
-        }
-        .glass-nav {
-            background: rgba(10, 10, 16, 0.92);
-            backdrop-filter: blur(28px) saturate(180%);
-            -webkit-backdrop-filter: blur(28px) saturate(180%);
-            border-top: 1px solid var(--glass-border);
-            transform: translateZ(0);
-        }
-        @keyframes fadeInUp {
-            from { opacity: 0; transform: translateY(12px); }
-            to { opacity: 1; transform: translateY(0); }
-        }
-        @keyframes float {
-            0%, 100% { transform: translateY(0); }
-            50% { transform: translateY(-10px); }
-        }
-        @keyframes pulse-glow {
-            0%, 100% { box-shadow: 0 0 15px var(--neon-glow), 0 0 45px rgba(0, 230, 118, 0.15); }
-            50% { box-shadow: 0 0 30px var(--neon-glow), 0 0 80px rgba(0, 230, 118, 0.35); }
-        }
-        @keyframes pulse-glow-gold {
-            0%, 100% { box-shadow: 0 0 12px var(--gold-glow), 0 0 35px rgba(255, 215, 0, 0.12); }
-            50% { box-shadow: 0 0 28px var(--gold-glow), 0 0 65px rgba(255, 215, 0, 0.3); }
-        }
-        @keyframes neon-pulse {
-            0%, 100% { box-shadow: 0 0 20px var(--neon-glow), 0 0 60px rgba(0, 230, 118, 0.3), 0 0 100px rgba(0, 230, 118, 0.12); }
-            50% { box-shadow: 0 0 40px var(--neon-glow), 0 0 100px rgba(0, 230, 118, 0.55), 0 0 160px rgba(0, 230, 118, 0.25); }
-        }
-        @keyframes shake {
-            0%, 100% { transform: translateZ(0) rotate(0); }
-            20% { transform: translateZ(0) rotate(-5deg); }
-            40% { transform: translateZ(0) rotate(5deg); }
-            60% { transform: translateZ(0) rotate(-3deg); }
-            80% { transform: translateZ(0) rotate(3deg); }
-        }
-        @keyframes burst {
-            0% { transform: translateZ(0) scale(1); opacity: 1; }
-            50% { transform: translateZ(0) scale(1.5); opacity: .5; }
-            100% { transform: translateZ(0) scale(.2); opacity: 0; }
-        }
-        @keyframes sparkle {
-            0%, 100% { opacity: 0; transform: scale(0) rotate(0); }
-            50% { opacity: 1; transform: scale(1) rotate(180deg); }
-        }
-        @keyframes notifIn {
-            from { top: -70px; opacity: 0; transform: translateX(-50%) scale(.9); }
-            to { top: 18px; opacity: 1; transform: translateX(-50%) scale(1); }
-        }
-        @keyframes notifOut {
-            from { top: 18px; opacity: 1; transform: translateX(-50%) scale(1); }
-            to { top: -70px; opacity: 0; transform: translateX(-50%) scale(.9); }
-        }
-        @keyframes ticker-scroll {
-            0% { transform: translateX(0); }
-            100% { transform: translateX(-50%); }
-        }
-        @keyframes coin-pop {
-            0% { transform: translateZ(0) scale(1); }
-            40% { transform: translateZ(0) scale(1.4); }
-            100% { transform: translateZ(0) scale(1); }
-        }
-        @keyframes ball-float {
-            0%, 100% { transform: translateY(0) scale(1); }
-            30% { transform: translateY(-18px) scale(1.08); }
-            60% { transform: translateY(-6px) scale(1.03); }
-        }
-        @keyframes win-glow {
-            0%, 100% { filter: drop-shadow(0 0 25px #00e676) drop-shadow(0 0 60px #00e676); }
-            50% { filter: drop-shadow(0 0 50px #00e676) drop-shadow(0 0 110px #00e676) drop-shadow(0 0 180px #00ff88); }
-        }
-        @keyframes lose-glow {
-            0%, 100% { filter: drop-shadow(0 0 25px #ff1744) drop-shadow(0 0 60px #ff1744); }
-            50% { filter: drop-shadow(0 0 50px #ff1744) drop-shadow(0 0 110px #ff1744); }
-        }
-        @keyframes nav-game-pulse {
-            0%, 100% { box-shadow: 0 0 22px var(--neon-glow), 0 0 55px rgba(0, 230, 118, 0.35), 0 -4px 30px rgba(0, 230, 118, 0.2); }
-            50% { box-shadow: 0 0 45px var(--neon-glow), 0 0 100px rgba(0, 230, 118, 0.65), 0 -8px 55px rgba(0, 230, 118, 0.4); }
-        }
-        @keyframes gauge-pulse {
-            0%, 100% { box-shadow: 0 0 8px rgba(0, 230, 118, 0.4), 0 0 20px rgba(255, 23, 68, 0.3); }
-            50% { box-shadow: 0 0 18px rgba(0, 230, 118, 0.7), 0 0 40px rgba(255, 23, 68, 0.55); }
-        }
-        .coin-pop { animation: coin-pop 0.4s ease-out; }
-        .page {
-            display: none;
-            padding: 12px 14px;
-            padding-bottom: calc(var(--nav-height) + 20px);
-            animation: fadeInUp .3s ease;
-            max-width: 480px;
-            margin: 0 auto;
-        }
-        .page.active { display: block; }
-        .topbar {
-            display: flex;
-            justify-content: space-between;
-            align-items: center;
-            padding: 14px 18px;
-            margin-bottom: 10px;
-            border-radius: var(--radius-lg);
-        }
-        .logo {
-            font-size: 19px;
-            font-weight: 800;
-            letter-spacing: -.3px;
-            display: flex;
-            align-items: center;
-            gap: 6px;
-        }
-        .logo .bolt {
-            display: inline-block;
-            animation: float 2.5s ease-in-out infinite;
-            filter: drop-shadow(0 0 12px var(--neon-glow));
-            font-size: 22px;
-        }
-        .logo .txt {
-            background: linear-gradient(135deg, #00e676, #69f0ae, #ffd700);
-            -webkit-background-clip: text;
-            -webkit-text-fill-color: transparent;
-            background-clip: text;
-            font-weight: 900;
-        }
-        .id-chip {
-            font-size: 11px;
-            padding: 6px 14px;
-            border-radius: 20px;
-            color: var(--hint);
-            letter-spacing: .3px;
-            font-weight: 500;
-            background: var(--glass-bg);
-            backdrop-filter: blur(10px);
-            border: 1px solid rgba(0, 230, 118, 0.2);
-        }
-        .hero {
-            text-align: center;
-            padding: 10px 16px 6px;
-        }
-        .coin-wrap {
-            display: inline-block;
-            animation: float 3s ease-in-out infinite;
-        }
-        .coin-ico {
-            font-size: 76px;
-            filter: drop-shadow(0 8px 25px var(--neon-glow));
-            display: block;
-            transform: translateZ(0);
-        }
-        .coin-num {
-            font-size: 52px;
-            font-weight: 900;
-            letter-spacing: -2px;
-            margin-top: 4px;
-            background: linear-gradient(180deg, #fff 0%, rgba(200, 255, 220, .85) 100%);
-            -webkit-background-clip: text;
-            -webkit-text-fill-color: transparent;
-            background-clip: text;
-            transition: all .3s ease;
-        }
-        .coin-usdt {
-            font-size: 12px;
-            color: var(--hint);
-            margin-top: 2px;
-            letter-spacing: .5px;
-        }
-        .prog-wrap {
-            margin: 14px 20px 0;
-            height: 6px;
-            border-radius: 10px;
-            overflow: hidden;
-            background: rgba(255, 255, 255, .06);
-        }
-        .prog {
-            height: 100%;
-            border-radius: 10px;
-            background: linear-gradient(90deg, #00e676, #69f0ae, #ffd700);
-            transition: width .7s cubic-bezier(.4, 0, .2, 1);
-            box-shadow: 0 0 18px var(--neon-glow);
-        }
-        .stats {
-            display: grid;
-            grid-template-columns: repeat(3, 1fr);
-            gap: 8px;
-            padding: 8px 14px;
-        }
-        .stat {
-            text-align: center;
-            padding: 14px 8px;
-            border-radius: var(--radius);
-            transition: all var(--ease);
-        }
-        .stat-n {
-            font-size: 23px;
-            font-weight: 800;
-            letter-spacing: -.5px;
-            color: #00e676;
-            text-shadow: 0 0 12px var(--neon-glow);
-        }
-        .stat-l {
-            font-size: 10px;
-            color: var(--hint);
-            margin-top: 4px;
-            text-transform: uppercase;
-            letter-spacing: .5px;
-        }
-        .card {
-            padding: 16px;
-            margin-bottom: 10px;
-            border-radius: var(--radius-lg);
-        }
-        .card-h {
-            font-size: 14px;
-            font-weight: 700;
-            margin-bottom: 12px;
-            display: flex;
-            align-items: center;
-            gap: 8px;
-            letter-spacing: .2px;
-            color: #00e676;
-            text-shadow: 0 0 8px rgba(0, 230, 118, 0.3);
-        }
-        .card-h .ico { font-size: 20px; }
-        .ad-box {
-            padding: 22px;
-            text-align: center;
-            margin-bottom: 10px;
-            border-radius: var(--radius-xl);
-            animation: pulse-glow-gold 3s infinite;
-            position: relative;
-            overflow: hidden;
-            background: rgba(20, 25, 18, .5);
-            backdrop-filter: blur(12px);
-            border: 1px solid rgba(255, 215, 0, 0.25);
-        }
-        .ad-pts {
-            font-size: 42px;
-            font-weight: 900;
-            letter-spacing: -1px;
-            background: linear-gradient(135deg, #00e676, #ffd700);
-            -webkit-background-clip: text;
-            -webkit-text-fill-color: transparent;
-            background-clip: text;
-        }
-        .ad-sub {
-            font-size: 13px;
-            color: var(--hint);
-            margin-bottom: 6px;
-        }
-        .ad-btn {
-            width: 100%;
-            padding: 14px;
-            border-radius: var(--radius);
-            font-size: 15px;
-            font-weight: 700;
-            cursor: pointer;
-            color: #0e0e12;
-            border: none;
-            background: linear-gradient(135deg, #00e676, #69f0ae);
-            letter-spacing: .3px;
-            transition: all var(--ease);
-            transform: translateZ(0);
-            box-shadow: 0 4px 25px rgba(0, 230, 118, 0.4);
-            margin-top: 12px;
-        }
-        .ad-btn:active { transform: translateZ(0) scale(.96); }
-        .ad-btn:disabled { opacity: .5; cursor: not-allowed; box-shadow: none; filter: grayscale(30%); }
-        .ad-info {
-            font-size: 11px;
-            color: var(--hint);
-            margin-top: 8px;
-            letter-spacing: .3px;
-        }
-        .task {
-            display: flex;
-            justify-content: space-between;
-            align-items: center;
-            padding: 14px;
-            border-radius: var(--radius);
-            margin-bottom: 7px;
-            cursor: pointer;
-            transition: all var(--ease);
-            transform: translateZ(0);
-            background: var(--glass-bg);
-            border: 1px solid var(--glass-border);
-        }
-        .task:active { transform: translateZ(0) scale(.97); background: var(--glass-hover); }
-        .task.done { opacity: .3; pointer-events: none; filter: grayscale(40%); }
-        .task-l {
-            display: flex;
-            align-items: center;
-            gap: 12px;
-        }
-        .task-ico { font-size: 30px; }
-        .task-name {
-            font-size: 14px;
-            font-weight: 600;
-            letter-spacing: .1px;
-        }
-        .task-desc {
-            font-size: 11px;
-            color: var(--hint);
-            margin-top: 2px;
-        }
-        .badge {
-            padding: 6px 12px;
-            border-radius: 8px;
-            font-size: 12px;
-            font-weight: 700;
-            white-space: nowrap;
-            background: rgba(0, 230, 118, 0.12);
-            border: 1px solid rgba(0, 230, 118, 0.3);
-            color: #00e676;
-        }
-        .ticker-wrap {
-            padding: 10px 14px;
-            border-radius: var(--radius);
-            margin-bottom: 10px;
-            overflow: hidden;
-        }
-        .ticker-label {
-            font-size: 10px;
-            color: var(--hint);
-            margin-bottom: 4px;
-            letter-spacing: .5px;
-            text-transform: uppercase;
-        }
-        .ticker-inner { overflow: hidden; white-space: nowrap; }
-        .ticker-track {
-            white-space: nowrap;
-            animation: ticker-scroll 22s linear infinite;
-            font-size: 11px;
-            color: #00e676;
-            display: inline-block;
-        }
-        .checkin-strip {
-            display: flex;
-            justify-content: space-between;
-            gap: 5px;
-            padding: 4px 0;
-        }
-        .checkin-day {
-            flex: 1;
-            text-align: center;
-            padding: 9px 3px;
-            border-radius: var(--radius-sm);
-            min-width: 0;
-        }
-        .checkin-day .day-num { font-size: 9px; color: var(--hint); margin-bottom: 2px; }
-        .checkin-day .day-dot {
-            width: 28px;
-            height: 28px;
-            border-radius: 50%;
-            margin: 0 auto;
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            font-size: 13px;
-            border: 2px solid rgba(255, 255, 255, .1);
-            transition: all var(--ease);
-            background: rgba(20, 25, 20, .5);
-        }
-        .checkin-day.checked .day-dot {
-            background: linear-gradient(135deg, #00e676, #69f0ae);
-            border-color: #00e676;
-            box-shadow: 0 0 18px var(--neon-glow);
-            color: #0e0e12;
-        }
-        .checkin-day.today .day-dot {
-            border-color: #00e676;
-            box-shadow: 0 0 25px var(--neon-glow);
-        }
-        .checkin-day .day-reward { font-size: 9px; color: var(--hint); margin-top: 3px; }
-        .checkin-day.checked .day-reward { color: #00e676; }
-        .mystery-box-wrap {
-            text-align: center;
-            padding: 22px 16px;
-            cursor: pointer;
-            position: relative;
-            transform: translateZ(0);
-            transition: all var(--ease);
-        }
-        .mystery-box-wrap:active { transform: translateZ(0) scale(.95); }
-        .mystery-box-wrap.ready .mystery-ico { animation: shake .7s ease-in-out infinite; }
-        .mystery-box-wrap.opening .mystery-ico { animation: burst .5s ease-out forwards; }
-        .mystery-ico {
-            font-size: 74px;
-            display: block;
-            filter: drop-shadow(0 0 30px rgba(0, 230, 118, 0.65));
-            transform: translateZ(0);
-        }
-        .mystery-label { font-size: 14px; font-weight: 600; margin-top: 10px; }
-        .mystery-sub { font-size: 11px; color: var(--hint); margin-top: 3px; }
-        .mystery-sparkles { position: absolute; pointer-events: none; inset: 0; }
-        .sparkle { position: absolute; font-size: 16px; animation: sparkle 1.5s ease-in-out infinite; opacity: 0; }
-        .sparkle:nth-child(1) { top: 10%; left: 15%; }
-        .sparkle:nth-child(2) { top: 5%; right: 15%; animation-delay: .4s; }
-        .sparkle:nth-child(3) { bottom: 20%; left: 10%; animation-delay: .8s; }
-        .sparkle:nth-child(4) { bottom: 10%; right: 12%; animation-delay: 1.2s; }
-        .ref-box {
-            padding: 14px;
-            border-radius: var(--radius);
-            font-size: 11px;
-            word-break: break-all;
-            margin: 8px 0;
-            line-height: 1.7;
-            color: rgba(180, 220, 180, .9);
-            font-family: 'SF Mono', 'Courier New', monospace;
-            background: rgba(20, 25, 20, .5);
-            border: 1px solid rgba(0, 230, 118, .2);
-        }
-        .btn {
-            width: 100%;
-            padding: 14px;
-            border-radius: var(--radius);
-            font-size: 14px;
-            font-weight: 700;
-            cursor: pointer;
-            margin-top: 8px;
-            transition: all var(--ease);
-            border: none;
-            letter-spacing: .3px;
-            transform: translateZ(0);
-        }
-        .btn:active { transform: translateZ(0) scale(.96); }
-        .btn-gold {
-            color: #0e0e12;
-            background: linear-gradient(135deg, #00e676, #69f0ae);
-            box-shadow: 0 4px 22px rgba(0, 230, 118, 0.35);
-        }
-        .btn-ghost {
-            color: var(--hint);
-            background: transparent;
-            border: 1px solid var(--glass-border);
-        }
-        .btn-danger {
-            color: #fff;
-            background: linear-gradient(135deg, #ff1744, #ff5252);
-            box-shadow: 0 4px 22px rgba(255, 23, 68, 0.4);
-        }
-        .btn:disabled { opacity: .5; pointer-events: none; }
-        #ton-connect-container { margin: 10px 0; display: flex; justify-content: center; min-height: 48px; align-items: center; }
-        .wallet-connected {
-            text-align: center;
-            padding: 12px;
-            border-radius: var(--radius);
-            background: rgba(0, 230, 118, .1);
-            border: 1px solid rgba(0, 230, 118, .3);
-            font-size: 12px;
-            color: #00e676;
-            word-break: break-all;
-            margin: 8px 0;
-            text-shadow: 0 0 8px rgba(0, 230, 118, 0.3);
-        }
-        .wallet-addr { font-size: 11px; color: var(--hint); margin-top: 4px; word-break: break-all; }
-        .nav {
-            position: fixed;
-            bottom: 0;
-            left: 0;
-            right: 0;
-            display: flex;
-            justify-content: space-around;
-            align-items: flex-end;
-            padding: 6px 8px max(10px, env(safe-area-inset-bottom, 10px));
-            z-index: 100;
-            max-width: 480px;
-            margin: 0 auto;
-            border-radius: var(--radius-xl) var(--radius-xl) 0 0;
-        }
-        .nb {
-            background: none;
-            border: none;
-            color: var(--hint);
-            font-size: 10px;
-            cursor: pointer;
-            display: flex;
-            flex-direction: column;
-            align-items: center;
-            gap: 3px;
-            padding: 6px 12px;
-            transition: all var(--ease);
-            border-radius: var(--radius);
-            position: relative;
-            transform: translateZ(0);
-        }
-        .nb .ic { font-size: 22px; transition: all var(--ease); transform: translateZ(0); }
-        .nb.on {
-            color: #00e676;
-            font-weight: 600;
-            text-shadow: 0 0 10px var(--neon-glow);
-        }
-        .nb.on .ic { filter: drop-shadow(0 0 10px var(--neon-glow)); transform: translateZ(0) scale(1.1); }
-        .nb.on::after {
-            content: '';
-            position: absolute;
-            top: -4px;
-            width: 20px;
-            height: 3px;
-            border-radius: 4px;
-            background: #00e676;
-            box-shadow: 0 0 14px var(--neon-glow);
-        }
-        .nb-game {
-            position: relative;
-            margin-top: -28px;
-            z-index: 110;
-            background: linear-gradient(135deg, #00e676, #00c853);
-            border-radius: 50%;
-            width: 58px;
-            height: 58px;
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            animation: nav-game-pulse 2.2s ease-in-out infinite;
-            box-shadow: 0 0 30px var(--neon-glow), 0 0 70px rgba(0, 230, 118, 0.45);
-            cursor: pointer;
-            border: 3px solid rgba(255, 255, 255, 0.25);
-            transition: all var(--ease);
-            transform: translateZ(0);
-        }
-        .nb-game:active { transform: translateZ(0) scale(0.9); }
-        .nb-game .ic { font-size: 26px; filter: drop-shadow(0 0 6px rgba(0, 0, 0, 0.4)); }
-        .nb-game.on {
-            animation: nav-game-pulse 1.4s ease-in-out infinite;
-            box-shadow: 0 0 50px var(--neon-glow), 0 0 110px rgba(0, 230, 118, 0.7);
-            border-color: #fff;
-        }
-        .notif {
-            position: fixed;
-            top: 18px;
-            left: 50%;
-            transform: translateX(-50%);
-            padding: 12px 24px;
-            border-radius: 28px;
-            font-size: 14px;
-            font-weight: 700;
-            z-index: 999;
-            display: none;
-            letter-spacing: .3px;
-            white-space: nowrap;
-            pointer-events: none;
-            box-shadow: 0 8px 32px rgba(0, 0, 0, .7);
-            max-width: 90vw;
-            text-align: center;
-            backdrop-filter: blur(20px);
-            background: rgba(20, 20, 30, .9);
-        }
-        .notif.success { color: #00e676; border: 1px solid rgba(0, 230, 118, .5); text-shadow: 0 0 10px var(--neon-glow); }
-        .notif.error { color: #ff1744; border: 1px solid rgba(255, 23, 68, .5); text-shadow: 0 0 10px var(--danger-glow); }
-        .notif.info { color: #00e676; border: 1px solid rgba(0, 230, 118, .4); }
-        .lang-g { display: grid; grid-template-columns: 1fr 1fr; gap: 8px; margin-top: 8px; }
-        .lang-i {
-            padding: 12px;
-            border-radius: var(--radius);
-            text-align: center;
-            cursor: pointer;
-            font-size: 13px;
-            transition: all var(--ease);
-            transform: translateZ(0);
-            background: var(--glass-bg);
-            border: 1px solid var(--glass-border);
-        }
-        .lang-i:active { transform: translateZ(0) scale(.95); }
-        .lang-i.on {
-            border-color: #00e676 !important;
-            background: rgba(0, 230, 118, .15) !important;
-            color: #00e676;
-            box-shadow: 0 0 22px rgba(0, 230, 118, .25);
-        }
-        #verify-btn {
-            position: fixed;
-            bottom: 90px;
-            z-index: 200;
-            padding: 14px;
-            border-radius: 14px;
-            font-size: 14px;
-            font-weight: 700;
-            cursor: pointer;
-            border: none;
-            width: calc(100% - 28px);
-            max-width: 452px;
-            left: 50%;
-            transform: translateX(-50%);
-            background: linear-gradient(135deg, #00e676, #69f0ae);
-            color: #0e0e12;
-            box-shadow: 0 0 28px rgba(0, 230, 118, .55);
-        }
-        .info-row { font-size: 11px; color: var(--hint); display: flex; align-items: center; gap: 6px; padding: 3px 0; }
-        /* Game Styles */
-        .field {
-            position: relative;
-            width: 100%;
-            aspect-ratio: 1.4/1;
-            max-height: 320px;
-            border-radius: var(--radius-lg);
-            overflow: hidden;
-            background: linear-gradient(180deg, #0a2a0f 0%, #0d3314 30%, #0a2a0f 60%, #0d3314 100%);
-            border: 2px solid rgba(0, 230, 118, 0.35);
-            box-shadow: 0 0 40px rgba(0, 230, 118, 0.2), inset 0 0 80px rgba(0, 0, 0, 0.5);
-            margin: 0 auto 14px;
-        }
-        .field-lines { position: absolute; inset: 0; pointer-events: none; }
-        .field-line { position: absolute; background: rgba(0, 230, 118, 0.35); box-shadow: 0 0 6px rgba(0, 230, 118, 0.3); }
-        .field-line.center { top: 50%; left: 0; right: 0; height: 2px; transform: translateY(-50%); }
-        .field-line.circle {
-            top: 50%;
-            left: 50%;
-            width: 100px;
-            height: 100px;
-            border-radius: 50%;
-            background: transparent;
-            border: 2px solid rgba(0, 230, 118, 0.35);
-            transform: translate(-50%, -50%);
-            box-shadow: 0 0 15px rgba(0, 230, 118, 0.2);
-        }
-        .field-line.penalty-top {
-            top: 8%;
-            left: 25%;
-            right: 25%;
-            height: 25%;
-            border: 2px solid rgba(0, 230, 118, 0.3);
-            border-top: none;
-            border-radius: 0 0 20px 20px;
-            background: transparent;
-        }
-        .field-line.penalty-bottom {
-            bottom: 8%;
-            left: 25%;
-            right: 25%;
-            height: 25%;
-            border: 2px solid rgba(0, 230, 118, 0.3);
-            border-bottom: none;
-            border-radius: 20px 20px 0 0;
-            background: transparent;
-        }
-        .field-dot {
-            position: absolute;
-            width: 8px;
-            height: 8px;
-            background: rgba(0, 230, 118, 0.6);
-            border-radius: 50%;
-            box-shadow: 0 0 10px rgba(0, 230, 118, 0.5);
-        }
-        .field-dot.center-dot { top: 50%; left: 50%; transform: translate(-50%, -50%); }
-        .ball-container {
-            position: absolute;
-            top: 50%;
-            left: 50%;
-            transform: translate(-50%, -50%);
-            z-index: 5;
-            animation: ball-float 3s ease-in-out infinite;
-            transition: filter 0.3s ease;
-        }
-        .ball-container.win {
-            animation: ball-float 0.6s ease-in-out infinite;
-            filter: drop-shadow(0 0 35px #00e676) drop-shadow(0 0 80px #00e676) !important;
-        }
-        .ball-container.lose {
-            animation: shake 0.5s ease-in-out;
-            filter: drop-shadow(0 0 35px #ff1744) drop-shadow(0 0 80px #ff1744) !important;
-        }
-        .ball {
-            font-size: 60px;
-            display: block;
-            filter: drop-shadow(0 0 20px rgba(0, 230, 118, 0.5));
-            transition: all 0.3s ease;
-        }
-        .gauge-wrap {
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            gap: 0;
-            margin: 0 auto 16px;
-            position: relative;
-            height: 48px;
-            max-width: 340px;
-            border-radius: 24px;
-            overflow: hidden;
-            animation: gauge-pulse 2.5s ease-in-out infinite;
-        }
-        .gauge-low {
-            flex: 1;
-            height: 100%;
-            background: linear-gradient(180deg, rgba(0, 230, 118, 0.7), rgba(0, 200, 100, 0.85));
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            font-weight: 800;
-            font-size: 13px;
-            color: #0e0e12;
-            letter-spacing: 1px;
-            border-radius: 24px 0 0 24px;
-            text-shadow: 0 0 4px rgba(0, 0, 0, 0.3);
-        }
-        .gauge-high {
-            flex: 1;
-            height: 100%;
-            background: linear-gradient(180deg, rgba(255, 23, 68, 0.7), rgba(255, 50, 80, 0.85));
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            font-weight: 800;
-            font-size: 13px;
-            color: #fff;
-            letter-spacing: 1px;
-            border-radius: 0 24px 24px 0;
-            text-shadow: 0 0 4px rgba(0, 0, 0, 0.3);
-        }
-        .gauge-mid {
-            position: absolute;
-            left: 50%;
-            top: 50%;
-            transform: translate(-50%, -50%);
-            width: 44px;
-            height: 44px;
-            border-radius: 50%;
-            background: #0e0e12;
-            border: 3px solid rgba(255, 215, 0, 0.8);
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            font-weight: 900;
-            font-size: 15px;
-            color: #ffd700;
-            box-shadow: 0 0 20px var(--gold-glow), 0 0 40px rgba(255, 215, 0, 0.3);
-            z-index: 2;
-        }
-        .game-btns {
-            display: flex;
-            gap: 12px;
-            margin-bottom: 16px;
-            max-width: 340px;
-            margin-left: auto;
-            margin-right: auto;
-        }
-        .game-btn {
-            flex: 1;
-            padding: 16px;
-            border-radius: var(--radius-lg);
-            font-size: 18px;
-            font-weight: 800;
-            cursor: pointer;
-            border: none;
-            letter-spacing: 1px;
-            transition: all var(--ease);
-            transform: translateZ(0);
-        }
-        .game-btn.low-btn {
-            background: linear-gradient(135deg, #00c853, #00e676);
-            color: #0e0e12;
-            box-shadow: 0 4px 30px rgba(0, 230, 118, 0.5);
-        }
-        .game-btn.high-btn {
-            background: linear-gradient(135deg, #d50000, #ff1744);
-            color: #fff;
-            box-shadow: 0 4px 30px rgba(255, 23, 68, 0.5);
-        }
-        .game-btn:active { transform: translateZ(0) scale(0.93); }
-        .game-btn:disabled { opacity: 0.4; pointer-events: none; filter: grayscale(30%); }
-        .bet-section { max-width: 340px; margin: 0 auto; text-align: center; }
-        .bet-input-wrap { position: relative; margin-bottom: 10px; }
-        .bet-input {
-            width: 100%;
-            padding: 14px 18px;
-            border-radius: var(--radius-lg);
-            background: rgba(20, 25, 20, 0.7);
-            border: 2px solid rgba(0, 230, 118, 0.35);
-            color: #fff;
-            font-size: 22px;
-            font-weight: 800;
-            text-align: center;
-            letter-spacing: 1px;
-            font-family: var(--font);
-            transition: all var(--ease);
-            box-shadow: 0 0 15px rgba(0, 230, 118, 0.15);
-        }
-        .bet-input:focus { outline: none; border-color: #00e676; box-shadow: 0 0 30px rgba(0, 230, 118, 0.35); }
-        .bet-label { font-size: 10px; color: var(--hint); text-transform: uppercase; letter-spacing: 1px; margin-bottom: 4px; }
-        .bet-controls { display: grid; grid-template-columns: repeat(4, 1fr); gap: 6px; }
-        .bet-ctrl {
-            padding: 10px 6px;
-            border-radius: var(--radius-sm);
-            font-size: 13px;
-            font-weight: 700;
-            cursor: pointer;
-            border: 1px solid rgba(0, 230, 118, 0.3);
-            background: rgba(0, 230, 118, 0.08);
-            color: #00e676;
-            transition: all var(--ease);
-            letter-spacing: 0.5px;
-        }
-        .bet-ctrl:active { background: rgba(0, 230, 118, 0.25); transform: scale(0.94); }
-        .bet-ctrl.max-btn { border-color: rgba(255, 215, 0, 0.5); color: #ffd700; background: rgba(255, 215, 0, 0.08); }
-        .bet-ctrl.min-btn { border-color: rgba(255, 255, 255, 0.4); color: #ccc; background: rgba(255, 255, 255, 0.05); }
-        .game-history { max-width: 340px; margin: 12px auto; display: flex; gap: 6px; flex-wrap: wrap; justify-content: center; }
-        .game-history-dot {
-            width: 22px;
-            height: 22px;
-            border-radius: 50%;
-            font-size: 9px;
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            font-weight: 700;
-        }
-        .game-history-dot.win-dot { background: rgba(0, 230, 118, 0.25); color: #00e676; border: 1px solid rgba(0, 230, 118, 0.5); }
-        .game-history-dot.lose-dot { background: rgba(255, 23, 68, 0.25); color: #ff1744; border: 1px solid rgba(255, 23, 68, 0.5); }
-        [dir="rtl"] .ticker-track { animation-direction: reverse; }
-        [dir="rtl"] .prog { background: linear-gradient(270deg, #00e676, #69f0ae, #ffd700); }
-    </style>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=no, viewport-fit=cover">
+<title>TaskEarn ⚡</title>
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;600;700;900&display=swap" rel="stylesheet">
+<script src="https://telegram.org/js/telegram-web-app.js"></script>
+<script src="https://unpkg.com/@tonconnect/ui@latest/dist/tonconnect-ui.min.js"></script>
+<script src="https://sad.adsgram.ai/js/sad.min.js"></script>
+<style>
+:root{
+--bg:#0e0e12;--surface:#14141a;--neon:#00e676;--neon-glow:rgba(0,230,118,.55);--neon-soft:rgba(0,230,118,.15);
+--gold:#ffd700;--gold-glow:rgba(255,215,0,.5);--danger:#ff1744;--danger-glow:rgba(255,23,68,.6);
+--text:#e0e0e0;--hint:#888;--radius-sm:10px;--radius:14px;--radius-lg:18px;--radius-xl:22px;--nav-height:74px;
+--font:'Inter',-apple-system,BlinkMacSystemFont,'Segoe UI','Noto Sans Arabic',sans-serif;
+--ease:0.25s cubic-bezier(0.4,0,0.2,1);
+--glass-bg:rgba(20,20,30,0.7);--glass-border:rgba(0,230,118,0.18);--glass-hover:rgba(0,230,118,0.08);
+}
+*{margin:0;padding:0;box-sizing:border-box;-webkit-tap-highlight-color:transparent;-webkit-user-select:none;user-select:none;}
+body{font-family:var(--font);background:var(--bg);color:var(--text);min-height:100vh;min-height:100dvh;overflow-x:hidden;-webkit-font-smoothing:antialiased;
+background-image:radial-gradient(ellipse at 30% 10%,rgba(0,230,118,.06) 0%,transparent 55%),radial-gradient(ellipse at 70% 80%,rgba(0,230,118,.04) 0%,transparent 55%);background-attachment:fixed;}
+.glass{background:var(--glass-bg);backdrop-filter:blur(18px) saturate(180%);-webkit-backdrop-filter:blur(18px) saturate(180%);border:1px solid var(--glass-border);transform:translateZ(0);}
+.glass-card{background:var(--glass-bg);backdrop-filter:blur(18px) saturate(180%);-webkit-backdrop-filter:blur(18px) saturate(180%);border:1px solid var(--glass-border);border-radius:var(--radius-lg);transform:translateZ(0);transition:border-color var(--ease),box-shadow var(--ease);}
+.glass-nav{background:rgba(10,10,16,.94);backdrop-filter:blur(28px) saturate(180%);-webkit-backdrop-filter:blur(28px) saturate(180%);border-top:1px solid var(--glass-border);transform:translateZ(0);}
+@keyframes fadeInUp{from{opacity:0;transform:translateY(12px);}to{opacity:1;transform:translateY(0);}}
+@keyframes float{0%,100%{transform:translateY(0);}50%{transform:translateY(-10px);}}
+@keyframes pulse-glow{0%,100%{box-shadow:0 0 15px var(--neon-glow),0 0 45px rgba(0,230,118,.15);}50%{box-shadow:0 0 30px var(--neon-glow),0 0 80px rgba(0,230,118,.35);}}
+@keyframes pulse-glow-gold{0%,100%{box-shadow:0 0 12px var(--gold-glow),0 0 35px rgba(255,215,0,.12);}50%{box-shadow:0 0 28px var(--gold-glow),0 0 65px rgba(255,215,0,.3);}}
+@keyframes shake{0%,100%{transform:rotate(0);}20%{transform:rotate(-5deg);}40%{transform:rotate(5deg);}60%{transform:rotate(-3deg);}80%{transform:rotate(3deg);}}
+@keyframes burst{0%{transform:scale(1);opacity:1;}50%{transform:scale(1.5);opacity:.5;}100%{transform:scale(.2);opacity:0;}}
+@keyframes sparkle{0%,100%{opacity:0;transform:scale(0) rotate(0);}50%{opacity:1;transform:scale(1) rotate(180deg);}}
+@keyframes notifIn{from{top:-70px;opacity:0;transform:translateX(-50%) scale(.9);}to{top:18px;opacity:1;transform:translateX(-50%) scale(1);}}
+@keyframes notifOut{from{top:18px;opacity:1;transform:translateX(-50%) scale(1);}to{top:-70px;opacity:0;transform:translateX(-50%) scale(.9);}}
+@keyframes ticker-scroll{0%{transform:translateX(0);}100%{transform:translateX(-50%);}}
+@keyframes coin-pop{0%{transform:scale(1);}40%{transform:scale(1.4);}100%{transform:scale(1);}}
+@keyframes ball-float{0%,100%{transform:translateY(0) scale(1);}30%{transform:translateY(-18px) scale(1.08);}60%{transform:translateY(-6px) scale(1.03);}}
+@keyframes nav-game-pulse{0%,100%{box-shadow:0 0 22px var(--neon-glow),0 0 55px rgba(0,230,118,.35);}50%{box-shadow:0 0 45px var(--neon-glow),0 0 100px rgba(0,230,118,.65);}}
+@keyframes gauge-pulse{0%,100%{box-shadow:0 0 8px rgba(0,230,118,.4),0 0 20px rgba(255,23,68,.3);}50%{box-shadow:0 0 18px rgba(0,230,118,.7),0 0 40px rgba(255,23,68,.55);}}
+@keyframes spin{to{transform:rotate(360deg);}}
+.coin-pop{animation:coin-pop .4s ease-out;}
+.page{display:none;padding:12px 14px;padding-bottom:calc(var(--nav-height) + 20px);animation:fadeInUp .3s ease;max-width:480px;margin:0 auto;}
+.page.active{display:block;}
+.topbar{display:flex;justify-content:space-between;align-items:center;padding:14px 18px;margin-bottom:10px;border-radius:var(--radius-lg);}
+.logo{font-size:19px;font-weight:800;letter-spacing:-.3px;display:flex;align-items:center;gap:6px;}
+.logo .bolt{display:inline-block;animation:float 2.5s ease-in-out infinite;filter:drop-shadow(0 0 12px var(--neon-glow));font-size:22px;}
+.logo .txt{background:linear-gradient(135deg,#00e676,#69f0ae,#ffd700);-webkit-background-clip:text;-webkit-text-fill-color:transparent;background-clip:text;font-weight:900;}
+.id-chip{font-size:11px;padding:6px 14px;border-radius:20px;color:var(--hint);letter-spacing:.3px;font-weight:500;background:var(--glass-bg);backdrop-filter:blur(10px);border:1px solid rgba(0,230,118,.2);}
+.hero{text-align:center;padding:10px 16px 6px;}
+.coin-wrap{display:inline-block;animation:float 3s ease-in-out infinite;}
+.coin-ico{font-size:76px;filter:drop-shadow(0 8px 25px var(--neon-glow));display:block;}
+.coin-num{font-size:52px;font-weight:900;letter-spacing:-2px;margin-top:4px;background:linear-gradient(180deg,#fff 0%,rgba(200,255,220,.85) 100%);-webkit-background-clip:text;-webkit-text-fill-color:transparent;background-clip:text;}
+.coin-usdt{font-size:12px;color:var(--hint);margin-top:2px;letter-spacing:.5px;}
+.prog-wrap{margin:14px 20px 0;height:6px;border-radius:10px;overflow:hidden;background:rgba(255,255,255,.06);}
+.prog{height:100%;border-radius:10px;background:linear-gradient(90deg,#00e676,#69f0ae,#ffd700);transition:width .7s cubic-bezier(.4,0,.2,1);box-shadow:0 0 18px var(--neon-glow);}
+.stats{display:grid;grid-template-columns:repeat(3,1fr);gap:8px;padding:8px 14px;}
+.stat{text-align:center;padding:14px 8px;border-radius:var(--radius);}
+.stat-n{font-size:23px;font-weight:800;letter-spacing:-.5px;color:#00e676;text-shadow:0 0 12px var(--neon-glow);}
+.stat-l{font-size:10px;color:var(--hint);margin-top:4px;text-transform:uppercase;letter-spacing:.5px;}
+.card{padding:16px;margin-bottom:10px;border-radius:var(--radius-lg);}
+.card-h{font-size:14px;font-weight:700;margin-bottom:12px;display:flex;align-items:center;gap:8px;color:#00e676;text-shadow:0 0 8px rgba(0,230,118,.3);}
+.card-h .ico{font-size:20px;}
+.ad-box{padding:22px;text-align:center;margin-bottom:10px;border-radius:var(--radius-xl);animation:pulse-glow-gold 3s infinite;position:relative;overflow:hidden;background:rgba(20,25,18,.5);backdrop-filter:blur(12px);border:1px solid rgba(255,215,0,.25);}
+.ad-pts{font-size:42px;font-weight:900;letter-spacing:-1px;background:linear-gradient(135deg,#00e676,#ffd700);-webkit-background-clip:text;-webkit-text-fill-color:transparent;background-clip:text;}
+.ad-sub{font-size:13px;color:var(--hint);margin-bottom:6px;}
+.ad-btn{width:100%;padding:14px;border-radius:var(--radius);font-size:15px;font-weight:700;cursor:pointer;color:#0e0e12;border:none;background:linear-gradient(135deg,#00e676,#69f0ae);box-shadow:0 4px 25px rgba(0,230,118,.4);margin-top:12px;transition:all var(--ease);}
+.ad-btn:active{transform:scale(.96);}
+.ad-btn:disabled{opacity:.5;cursor:not-allowed;box-shadow:none;}
+.ad-info{font-size:11px;color:var(--hint);margin-top:8px;}
+.task{display:flex;justify-content:space-between;align-items:center;padding:14px;border-radius:var(--radius);margin-bottom:7px;cursor:pointer;transition:all var(--ease);background:var(--glass-bg);border:1px solid var(--glass-border);}
+.task:active{transform:scale(.97);background:var(--glass-hover);}
+.task.done{opacity:.3;pointer-events:none;filter:grayscale(40%);}
+.task-l{display:flex;align-items:center;gap:12px;}
+.task-ico{font-size:30px;}
+.task-name{font-size:14px;font-weight:600;}
+.task-desc{font-size:11px;color:var(--hint);margin-top:2px;}
+.badge{padding:6px 12px;border-radius:8px;font-size:12px;font-weight:700;white-space:nowrap;background:rgba(0,230,118,.12);border:1px solid rgba(0,230,118,.3);color:#00e676;}
+.ticker-wrap{padding:10px 14px;border-radius:var(--radius);margin-bottom:10px;overflow:hidden;}
+.ticker-label{font-size:10px;color:var(--hint);margin-bottom:4px;letter-spacing:.5px;text-transform:uppercase;}
+.ticker-inner{overflow:hidden;white-space:nowrap;}
+.ticker-track{white-space:nowrap;animation:ticker-scroll 22s linear infinite;font-size:11px;color:#00e676;display:inline-block;}
+.checkin-strip{display:flex;justify-content:space-between;gap:5px;padding:4px 0;}
+.checkin-day{flex:1;text-align:center;padding:9px 3px;border-radius:var(--radius-sm);}
+.checkin-day .day-num{font-size:9px;color:var(--hint);margin-bottom:2px;}
+.checkin-day .day-dot{width:28px;height:28px;border-radius:50%;margin:0 auto;display:flex;align-items:center;justify-content:center;font-size:13px;border:2px solid rgba(255,255,255,.1);background:rgba(20,25,20,.5);}
+.checkin-day.checked .day-dot{background:linear-gradient(135deg,#00e676,#69f0ae);border-color:#00e676;box-shadow:0 0 18px var(--neon-glow);color:#0e0e12;}
+.checkin-day.today .day-dot{border-color:#00e676;box-shadow:0 0 25px var(--neon-glow);}
+.checkin-day .day-reward{font-size:9px;color:var(--hint);margin-top:3px;}
+.checkin-day.checked .day-reward{color:#00e676;}
+.mystery-box-wrap{text-align:center;padding:22px 16px;cursor:pointer;position:relative;transition:all var(--ease);}
+.mystery-box-wrap:active{transform:scale(.95);}
+.mystery-box-wrap.ready .mystery-ico{animation:shake .7s ease-in-out infinite;}
+.mystery-box-wrap.opening .mystery-ico{animation:burst .5s ease-out forwards;}
+.mystery-ico{font-size:74px;display:block;filter:drop-shadow(0 0 30px rgba(0,230,118,.65));}
+.mystery-label{font-size:14px;font-weight:600;margin-top:10px;}
+.mystery-sub{font-size:11px;color:var(--hint);margin-top:3px;}
+.mystery-sparkles{position:absolute;pointer-events:none;inset:0;}
+.sparkle{position:absolute;font-size:16px;animation:sparkle 1.5s ease-in-out infinite;opacity:0;}
+.sparkle:nth-child(1){top:10%;left:15%;}.sparkle:nth-child(2){top:5%;right:15%;animation-delay:.4s;}.sparkle:nth-child(3){bottom:20%;left:10%;animation-delay:.8s;}.sparkle:nth-child(4){bottom:10%;right:12%;animation-delay:1.2s;}
+.ref-box{padding:14px;border-radius:var(--radius);font-size:11px;word-break:break-all;margin:8px 0;line-height:1.7;color:rgba(180,220,180,.9);font-family:'SF Mono','Courier New',monospace;background:rgba(20,25,20,.5);border:1px solid rgba(0,230,118,.2);}
+.btn{width:100%;padding:14px;border-radius:var(--radius);font-size:14px;font-weight:700;cursor:pointer;margin-top:8px;transition:all var(--ease);border:none;}
+.btn:active{transform:scale(.96);}
+.btn-gold{color:#0e0e12;background:linear-gradient(135deg,#00e676,#69f0ae);box-shadow:0 4px 22px rgba(0,230,118,.35);}
+.btn-ghost{color:var(--hint);background:transparent;border:1px solid var(--glass-border);}
+.btn:disabled{opacity:.5;pointer-events:none;}
+#ton-connect-container{margin:10px 0;display:flex;justify-content:center;min-height:48px;align-items:center;}
+.wallet-connected{text-align:center;padding:12px;border-radius:var(--radius);background:rgba(0,230,118,.1);border:1px solid rgba(0,230,118,.3);font-size:12px;color:#00e676;word-break:break-all;margin:8px 0;}
+.wallet-addr{font-size:11px;color:var(--hint);margin-top:4px;word-break:break-all;}
+
+/* ===== NAV مع SVG icons احترافية ===== */
+.nav{position:fixed;bottom:0;left:0;right:0;display:flex;justify-content:space-around;align-items:flex-end;padding:6px 4px max(8px,env(safe-area-inset-bottom,8px));z-index:100;max-width:480px;margin:0 auto;border-radius:var(--radius-xl) var(--radius-xl) 0 0;}
+.nb{background:none;border:none;color:var(--hint);font-size:9px;cursor:pointer;display:flex;flex-direction:column;align-items:center;gap:3px;padding:6px 4px;transition:all var(--ease);border-radius:var(--radius);position:relative;flex:1;min-width:0;}
+.nb svg{width:21px;height:21px;transition:all var(--ease);stroke:currentColor;fill:none;stroke-width:2;stroke-linecap:round;stroke-linejoin:round;}
+.nb span{white-space:nowrap;overflow:hidden;text-overflow:ellipsis;max-width:100%;}
+.nb.on{color:#00e676;font-weight:600;text-shadow:0 0 10px var(--neon-glow);}
+.nb.on svg{filter:drop-shadow(0 0 8px var(--neon-glow));transform:scale(1.12);stroke-width:2.3;}
+.nb.on::after{content:'';position:absolute;top:-4px;width:16px;height:3px;border-radius:4px;background:#00e676;box-shadow:0 0 14px var(--neon-glow);}
+.nb-game{position:relative;margin-top:-26px;z-index:110;background:linear-gradient(135deg,#00e676,#00c853);border-radius:50%;width:54px;height:54px;display:flex;align-items:center;justify-content:center;animation:nav-game-pulse 2.2s ease-in-out infinite;box-shadow:0 0 30px var(--neon-glow),0 0 70px rgba(0,230,118,.45);cursor:pointer;border:3px solid rgba(255,255,255,.25);transition:all var(--ease);flex-shrink:0;}
+.nb-game:active{transform:scale(.9);}
+.nb-game svg{width:24px;height:24px;stroke:#0e0e12;stroke-width:2.3;fill:none;filter:drop-shadow(0 0 4px rgba(0,0,0,.3));}
+.nb-game.on{animation:nav-game-pulse 1.4s ease-in-out infinite;box-shadow:0 0 50px var(--neon-glow),0 0 110px rgba(0,230,118,.7);border-color:#fff;}
+
+.notif{position:fixed;top:18px;left:50%;transform:translateX(-50%);padding:12px 24px;border-radius:28px;font-size:14px;font-weight:700;z-index:999;display:none;white-space:nowrap;pointer-events:none;box-shadow:0 8px 32px rgba(0,0,0,.7);max-width:90vw;text-align:center;backdrop-filter:blur(20px);background:rgba(20,20,30,.9);}
+.notif.success{color:#00e676;border:1px solid rgba(0,230,118,.5);}
+.notif.error{color:#ff1744;border:1px solid rgba(255,23,68,.5);}
+.notif.info{color:#00e676;border:1px solid rgba(0,230,118,.4);}
+.lang-g{display:grid;grid-template-columns:1fr 1fr;gap:8px;margin-top:8px;}
+.lang-i{padding:12px;border-radius:var(--radius);text-align:center;cursor:pointer;font-size:13px;background:var(--glass-bg);border:1px solid var(--glass-border);transition:all var(--ease);}
+.lang-i:active{transform:scale(.95);}
+.lang-i.on{border-color:#00e676!important;background:rgba(0,230,118,.15)!important;color:#00e676;box-shadow:0 0 22px rgba(0,230,118,.25);}
+#verify-btn{position:fixed;bottom:90px;z-index:200;padding:14px;border-radius:14px;font-size:14px;font-weight:700;cursor:pointer;border:none;width:calc(100% - 28px);max-width:452px;left:50%;transform:translateX(-50%);background:linear-gradient(135deg,#00e676,#69f0ae);color:#0e0e12;box-shadow:0 0 28px rgba(0,230,118,.55);}
+.info-row{font-size:11px;color:var(--hint);display:flex;align-items:center;gap:6px;padding:3px 0;}
+
+/* Game */
+.field{position:relative;width:100%;aspect-ratio:1.4/1;max-height:320px;border-radius:var(--radius-lg);overflow:hidden;background:linear-gradient(180deg,#0a2a0f 0%,#0d3314 30%,#0a2a0f 60%,#0d3314 100%);border:2px solid rgba(0,230,118,.35);box-shadow:0 0 40px rgba(0,230,118,.2),inset 0 0 80px rgba(0,0,0,.5);margin:0 auto 14px;}
+.field-lines{position:absolute;inset:0;pointer-events:none;}
+.field-line{position:absolute;background:rgba(0,230,118,.35);}
+.field-line.center{top:50%;left:0;right:0;height:2px;}
+.field-line.circle{top:50%;left:50%;width:100px;height:100px;border-radius:50%;background:transparent;border:2px solid rgba(0,230,118,.35);transform:translate(-50%,-50%);}
+.field-line.penalty-top{top:8%;left:25%;right:25%;height:25%;border:2px solid rgba(0,230,118,.3);border-top:none;border-radius:0 0 20px 20px;}
+.field-line.penalty-bottom{bottom:8%;left:25%;right:25%;height:25%;border:2px solid rgba(0,230,118,.3);border-bottom:none;border-radius:20px 20px 0 0;}
+.field-dot{position:absolute;width:8px;height:8px;background:rgba(0,230,118,.6);border-radius:50%;}
+.field-dot.center-dot{top:50%;left:50%;transform:translate(-50%,-50%);}
+.ball-container{position:absolute;top:50%;left:50%;transform:translate(-50%,-50%);z-index:5;animation:ball-float 3s ease-in-out infinite;transition:filter .3s ease;}
+.ball-container.win{animation:ball-float .6s ease-in-out infinite;filter:drop-shadow(0 0 35px #00e676) drop-shadow(0 0 80px #00e676)!important;}
+.ball-container.lose{animation:shake .5s ease-in-out;filter:drop-shadow(0 0 35px #ff1744) drop-shadow(0 0 80px #ff1744)!important;}
+.ball{font-size:60px;display:block;filter:drop-shadow(0 0 20px rgba(0,230,118,.5));}
+.gauge-wrap{display:flex;align-items:center;justify-content:center;margin:0 auto 16px;position:relative;height:48px;max-width:340px;border-radius:24px;overflow:hidden;animation:gauge-pulse 2.5s ease-in-out infinite;}
+.gauge-low{flex:1;height:100%;background:linear-gradient(180deg,rgba(0,230,118,.7),rgba(0,200,100,.85));display:flex;align-items:center;justify-content:center;font-weight:800;font-size:13px;color:#0e0e12;border-radius:24px 0 0 24px;}
+.gauge-high{flex:1;height:100%;background:linear-gradient(180deg,rgba(255,23,68,.7),rgba(255,50,80,.85));display:flex;align-items:center;justify-content:center;font-weight:800;font-size:13px;color:#fff;border-radius:0 24px 24px 0;}
+.gauge-mid{position:absolute;left:50%;top:50%;transform:translate(-50%,-50%);width:44px;height:44px;border-radius:50%;background:#0e0e12;border:3px solid rgba(255,215,0,.8);display:flex;align-items:center;justify-content:center;font-weight:900;font-size:15px;color:#ffd700;box-shadow:0 0 20px var(--gold-glow);z-index:2;}
+.game-btns{display:flex;gap:12px;margin-bottom:16px;max-width:340px;margin-left:auto;margin-right:auto;}
+.game-btn{flex:1;padding:16px;border-radius:var(--radius-lg);font-size:18px;font-weight:800;cursor:pointer;border:none;transition:all var(--ease);}
+.game-btn.low-btn{background:linear-gradient(135deg,#00c853,#00e676);color:#0e0e12;box-shadow:0 4px 30px rgba(0,230,118,.5);}
+.game-btn.high-btn{background:linear-gradient(135deg,#d50000,#ff1744);color:#fff;box-shadow:0 4px 30px rgba(255,23,68,.5);}
+.game-btn:active{transform:scale(.93);}
+.game-btn:disabled{opacity:.4;pointer-events:none;}
+.bet-section{max-width:340px;margin:0 auto;text-align:center;}
+.bet-input-wrap{position:relative;margin-bottom:10px;}
+.bet-input{width:100%;padding:14px 18px;border-radius:var(--radius-lg);background:rgba(20,25,20,.7);border:2px solid rgba(0,230,118,.35);color:#fff;font-size:22px;font-weight:800;text-align:center;font-family:var(--font);}
+.bet-input:focus{outline:none;border-color:#00e676;box-shadow:0 0 30px rgba(0,230,118,.35);}
+.bet-label{font-size:10px;color:var(--hint);text-transform:uppercase;margin-bottom:4px;}
+.bet-controls{display:grid;grid-template-columns:repeat(4,1fr);gap:6px;}
+.bet-ctrl{padding:10px 6px;border-radius:var(--radius-sm);font-size:13px;font-weight:700;cursor:pointer;border:1px solid rgba(0,230,118,.3);background:rgba(0,230,118,.08);color:#00e676;}
+.bet-ctrl:active{background:rgba(0,230,118,.25);transform:scale(.94);}
+.bet-ctrl.max-btn{border-color:rgba(255,215,0,.5);color:#ffd700;background:rgba(255,215,0,.08);}
+.bet-ctrl.min-btn{border-color:rgba(255,255,255,.4);color:#ccc;background:rgba(255,255,255,.05);}
+.game-history{max-width:340px;margin:12px auto;display:flex;gap:6px;flex-wrap:wrap;justify-content:center;}
+.game-history-dot{width:22px;height:22px;border-radius:50%;font-size:9px;display:flex;align-items:center;justify-content:center;font-weight:700;}
+.game-history-dot.win-dot{background:rgba(0,230,118,.25);color:#00e676;border:1px solid rgba(0,230,118,.5);}
+.game-history-dot.lose-dot{background:rgba(255,23,68,.25);color:#ff1744;border:1px solid rgba(255,23,68,.5);}
+[dir="rtl"] .ticker-track{animation-direction:reverse;}
+[dir="rtl"] .prog{background:linear-gradient(270deg,#00e676,#69f0ae,#ffd700);}
+
+/* ===== صفحة المهام/Shortlinks ===== */
+.offer-card{display:flex;align-items:center;gap:12px;padding:14px;border-radius:var(--radius);margin-bottom:8px;cursor:pointer;transition:all var(--ease);background:var(--glass-bg);border:1px solid var(--glass-border);position:relative;}
+.offer-card:active{transform:scale(.97);background:var(--glass-hover);}
+.offer-card.completed{opacity:.4;pointer-events:none;filter:grayscale(50%);}
+.offer-card.pending{border-color:rgba(255,200,0,.3);background:rgba(255,200,0,.05);}
+.offer-ico{width:44px;height:44px;border-radius:10px;background:linear-gradient(135deg,#00c853,#00e676);display:flex;align-items:center;justify-content:center;font-size:22px;flex-shrink:0;}
+.offer-info{flex:1;min-width:0;}
+.offer-name{font-size:13px;font-weight:600;white-space:nowrap;overflow:hidden;text-overflow:ellipsis;}
+.offer-desc{font-size:10px;color:var(--hint);margin-top:2px;white-space:nowrap;overflow:hidden;text-overflow:ellipsis;}
+.offer-pts{font-size:13px;font-weight:800;color:#00e676;white-space:nowrap;text-align:right;}
+.offer-pts span{font-size:10px;color:var(--hint);display:block;font-weight:400;}
+.offer-status{position:absolute;top:8px;right:8px;font-size:10px;padding:3px 8px;border-radius:6px;}
+.offer-status.done{background:rgba(0,230,118,.2);color:#00e676;}
+.offer-status.pending-s{background:rgba(255,200,0,.2);color:#ffc800;}
+.offers-loader{text-align:center;padding:30px;color:var(--hint);}
+.offers-loader .spin-ico{font-size:32px;display:block;animation:spin 1s linear infinite;margin-bottom:8px;}
+.load-more-btn{width:100%;padding:12px;border-radius:var(--radius);font-size:13px;font-weight:700;cursor:pointer;border:1px solid var(--glass-border);background:var(--glass-bg);color:#00e676;margin-top:4px;}
+.load-more-btn:active{transform:scale(.97);}
+.load-more-btn:disabled{opacity:.5;pointer-events:none;}
+.offers-empty{text-align:center;padding:30px;color:var(--hint);font-size:13px;}
+.tasks-header{display:flex;justify-content:space-between;align-items:center;margin-bottom:12px;}
+.tasks-count{font-size:11px;color:var(--hint);background:var(--glass-bg);border:1px solid var(--glass-border);padding:4px 10px;border-radius:10px;}
+.verify-offer-btn{width:100%;padding:11px;border-radius:var(--radius);font-size:13px;font-weight:700;cursor:pointer;border:none;background:linear-gradient(135deg,#00c853,#00e676);color:#0e0e12;margin-top:6px;}
+.verify-offer-btn:active{transform:scale(.96);}
+</style>
 </head>
 <body>
 
 <div class="notif" id="notif"></div>
 
-<!-- Home Page -->
+<!-- الرئيسية -->
 <div id="pg-home" class="page active">
-    <div class="topbar glass-card">
-        <div class="logo"><span class="bolt">⚡</span><span class="txt">TaskEarn</span></div>
-        <div class="id-chip glass" id="id-chip">ID: ···</div>
+  <div class="topbar glass-card">
+    <div class="logo"><span class="bolt">⚡</span><span class="txt">TaskEarn</span></div>
+    <div class="id-chip glass" id="id-chip">ID: ···</div>
+  </div>
+  <div class="hero">
+    <div class="coin-wrap"><span class="coin-ico" id="coin-ico">🪙</span></div>
+    <div class="coin-num" id="coins">0</div>
+    <div class="coin-usdt" id="usdt1">≈ 0.0000 USDT</div>
+    <div class="prog-wrap"><div class="prog" id="prog" style="width:0%"></div></div>
+  </div>
+  <div class="stats">
+    <div class="stat glass-card"><div class="stat-n" id="s-ads">0</div><div class="stat-l" id="tl-ads">إعلانات</div></div>
+    <div class="stat glass-card"><div class="stat-n" id="s-refs">0</div><div class="stat-l" id="tl-refs">إحالات</div></div>
+    <div class="stat glass-card"><div class="stat-n" id="s-tasks">0</div><div class="stat-l" id="tl-tasks">مهام</div></div>
+  </div>
+  <div class="card glass-card">
+    <div class="card-h"><span class="ico">📅</span><span id="tl-checkin">التسجيل اليومي</span></div>
+    <div class="checkin-strip" id="checkin-strip"></div>
+    <button class="btn btn-gold" id="checkin-btn" style="margin-top:10px;">✅ <span id="tl-checkin-btn">احصل على مكافأة اليوم</span></button>
+  </div>
+  <div class="card glass-card">
+    <div class="card-h"><span class="ico">🎁</span><span id="tl-mystery">الصندوق الغامض</span></div>
+    <div class="mystery-box-wrap ready" id="mystery-box">
+      <span class="mystery-ico">🎁</span>
+      <div class="mystery-sparkles"><span class="sparkle">✨</span><span class="sparkle">💫</span><span class="sparkle">⭐</span><span class="sparkle">🌟</span></div>
+      <div class="mystery-label" id="tl-mystery-label">اضغط للفتح!</div>
+      <div class="mystery-sub" id="tl-mystery-sub">شاهد إعلاناً لفتح مكافأة عشوائية</div>
     </div>
-    <div class="hero">
-        <div class="coin-wrap"><span class="coin-ico" id="coin-ico">🪙</span></div>
-        <div class="coin-num" id="coins">0</div>
-        <div class="coin-usdt" id="usdt1">≈ 0.0000 USDT</div>
-        <div class="prog-wrap"><div class="prog" id="prog" style="width:0%"></div></div>
-    </div>
-    <div class="stats">
-        <div class="stat glass-card"><div class="stat-n" id="s-ads">0</div><div class="stat-l" id="tl-ads">إعلانات</div></div>
-        <div class="stat glass-card"><div class="stat-n" id="s-refs">0</div><div class="stat-l" id="tl-refs">إحالات</div></div>
-        <div class="stat glass-card"><div class="stat-n" id="s-tasks">0</div><div class="stat-l" id="tl-tasks">مهام</div></div>
-    </div>
-    <div class="card glass-card">
-        <div class="card-h"><span class="ico">📅</span><span id="tl-checkin">التسجيل اليومي</span></div>
-        <div class="checkin-strip" id="checkin-strip"></div>
-        <button class="btn btn-gold" id="checkin-btn" style="margin-top:10px;">✅ <span id="tl-checkin-btn">احصل على مكافأة اليوم</span></button>
-    </div>
-    <div class="card glass-card">
-        <div class="card-h"><span class="ico">🎁</span><span id="tl-mystery">الصندوق الغامض</span></div>
-        <div class="mystery-box-wrap ready" id="mystery-box">
-            <span class="mystery-ico">🎁</span>
-            <div class="mystery-sparkles"><span class="sparkle">✨</span><span class="sparkle">💫</span><span class="sparkle">⭐</span><span class="sparkle">🌟</span></div>
-            <div class="mystery-label" id="tl-mystery-label">اضغط للفتح!</div>
-            <div class="mystery-sub" id="tl-mystery-sub">شاهد إعلاناً لفتح مكافأة عشوائية</div>
-        </div>
-    </div>
+  </div>
 </div>
 
-<!-- Earn Page -->
+<!-- الربح (إعلانات) -->
 <div id="pg-earn" class="page">
-    <div class="ad-box glass-card">
-        <div class="ad-sub" id="tl-earn">شاهد إعلاناً واكسب نقاط!</div>
-        <div class="ad-pts">+3 <span style="font-size:15px" id="tl-pts">نقاط</span></div>
-        <button class="ad-btn" id="ad-btn">📺 <span id="tl-watch">شاهد الإعلان</span></button>
-        <div class="ad-info" id="ad-info"></div>
+  <div class="ad-box glass-card">
+    <div class="ad-sub" id="tl-earn">شاهد إعلاناً واكسب نقاط!</div>
+    <div class="ad-pts">+3 <span style="font-size:15px" id="tl-pts">نقاط</span></div>
+    <button class="ad-btn" id="ad-btn">📺 <span id="tl-watch">شاهد الإعلان</span></button>
+    <div class="ad-info" id="ad-info"></div>
+  </div>
+  <div class="card glass-card">
+    <div class="card-h"><span class="ico">📋</span><span id="tl-daily">المهام</span></div>
+    <div class="task glass-card" id="tk-ch">
+      <div class="task-l"><div class="task-ico">📢</div>
+        <div><div class="task-name" id="tl-join">اشترك في قناة TaskEarn</div>
+        <div class="task-desc" id="tl-joind">اشترك واكسب 50 نقطة</div></div>
+      </div>
+      <div class="badge">+50 🪙</div>
     </div>
-    <div class="card glass-card">
-        <div class="card-h"><span class="ico">📋</span><span id="tl-daily">المهام</span></div>
-        <div class="task glass-card" id="tk-ch">
-            <div class="task-l"><div class="task-ico">📢</div>
-                <div><div class="task-name" id="tl-join">اشترك في قناة TaskEarn</div>
-                    <div class="task-desc" id="tl-joind">اشترك واكسب 50 نقطة</div></div>
-            </div>
-            <div class="badge">+50 🪙</div>
-        </div>
-        <div class="task glass-card" id="tk-sh">
-            <div class="task-l"><div class="task-ico">🔗</div>
-                <div><div class="task-name" id="tl-share">شارك رابط الإحالة</div>
-                    <div class="task-desc" id="tl-shared">100 نقطة لكل صديق</div></div>
-            </div>
-            <div class="badge">+100 🪙</div>
-        </div>
+    <div class="task glass-card" id="tk-sh">
+      <div class="task-l"><div class="task-ico">🔗</div>
+        <div><div class="task-name" id="tl-share">شارك رابط الإحالة</div>
+        <div class="task-desc" id="tl-shared">100 نقطة لكل صديق</div></div>
+      </div>
+      <div class="badge">+100 🪙</div>
     </div>
+  </div>
 </div>
 
-<!-- Game Page - FIFA CUP -->
+<!-- صفحة المهام Shortlinks - لوحدها منفصلة -->
+<div id="pg-tasks" class="page">
+  <div class="card glass-card" style="margin-bottom:10px;">
+    <div class="tasks-header">
+      <div class="card-h" style="margin-bottom:0;"><span class="ico">🔗</span><span>مهام الربح</span></div>
+      <div class="tasks-count" id="offers-count">0 مهمة</div>
+    </div>
+    <p style="font-size:11px;color:var(--hint);margin-bottom:4px;">أكمل المهام واكسب نقاط فورية! تتجدد يومياً ♾️</p>
+  </div>
+  <div id="offers-list"></div>
+  <button class="load-more-btn" id="load-more-btn" style="display:none;">⬇️ تحميل المزيد</button>
+</div>
+
+<!-- اللعبة -->
 <div id="pg-game" class="page">
-    <div class="card glass-card" style="text-align:center;animation:pulse-glow 3s infinite;">
-        <div class="card-h" style="justify-content:center;"><span class="ico">🏆</span> FIFA CUP</div>
+  <div class="card glass-card" style="text-align:center;animation:pulse-glow 3s infinite;">
+    <div class="card-h" style="justify-content:center;"><span class="ico">🏆</span> FIFA CUP</div>
+  </div>
+  <div class="field" id="field">
+    <div class="field-lines">
+      <div class="field-line center"></div>
+      <div class="field-line circle"></div>
+      <div class="field-line penalty-top"></div>
+      <div class="field-line penalty-bottom"></div>
+      <div class="field-dot center-dot"></div>
     </div>
-    <div class="field" id="field">
-        <div class="field-lines">
-            <div class="field-line center"></div>
-            <div class="field-line circle"></div>
-            <div class="field-line penalty-top"></div>
-            <div class="field-line penalty-bottom"></div>
-            <div class="field-dot center-dot"></div>
-        </div>
-        <div class="ball-container" id="ball-container">
-            <span class="ball" id="ball">⚽</span>
-        </div>
+    <div class="ball-container" id="ball-container"><span class="ball" id="ball">⚽</span></div>
+  </div>
+  <div class="gauge-wrap">
+    <div class="gauge-low">LOW 1-49</div>
+    <div class="gauge-mid">50</div>
+    <div class="gauge-high">HIGH 51-100</div>
+  </div>
+  <div class="game-btns">
+    <button class="game-btn low-btn" id="btn-low">📉 LOW</button>
+    <button class="game-btn high-btn" id="btn-high">📈 HIGH</button>
+  </div>
+  <div class="bet-section">
+    <div class="bet-label">💰 <span id="tl-bet-amount">مبلغ الرهان</span></div>
+    <div class="bet-input-wrap"><input type="number" class="bet-input" id="bet-amount" value="10" min="10" max="1000" step="1"></div>
+    <div class="bet-controls">
+      <button class="bet-ctrl min-btn" id="bet-half">½</button>
+      <button class="bet-ctrl" id="bet-double">2×</button>
+      <button class="bet-ctrl max-btn" id="bet-max">MAX</button>
+      <button class="bet-ctrl min-btn" id="bet-min">MIN</button>
     </div>
-    <div class="gauge-wrap">
-        <div class="gauge-low">LOW 1-49</div>
-        <div class="gauge-mid">50</div>
-        <div class="gauge-high">HIGH 51-100</div>
-    </div>
-    <div class="game-btns">
-        <button class="game-btn low-btn" id="btn-low">📉 LOW</button>
-        <button class="game-btn high-btn" id="btn-high">📈 HIGH</button>
-    </div>
-    <div class="bet-section">
-        <div class="bet-label">💰 <span id="tl-bet-amount">مبلغ الرهان</span></div>
-        <div class="bet-input-wrap">
-            <input type="number" class="bet-input" id="bet-amount" value="10" min="10" max="1000" step="1">
-        </div>
-        <div class="bet-controls">
-            <button class="bet-ctrl min-btn" id="bet-half">½</button>
-            <button class="bet-ctrl" id="bet-double">2×</button>
-            <button class="bet-ctrl max-btn" id="bet-max">MAX</button>
-            <button class="bet-ctrl min-btn" id="bet-min">MIN</button>
-        </div>
-    </div>
-    <div class="game-history" id="game-history"></div>
+  </div>
+  <div class="game-history" id="game-history"></div>
 </div>
 
-<!-- Squad (Referral) Page -->
+<!-- الفريق (الإحالة) -->
 <div id="pg-squad" class="page">
-    <div class="card glass-card">
-        <div class="card-h"><span class="ico">👥</span><span id="tl-reft">نظام الإحالة</span></div>
-        <p style="color:var(--hint);font-size:12px;margin-bottom:8px;" id="tl-refd">ادعو أصدقاءك واكسب 100 نقطة لكل صديق!</p>
-        <div class="ref-box glass" id="ref-link">جاري التحميل...</div>
-        <button class="btn btn-gold" id="btn-copy">📋 <span id="tl-copy">نسخ الرابط</span></button>
-        <button class="btn btn-ghost" id="btn-share-ref">📤 <span id="tl-sref">مشاركة</span></button>
-    </div>
-    <div class="stats">
-        <div class="stat glass-card"><div class="stat-n" id="r-num">0</div><div class="stat-l" id="tl-rnum">إحالات</div></div>
-        <div class="stat glass-card"><div class="stat-n" id="r-pts">0</div><div class="stat-l">نقاط</div></div>
-        <div class="stat glass-card"><div class="stat-n" id="r-usd">0.00</div><div class="stat-l">USDT</div></div>
-    </div>
+  <div class="card glass-card">
+    <div class="card-h"><span class="ico">👥</span><span id="tl-reft">نظام الإحالة</span></div>
+    <p style="color:var(--hint);font-size:12px;margin-bottom:8px;" id="tl-refd">ادعو أصدقاءك واكسب 100 نقطة لكل صديق!</p>
+    <div class="ref-box glass" id="ref-link">جاري التحميل...</div>
+    <button class="btn btn-gold" id="btn-copy">📋 <span id="tl-copy">نسخ الرابط</span></button>
+    <button class="btn btn-ghost" id="btn-share-ref">📤 <span id="tl-sref">مشاركة</span></button>
+  </div>
+  <div class="stats">
+    <div class="stat glass-card"><div class="stat-n" id="r-num">0</div><div class="stat-l" id="tl-rnum">إحالات</div></div>
+    <div class="stat glass-card"><div class="stat-n" id="r-pts">0</div><div class="stat-l">نقاط</div></div>
+    <div class="stat glass-card"><div class="stat-n" id="r-usd">0.00</div><div class="stat-l">USDT</div></div>
+  </div>
 </div>
 
-<!-- Wallet Page -->
+<!-- المحفظة -->
 <div id="pg-wallet" class="page">
-    <div class="ticker-wrap glass-card">
-        <div class="ticker-label">🔴 عمليات سحب حديثة</div>
-        <div class="ticker-inner"><div class="ticker-track" id="ticker">جاري التحميل...</div></div>
+  <div class="ticker-wrap glass-card">
+    <div class="ticker-label">🔴 عمليات سحب حديثة</div>
+    <div class="ticker-inner"><div class="ticker-track" id="ticker">جاري التحميل...</div></div>
+  </div>
+  <div class="card glass-card" style="text-align:center;animation:pulse-glow 3s infinite;">
+    <div style="color:var(--hint);font-size:12px;" id="tl-bal">رصيدك الحالي</div>
+    <div class="coin-num" style="font-size:40px;margin-top:4px;" id="coins2">0</div>
+    <div class="coin-usdt" id="usdt2">≈ 0.0000 USDT</div>
+    <div style="font-size:10px;color:var(--hint);margin-top:4px;">1000 نقطة = 0.1 USDT</div>
+  </div>
+  <div class="card glass-card">
+    <div class="card-h"><span class="ico">💸</span><span id="tl-wdt">سحب المكافآت</span></div>
+    <p style="font-size:11px;color:var(--hint);margin-bottom:8px;" id="tl-wall">اربط محفظة TON للسحب</p>
+    <div id="ton-connect-container"></div>
+    <div id="wallet-status" style="display:none;"></div>
+    <button class="btn btn-gold" id="btn-withdraw" disabled>💸 <span id="tl-wdb">سحب</span></button>
+  </div>
+  <div class="card glass-card">
+    <div class="card-h"><span class="ico">🌍</span><span id="tl-lang">اللغة</span></div>
+    <div class="lang-g">
+      <div class="lang-i glass-card on" data-lang="ar">🇸🇦 العربية</div>
+      <div class="lang-i glass-card" data-lang="en">🇬🇧 English</div>
+      <div class="lang-i glass-card" data-lang="fr">🇫🇷 Français</div>
+      <div class="lang-i glass-card" data-lang="ru">🇷🇺 Русский</div>
     </div>
-    <div class="card glass-card" style="text-align:center;animation:pulse-glow 3s infinite;">
-        <div style="color:var(--hint);font-size:12px;" id="tl-bal">رصيدك الحالي</div>
-        <div class="coin-num" style="font-size:40px;margin-top:4px;" id="coins2">0</div>
-        <div class="coin-usdt" id="usdt2">≈ 0.0000 USDT</div>
-        <div style="font-size:10px;color:var(--hint);margin-top:4px;">1000 نقطة = 0.1 USDT</div>
-    </div>
-    <div class="card glass-card">
-        <div class="card-h"><span class="ico">💸</span><span id="tl-wdt">سحب المكافآت</span></div>
-        <p style="font-size:11px;color:var(--hint);margin-bottom:8px;" id="tl-wall">اربط محفظة TON للسحب</p>
-        <div id="ton-connect-container"></div>
-        <div id="wallet-status" style="display:none;"></div>
-        <button class="btn btn-gold" id="btn-withdraw" disabled>💸 <span id="tl-wdb">سحب</span></button>
-    </div>
-    <div class="card glass-card">
-        <div class="card-h"><span class="ico">🌍</span><span id="tl-lang">اللغة</span></div>
-        <div class="lang-g">
-            <div class="lang-i glass-card on" data-lang="ar">🇸🇦 العربية</div>
-            <div class="lang-i glass-card" data-lang="en">🇬🇧 English</div>
-            <div class="lang-i glass-card" data-lang="fr">🇫🇷 Français</div>
-            <div class="lang-i glass-card" data-lang="ru">🇷🇺 Русский</div>
-        </div>
-    </div>
-    <div class="card glass-card">
-        <div class="info-row">⚠️ <span id="tl-min">الحد الأدنى: 1000 نقطة</span></div>
-        <div class="info-row">⏱️ <span id="tl-time">وقت المعالجة: 24-48 ساعة</span></div>
-        <div class="info-row">💡 الربح الصافي: 100% لك</div>
-    </div>
+  </div>
+  <div class="card glass-card">
+    <div class="info-row">⚠️ <span id="tl-min">الحد الأدنى: 1000 نقطة</span></div>
+    <div class="info-row">⏱️ <span id="tl-time">وقت المعالجة: 24-48 ساعة</span></div>
+    <div class="info-row">💡 الربح الصافي: 100% لك</div>
+  </div>
 </div>
 
-<!-- Navigation -->
+<!-- Navigation مع SVG icons احترافية -->
 <nav class="nav glass-nav" id="main-nav">
-    <button class="nb on" data-page="home"><span class="ic">🏠</span><span id="nl-home">الرئيسية</span></button>
-    <button class="nb" data-page="earn"><span class="ic">📺</span><span id="nl-earn">الربح</span></button>
-    <button class="nb-game" data-page="game" id="nav-game-btn">
-        <span class="ic">⚽</span>
-    </button>
-    <button class="nb" data-page="squad"><span class="ic">👥</span><span id="nl-squad">الفريق</span></button>
-    <button class="nb" data-page="wallet"><span class="ic">💰</span><span id="nl-wallet">المحفظة</span></button>
+  <button class="nb on" data-page="home">
+    <svg viewBox="0 0 24 24"><path d="M3 9l9-7 9 7v11a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2z"/><polyline points="9 22 9 12 15 12 15 22"/></svg>
+    <span id="nl-home">الرئيسية</span>
+  </button>
+  <button class="nb" data-page="earn">
+    <svg viewBox="0 0 24 24"><rect x="2" y="7" width="20" height="14" rx="2"/><path d="M16 7V5a2 2 0 0 0-2-2h-4a2 2 0 0 0-2 2v2"/><circle cx="12" cy="14" r="3"/></svg>
+    <span id="nl-earn">الربح</span>
+  </button>
+  <button class="nb-game" data-page="game" id="nav-game-btn">
+    <svg viewBox="0 0 24 24" fill="none"><circle cx="12" cy="12" r="9.5" stroke="#0e0e12" stroke-width="2.3"/><path d="M12 7l2.5 1.8-1 2.9h-3l-1-2.9z" fill="#0e0e12" stroke="none"/><path d="M12 2.5v4.5M12 17v4.5M3.5 9l4 1.3M16.5 13.7l4 1.3M20.5 9l-4 1.3M7.5 13.7l-4 1.3" stroke="#0e0e12"/></svg>
+  </button>
+  <button class="nb" data-page="tasks">
+    <svg viewBox="0 0 24 24"><path d="M10 13a5 5 0 0 0 7.07 0l2.83-2.83a5 5 0 0 0-7.07-7.07l-1.5 1.5"/><path d="M14 11a5 5 0 0 0-7.07 0L4.1 13.83a5 5 0 0 0 7.07 7.07l1.5-1.5"/></svg>
+    <span>مهام</span>
+  </button>
+  <button class="nb" data-page="squad">
+    <svg viewBox="0 0 24 24"><path d="M17 21v-2a4 4 0 0 0-4-4H5a4 4 0 0 0-4 4v2"/><circle cx="9" cy="7" r="4"/><path d="M23 21v-2a4 4 0 0 0-3-3.87"/><path d="M16 3.13a4 4 0 0 1 0 7.75"/></svg>
+    <span id="nl-squad">الفريق</span>
+  </button>
+  <button class="nb" data-page="wallet">
+    <svg viewBox="0 0 24 24"><path d="M21 12V7H5a2 2 0 0 1 0-4h14v4"/><path d="M3 5v14a2 2 0 0 0 2 2h16v-5"/><path d="M18 12a2 2 0 0 0 0 4h4v-4z"/></svg>
+    <span id="nl-wallet">المحفظة</span>
+  </button>
 </nav>
 
 <script>
-    const CFG = {
-        RATE: 0.0001,
-        CHANNEL: 'https://t.me/gxhxd',
-        BOT: 'earntaskpro_bot',
-        VERCEL: 'https://taskearnbot.vercel.app',
-        AD_BLOCK: '35884',
-        MIN_WD: 1000,
-        TON_MANIFEST: 'https://taskearnbot.vercel.app/tonconnect-manifest.json',
-        CHECKIN_REWARDS: [2, 3, 5, 8, 12, 18, 30],
-        MYSTERY: [{ label: 'Common', pts: 5, w: 55, e: '🎯' }, { label: 'Uncommon', pts: 15, w: 25, e: '💎' }, {
-            label: 'Rare',
-            pts: 50,
-            w: 12,
-            e: '🔥'
-        }, { label: 'Epic', pts: 150, w: 6, e: '⚡' }, { label: 'Legendary', pts: 500, w: 2, e: '👑' }],
-        MIN_BET: 10,
-        MAX_BET_MULTIPLIER: 1
-    };
-    let state = { coins: 0, uid: null, ads: 0, refs: 0, tasks: 0, lang: 'ar', channelDone: false, shareDone: false,
-        checkinStreak: 0, checkinDate: null, mysteryDate: null, gameHistory: [] };
-    let connectedWallet = null,
-        isAdWatching = false,
-        notifTimer = null,
-        tonUI = null,
-        isMysteryWatching = false,
-        isGameInProgress = false;
-    const TX = {
-        ar: { home: 'الرئيسية', earn: 'الربح', squad: 'الفريق', wallet: 'المحفظة', ads: 'إعلانات', refs: 'إحالات',
-            tasks: 'مهام', earn_title: 'شاهد إعلاناً واكسب نقاط!', pts: 'نقاط', watch: 'شاهد الإعلان', daily: 'المهام',
-            join: 'اشترك في قناة TaskEarn', joind: 'اشترك واكسب 50 نقطة', share: 'شارك رابط الإحالة',
-            shared: '100 نقطة لكل صديق', reft: 'نظام الإحالة', refd: 'ادعو أصدقاءك واكسب 100 نقطة لكل صديق!',
-            copy: 'نسخ الرابط', sref: 'مشاركة', rnum: 'إحالات', bal: 'رصيدك الحالي', wall: 'اربط محفظة TON للسحب',
-            wdt: 'سحب المكافآت', wdb: 'سحب', min: 'الحد الأدنى: 1000 نقطة', time: 'وقت المعالجة: 24-48 ساعة',
-            lang: 'اللغة', rate: 'معدل التحويل', myid: 'معرفك', adw: 'إعلان', checkin: 'التسجيل اليومي',
-            checkin_btn: 'احصل على مكافأة اليوم', checkin_done: 'تم الاستلام!', mystery: 'الصندوق الغامض',
-            mystery_label: 'اضغط للفتح!', mystery_sub: 'شاهد إعلاناً لفتح مكافأة عشوائية', mystery_locked: 'متاح غداً',
-            wallet_ok: '✅ المحفظة متصلة', ad_skip: '⚠️ تم تخطي الإعلان - لا مكافأة', ad_err: '⚠️ خطأ في تحميل الإعلان',
-            ci_ok: '🎉 تم تسجيل الحضور!', wd_ok: '✅ تم إرسال طلب السحب!', need_wallet: '⚠️ اربط محفظة TON أولاً',
-            need_pts: '⚠️ تحتاج 1000 نقطة على الأقل', already_sub: '✅ أنت مشترك بالفعل!', checking: '⏳ جاري التحقق...',
-            not_sub: '❌ لسه مشتركتش! اشترك الأول', verify_err: '❌ خطأ في التحقق', verify_btn: '✅ تحقق من اشتراكي',
-            copied: '✅ تم النسخ!', shared_ok: 'تم مشاركة الرابط!', disconnect: '🔌 فصل المحفظة',
-            bet_amount: 'مبلغ الرهان', game_win: '🎉 فوز! +', game_lose: '💔 خسارة! -',
-            game_need_coins: '⚠️ رصيد غير كافي!', min_bet_error: '⚠️ الحد الأدنى للرهان 10 نقاط',
-            game_in_progress: '⏳ جاري اللعب...' },
-        en: { home: 'Home', earn: 'Earn', squad: 'Squad', wallet: 'Wallet', ads: 'Ads', refs: 'Refs', tasks: 'Tasks',
-            earn_title: 'Watch an ad & earn points!', pts: 'pts', watch: 'Watch Ad', daily: 'Tasks',
-            join: 'Join TaskEarn Channel', joind: 'Subscribe & earn 50 pts', share: 'Share Referral Link',
-            shared: '100 pts per friend', reft: 'Referral System', refd: 'Invite friends & earn 100 pts each!',
-            copy: 'Copy Link', sref: 'Share', rnum: 'Referrals', bal: 'Your Balance',
-            wall: 'Connect TON wallet to withdraw', wdt: 'Withdraw Rewards', wdb: 'Withdraw',
-            min: 'Minimum: 1000 pts', time: 'Processing: 24-48h', lang: 'Language', rate: 'Exchange Rate',
-            myid: 'Your ID', adw: 'ad', checkin: 'Daily Check-in', checkin_btn: "Claim Today's Reward",
-            checkin_done: 'Claimed!', mystery: 'Mystery Box', mystery_label: 'Tap to Open!',
-            mystery_sub: 'Watch an ad to unlock a random reward', mystery_locked: 'Available tomorrow',
-            wallet_ok: '✅ Wallet Connected', ad_skip: '⚠️ Ad skipped - no reward', ad_err: '⚠️ Ad loading error',
-            ci_ok: '🎉 Check-in successful!', wd_ok: '✅ Withdrawal request sent!',
-            need_wallet: '⚠️ Connect TON wallet first', need_pts: '⚠️ Need at least 1000 pts',
-            already_sub: '✅ Already subscribed!', checking: '⏳ Checking...', not_sub: '❌ Not subscribed yet!',
-            verify_err: '❌ Verify error', verify_btn: '✅ Verify Subscription', copied: '✅ Copied!',
-            shared_ok: 'Link shared!', disconnect: '🔌 Disconnect', bet_amount: 'Bet Amount',
-            game_win: '🎉 Win! +', game_lose: '💔 Loss! -', game_need_coins: '⚠️ Insufficient balance!',
-            min_bet_error: '⚠️ Minimum bet is 10 points', game_in_progress: '⏳ Playing...' },
-        fr: { home: 'Accueil', earn: 'Gagner', squad: 'Équipe', wallet: 'Portefeuille', ads: 'Pubs', refs: 'Refs',
-            tasks: 'Tâches', earn_title: 'Voir pub & gagner!', pts: 'pts', watch: 'Voir pub', daily: 'Tâches',
-            join: 'Rejoindre TaskEarn', joind: 'Abonnez-vous & gagnez 50 pts', share: 'Partager lien',
-            shared: '100 pts par ami', reft: 'Parrainage', refd: 'Invitez & gagnez 100 pts!', copy: 'Copier',
-            sref: 'Partager', rnum: 'Parrainages', bal: 'Votre solde', wall: 'Connectez portefeuille TON',
-            wdt: 'Retrait', wdb: 'Retirer', min: 'Min: 1000 pts', time: 'Délai: 24-48h', lang: 'Langue',
-            rate: 'Taux', myid: 'Votre ID', adw: 'pub', checkin: 'Check-in quotidien', checkin_btn: 'Réclamer',
-            checkin_done: 'Reçu!', mystery: 'Boîte Mystère', mystery_label: 'Touchez pour ouvrir!',
-            mystery_sub: 'Voir une pub pour débloquer', mystery_locked: 'Disponible demain',
-            wallet_ok: '✅ Portefeuille connecté', ad_skip: '⚠️ Pub ignorée', ad_err: '⚠️ Erreur de pub',
-            ci_ok: '🎉 Check-in réussi!', wd_ok: '✅ Demande envoyée!', need_wallet: '⚠️ Connectez portefeuille TON',
-            need_pts: '⚠️ 1000 pts minimum', already_sub: '✅ Déjà abonné!', checking: '⏳ Vérification...',
-            not_sub: '❌ Pas encore abonné!', verify_err: '❌ Erreur de vérification', verify_btn: '✅ Vérifier',
-            copied: '✅ Copié!', shared_ok: 'Lien partagé!', disconnect: '🔌 Déconnecter', bet_amount: 'Mise',
-            game_win: '🎉 Gain! +', game_lose: '💔 Perte! -', game_need_coins: '⚠️ Solde insuffisant!',
-            min_bet_error: '⚠️ La mise minimale est de 10 points', game_in_progress: '⏳ En cours...' },
-        ru: { home: 'Главная', earn: 'Заработок', squad: 'Команда', wallet: 'Кошелёк', ads: 'Реклама',
-            refs: 'Рефералы', tasks: 'Задания', earn_title: 'Смотри & зарабатывай!', pts: 'очков', watch: 'Смотреть',
-            daily: 'Задания', join: 'Подписаться на TaskEarn', joind: 'Подпишись & получи 50 очков',
-            share: 'Поделиться ссылкой', shared: '100 очков за друга', reft: 'Рефералы',
-            refd: 'Приглашай & получай 100 очков!', copy: 'Копировать', sref: 'Поделиться', rnum: 'Рефералы',
-            bal: 'Ваш баланс', wall: 'Подключите TON кошелёк', wdt: 'Вывод', wdb: 'Вывести',
-            min: 'Минимум: 1000 очков', time: 'Обработка: 24-48ч', lang: 'Язык', rate: 'Курс', myid: 'Ваш ID',
-            adw: 'реклама', checkin: 'Ежедневный вход', checkin_btn: 'Получить награду', checkin_done: 'Получено!',
-            mystery: 'Загадочная коробка', mystery_label: 'Нажми открыть!',
-            mystery_sub: 'Посмотри рекламу для награды', mystery_locked: 'Доступно завтра',
-            wallet_ok: '✅ Кошелёк подключён', ad_skip: '⚠️ Реклама пропущена', ad_err: '⚠️ Ошибка рекламы',
-            ci_ok: '🎉 Отметка получена!', wd_ok: '✅ Запрос отправлен!',
-            need_wallet: '⚠️ Подключите TON кошелёк', need_pts: '⚠️ Минимум 1000 очков',
-            already_sub: '✅ Вы уже подписаны!', checking: '⏳ Проверяем...', not_sub: '❌ Вы не подписаны!',
-            verify_err: '❌ Ошибка проверки', verify_btn: '✅ Проверить подписку', copied: '✅ Скопировано!',
-            shared_ok: 'Ссылка отправлена!', disconnect: '🔌 Отключить', bet_amount: 'Ставка',
-            game_win: '🎉 Победа! +', game_lose: '💔 Поражение! -', game_need_coins: '⚠️ Недостаточно средств!',
-            min_bet_error: '⚠️ Минимальная ставка 10 очков', game_in_progress: '⏳ Идёт игра...' }
-    };
-    const FAKE_WD = ['أحمد س. سحب 0.5 USDT', 'محمد ع. سحب 1.2 USDT', 'سارة م. سحب 0.8 USDT', 'علي ح. سحب 2.0 USDT',
-        'فاطمة ك. سحب 0.3 USDT', 'Omar سحب 1.5 USDT', 'Yusuf سحب 0.7 USDT', 'نورا ف. سحب 0.9 USDT',
-        'Hassan سحب 3.0 USDT', 'ليلى ب. سحب 0.4 USDT', 'كريم ط. سحب 1.1 USDT', 'Aisha سحب 0.6 USDT'
-    ];
-    const tgApp = window.Telegram && window.Telegram.WebApp;
-    const haptic = tgApp && tgApp.HapticFeedback;
-    const el = id => document.getElementById(id);
-    const tr = k => (TX[state.lang] || TX.ar)[k] || k;
-    const today = () => new Date().toISOString().split('T')[0];
+const CFG={
+  RATE:0.0001,CHANNEL:'https://t.me/gxhxd',BOT:'earntaskpro_bot',VERCEL:'https://taskearnbot.vercel.app',
+  AD_BLOCK:'35884',MIN_WD:1000,TON_MANIFEST:'https://taskearnbot.vercel.app/tonconnect-manifest.json',
+  CHECKIN_REWARDS:[2,3,5,8,12,18,30],
+  MYSTERY:[{label:'Common',pts:5,w:55,e:'🎯'},{label:'Uncommon',pts:15,w:25,e:'💎'},{label:'Rare',pts:50,w:12,e:'🔥'},{label:'Epic',pts:150,w:6,e:'⚡'},{label:'Legendary',pts:500,w:2,e:'👑'}],
+  MIN_BET:10,
+  CPA_FEED:'https://www.cpagrip.com/common/offer_feed_json.php?user_id=2538192&pubkey=d54a39462aaed74f12ea734091ea01ea&tracking_id=',
+  CPA_PTS_PER_OFFER:10,
+  OFFERS_PER_PAGE:5
+};
 
-    function hImpact(s) { try { haptic && haptic.impactOccurred(s || 'medium'); } catch (e) {} }
-    function hSuccess() { try { haptic && haptic.notificationOccurred('success'); } catch (e) {} }
-    function hError() { try { haptic && haptic.notificationOccurred('error'); } catch (e) {} }
+let state={coins:0,uid:null,ads:0,refs:0,tasks:0,lang:'ar',channelDone:false,shareDone:false,checkinStreak:0,checkinDate:null,mysteryDate:null,gameHistory:[],completedOffers:{},pendingOffers:{}};
+let connectedWallet=null,isAdWatching=false,notifTimer=null,tonUI=null,isMysteryWatching=false,isGameInProgress=false;
+let allOffers=[],offersPage=0,offersLoading=false;
 
-    function toast(msg, type, dur) {
-        if (notifTimer) clearTimeout(notifTimer);
-        const n = el('notif');
-        n.textContent = msg;
-        n.className = 'notif ' + (type || 'info');
-        n.style.display = 'block';
-        n.style.animation = 'none';
-        n.offsetWidth;
-        n.style.animation = 'notifIn .35s ease';
-        notifTimer = setTimeout(() => { n.style.animation = 'notifOut .3s ease forwards';
-            setTimeout(() => { n.style.display = 'none'; }, 300); }, dur || 2800);
+const TX={
+  ar:{home:'الرئيسية',earn:'الربح',squad:'الفريق',wallet:'المحفظة',ads:'إعلانات',refs:'إحالات',tasks:'مهام',earn_title:'شاهد إعلاناً واكسب نقاط!',pts:'نقاط',watch:'شاهد الإعلان',daily:'المهام',join:'اشترك في قناة TaskEarn',joind:'اشترك واكسب 50 نقطة',share:'شارك رابط الإحالة',shared:'100 نقطة لكل صديق',reft:'نظام الإحالة',refd:'ادعو أصدقاءك واكسب 100 نقطة لكل صديق!',copy:'نسخ الرابط',sref:'مشاركة',rnum:'إحالات',bal:'رصيدك الحالي',wall:'اربط محفظة TON للسحب',wdt:'سحب المكافآت',wdb:'سحب',min:'الحد الأدنى: 1000 نقطة',time:'وقت المعالجة: 24-48 ساعة',lang:'اللغة',myid:'معرفك',adw:'إعلان',checkin:'التسجيل اليومي',checkin_btn:'احصل على مكافأة اليوم',checkin_done:'تم الاستلام!',mystery:'الصندوق الغامض',mystery_label:'اضغط للفتح!',mystery_sub:'شاهد إعلاناً لفتح مكافأة عشوائية',mystery_locked:'متاح غداً',wallet_ok:'✅ المحفظة متصلة',ad_skip:'⚠️ تم تخطي الإعلان',ad_err:'⚠️ خطأ في تحميل الإعلان',ci_ok:'🎉 تم تسجيل الحضور!',wd_ok:'✅ تم إرسال طلب السحب!',need_wallet:'⚠️ اربط محفظة TON أولاً',need_pts:'⚠️ تحتاج 1000 نقطة',already_sub:'✅ أنت مشترك بالفعل!',checking:'⏳ جاري التحقق...',not_sub:'❌ لسه مشتركتش!',verify_btn:'✅ تحقق من اشتراكي',copied:'✅ تم النسخ!',disconnect:'🔌 فصل المحفظة',bet_amount:'مبلغ الرهان',game_win:'🎉 فوز! +',game_lose:'💔 خسارة! -',game_need_coins:'⚠️ رصيد غير كافي!',min_bet_error:'⚠️ الحد الأدنى 10 نقاط',game_in_progress:'⏳ جاري اللعب...'},
+  en:{home:'Home',earn:'Earn',squad:'Squad',wallet:'Wallet',ads:'Ads',refs:'Refs',tasks:'Tasks',earn_title:'Watch ad & earn!',pts:'pts',watch:'Watch Ad',daily:'Tasks',join:'Join Channel',joind:'Subscribe & earn 50',share:'Share Link',shared:'100 pts/friend',reft:'Referral',refd:'Invite & earn 100 pts!',copy:'Copy',sref:'Share',rnum:'Refs',bal:'Balance',wall:'Connect TON wallet',wdt:'Withdraw',wdb:'Withdraw',min:'Min: 1000',time:'24-48h',lang:'Language',myid:'Your ID',adw:'ad',checkin:'Check-in',checkin_btn:'Claim Reward',checkin_done:'Claimed!',mystery:'Mystery Box',mystery_label:'Tap!',mystery_sub:'Watch ad to unlock',mystery_locked:'Tomorrow',wallet_ok:'✅ Connected',ad_skip:'⚠️ Skipped',ad_err:'⚠️ Error',ci_ok:'🎉 Done!',wd_ok:'✅ Sent!',need_wallet:'⚠️ Connect wallet',need_pts:'⚠️ Need 1000 pts',already_sub:'✅ Subscribed!',checking:'⏳ Checking...',not_sub:'❌ Not subscribed!',verify_btn:'✅ Verify',copied:'✅ Copied!',disconnect:'🔌 Disconnect',bet_amount:'Bet',game_win:'🎉 Win! +',game_lose:'💔 Loss! -',game_need_coins:'⚠️ Low balance!',min_bet_error:'⚠️ Min 10 pts',game_in_progress:'⏳ Playing...'},
+  fr:{home:'Accueil',earn:'Gagner',squad:'Équipe',wallet:'Portefeuille',ads:'Pubs',refs:'Refs',tasks:'Tâches',earn_title:'Voir pub!',pts:'pts',watch:'Voir pub',daily:'Tâches',join:'Rejoindre',joind:'Abonnez 50pts',share:'Partager',shared:'100pts/ami',reft:'Parrainage',refd:'Invitez!',copy:'Copier',sref:'Partager',rnum:'Refs',bal:'Solde',wall:'Connectez TON',wdt:'Retrait',wdb:'Retirer',min:'Min:1000',time:'24-48h',lang:'Langue',myid:'ID',adw:'pub',checkin:'Check-in',checkin_btn:'Réclamer',checkin_done:'Reçu!',mystery:'Boîte',mystery_label:'Touchez!',mystery_sub:'Voir pub',mystery_locked:'Demain',wallet_ok:'✅ Connecté',ad_skip:'⚠️ Ignoré',ad_err:'⚠️ Erreur',ci_ok:'🎉 Fait!',wd_ok:'✅ Envoyé!',need_wallet:'⚠️ Connectez',need_pts:'⚠️ Min 1000',already_sub:'✅ Abonné!',checking:'⏳...',not_sub:'❌ Non!',verify_btn:'✅ Vérifier',copied:'✅ Copié!',disconnect:'🔌 Déconnecter',bet_amount:'Mise',game_win:'🎉 Gain! +',game_lose:'💔 Perte! -',game_need_coins:'⚠️ Solde bas!',min_bet_error:'⚠️ Min 10',game_in_progress:'⏳...'},
+  ru:{home:'Главная',earn:'Заработок',squad:'Команда',wallet:'Кошелёк',ads:'Реклама',refs:'Рефералы',tasks:'Задания',earn_title:'Смотри!',pts:'очков',watch:'Смотреть',daily:'Задания',join:'Подписаться',joind:'+50 очков',share:'Поделиться',shared:'100/друга',reft:'Рефералы',refd:'Приглашай!',copy:'Копировать',sref:'Поделиться',rnum:'Рефералы',bal:'Баланс',wall:'Подключите TON',wdt:'Вывод',wdb:'Вывести',min:'Мин:1000',time:'24-48ч',lang:'Язык',myid:'ID',adw:'реклама',checkin:'Вход',checkin_btn:'Получить',checkin_done:'Получено!',mystery:'Коробка',mystery_label:'Нажми!',mystery_sub:'Смотри рекламу',mystery_locked:'Завтра',wallet_ok:'✅ Подключён',ad_skip:'⚠️ Пропущена',ad_err:'⚠️ Ошибка',ci_ok:'🎉 Готово!',wd_ok:'✅ Отправлено!',need_wallet:'⚠️ Подключите',need_pts:'⚠️ Мин 1000',already_sub:'✅ Подписаны!',checking:'⏳...',not_sub:'❌ Нет!',verify_btn:'✅ Проверить',copied:'✅ Скопировано!',disconnect:'🔌 Отключить',bet_amount:'Ставка',game_win:'🎉 Победа! +',game_lose:'💔 Поражение! -',game_need_coins:'⚠️ Мало средств!',min_bet_error:'⚠️ Мин 10',game_in_progress:'⏳...'}
+};
+
+const FAKE_WD=['أحمد س. سحب 0.5 USDT','محمد ع. سحب 1.2 USDT','سارة م. سحب 0.8 USDT','علي ح. سحب 2.0 USDT','فاطمة ك. سحب 0.3 USDT','Omar سحب 1.5 USDT','Yusuf سحب 0.7 USDT','نورا ف. سحب 0.9 USDT'];
+const OFFER_ICONS=['🎯','💰','🎮','📱','🛒','🎁','💎','🔥','⚡','🌟','🏆','💡'];
+
+const tgApp=window.Telegram&&window.Telegram.WebApp;
+const haptic=tgApp&&tgApp.HapticFeedback;
+const el=id=>document.getElementById(id);
+const tr=k=>(TX[state.lang]||TX.ar)[k]||k;
+const today=()=>new Date().toISOString().split('T')[0];
+function hImpact(s){try{haptic&&haptic.impactOccurred(s||'medium');}catch(e){}}
+function hSuccess(){try{haptic&&haptic.notificationOccurred('success');}catch(e){}}
+function hError(){try{haptic&&haptic.notificationOccurred('error');}catch(e){}}
+
+function toast(msg,type,dur){
+  if(notifTimer)clearTimeout(notifTimer);
+  const n=el('notif');n.textContent=msg;n.className='notif '+(type||'info');
+  n.style.display='block';n.style.animation='none';n.offsetWidth;n.style.animation='notifIn .35s ease';
+  notifTimer=setTimeout(()=>{n.style.animation='notifOut .3s ease forwards';setTimeout(()=>{n.style.display='none';},300);},dur||2800);
+}
+function fetchT(url,opts,ms){ms=ms||8000;return new Promise((res,rej)=>{const t=setTimeout(()=>rej(new Error('timeout')),ms);fetch(url,opts).then(r=>{clearTimeout(t);res(r);}).catch(e=>{clearTimeout(t);rej(e);});});}
+
+function saveLocal(){
+  try{
+    const data={coins:state.coins,ads_watched:state.ads,tasks_done:state.tasks,refs:state.refs,channel_done:state.channelDone,checkin_date:state.checkinDate,checkin_streak:state.checkinStreak,mystery_date:state.mysteryDate,lang:state.lang,game_history:state.gameHistory,completed_offers:state.completedOffers,pending_offers:state.pendingOffers,_ts:Date.now()};
+    const key='te_'+(state.uid||'guest');
+    try{sessionStorage.setItem(key,JSON.stringify(data));}catch(e){}
+    try{localStorage.setItem(key,JSON.stringify(data));}catch(e){}
+  }catch(e){}
+}
+function loadLocal(){
+  const key='te_'+(state.uid||'guest');let raw=null;
+  try{raw=sessionStorage.getItem(key);}catch(e){}
+  if(!raw)try{raw=localStorage.getItem(key);}catch(e){}
+  if(!raw)return null;
+  try{return JSON.parse(raw);}catch(e){return null;}
+}
+function correctBetValue(val){let num=parseInt(val);if(isNaN(num)||num<CFG.MIN_BET)num=CFG.MIN_BET;if(num>state.coins)num=Math.max(state.coins,CFG.MIN_BET);return num;}
+
+function updCoins(){
+  const u=(state.coins*CFG.RATE).toFixed(4);
+  ['coins','coins2'].forEach(id=>{const e=el(id);if(e)e.textContent=state.coins;});
+  ['usdt1','usdt2'].forEach(id=>{const e=el(id);if(e)e.textContent='≈ '+u+' USDT';});
+  const prog=el('prog');if(prog)prog.style.width=Math.min((state.coins%1000)/10,100)+'%';
+  const sa=el('s-ads');if(sa)sa.textContent=state.ads;
+  const sr=el('s-refs');if(sr)sr.textContent=state.refs;
+  const st=el('s-tasks');if(st)st.textContent=state.tasks;
+  const rn=el('r-num');if(rn)rn.textContent=state.refs;
+  const rp=el('r-pts');if(rp)rp.textContent=state.refs*100;
+  const ru=el('r-usd');if(ru)ru.textContent=(state.refs*100*CFG.RATE).toFixed(2);
+  const ai=el('ad-info');if(ai)ai.textContent=state.ads>0?state.ads+' '+tr('adw'):'';
+  const wdb=el('btn-withdraw');if(wdb)wdb.disabled=!(connectedWallet&&state.coins>=CFG.MIN_WD);
+  const betMax=el('bet-max');if(betMax)betMax.textContent='MAX ('+state.coins+')';
+  const betInput=el('bet-amount');
+  if(betInput&&document.activeElement!==betInput){
+    const current=parseInt(betInput.value);
+    if(isNaN(current)||current<CFG.MIN_BET||current>state.coins)betInput.value=correctBetValue(betInput.value);
+  }
+}
+function animateCoinPop(){const ico=el('coin-ico');if(!ico)return;ico.classList.remove('coin-pop');void ico.offsetWidth;ico.classList.add('coin-pop');setTimeout(()=>ico.classList.remove('coin-pop'),400);}
+
+// ============ CPA Offers - صفحة منفصلة ============
+async function loadOffers(reset){
+  if(offersLoading)return;
+  offersLoading=true;
+  const list=el('offers-list');const loadBtn=el('load-more-btn');
+  if(loadBtn)loadBtn.disabled=true;
+  if(reset){allOffers=[];offersPage=0;if(list)list.innerHTML='<div class="offers-loader"><span class="spin-ico">⏳</span><div>جاري تحميل المهام...</div></div>';}
+  try{
+    const url=CFG.CPA_FEED+(state.uid||'guest');
+    const res=await fetchT(url,{},10000);
+    const data=await res.json();
+    const offers=data.data||data.offers||data||[];
+    if(Array.isArray(offers)&&offers.length>0){allOffers=offers;if(reset)list.innerHTML='';renderOffersPage();}
+    else{if(list)list.innerHTML='<div class="offers-empty">⚠️ لا توجد مهام متاحة الآن<br><small style="color:var(--hint)">جرب مرة أخرى لاحقاً</small></div>';}
+  }catch(e){if(list)list.innerHTML='<div class="offers-empty">⚠️ خطأ في تحميل المهام<br><small style="color:var(--hint)">تحقق من الاتصال</small></div>';}
+  offersLoading=false;if(loadBtn)loadBtn.disabled=false;
+}
+function renderOffersPage(){
+  const list=el('offers-list');const loadBtn=el('load-more-btn');const countEl=el('offers-count');
+  if(!list)return;
+  const start=offersPage*CFG.OFFERS_PER_PAGE;const end=start+CFG.OFFERS_PER_PAGE;
+  const pageOffers=allOffers.slice(start,end);
+  if(pageOffers.length===0){if(loadBtn)loadBtn.style.display='none';return;}
+  pageOffers.forEach((offer,i)=>{
+    const id=String(offer.id||offer.offer_id||i+start);
+    const name=offer.name||offer.offer_name||'مهمة #'+(i+start+1);
+    const desc=offer.description||offer.network||'أكمل المهمة واكسب نقاط';
+    const url=offer.link||offer.offer_link||offer.url||'#';
+    const pts=Math.max(CFG.CPA_PTS_PER_OFFER,Math.round((parseFloat(offer.payout||'0')||0)*100)||CFG.CPA_PTS_PER_OFFER);
+    const ico=OFFER_ICONS[(i+start)%OFFER_ICONS.length];
+    const isDone=!!state.completedOffers[id];const isPending=!!state.pendingOffers[id];
+    const card=document.createElement('div');
+    card.className='offer-card'+(isDone?' completed':'')+(isPending?' pending':'');
+    card.id='offer-'+id;
+    card.innerHTML='<div class="offer-ico">'+ico+'</div><div class="offer-info"><div class="offer-name">'+name+'</div><div class="offer-desc">'+desc+'</div>'+(isPending&&!isDone?'<button class="verify-offer-btn" data-id="'+id+'" data-pts="'+pts+'">✅ تحقق من إتمام المهمة</button>':'')+'</div><div style="text-align:right;flex-shrink:0;"><div class="offer-pts">+'+pts+'<span>'+tr('pts')+'</span></div>'+(isDone?'<div class="offer-status done">✓ تم</div>':isPending?'<div class="offer-status pending-s">⏳ انتظار</div>':'')+'</div>';
+    if(!isDone&&!isPending)card.addEventListener('click',()=>startOffer(id,url,pts,name));
+    const vBtn=card.querySelector('.verify-offer-btn');
+    if(vBtn)vBtn.addEventListener('click',(e)=>{e.stopPropagation();verifyOffer(id,pts);});
+    list.appendChild(card);
+  });
+  offersPage++;
+  const total=allOffers.length;const done=Object.keys(state.completedOffers).length;
+  if(countEl)countEl.textContent=done+'/'+total+' مهمة';
+  if(offersPage*CFG.OFFERS_PER_PAGE<allOffers.length){if(loadBtn){loadBtn.style.display='block';loadBtn.disabled=false;}}
+  else{if(loadBtn)loadBtn.style.display='none';}
+}
+function startOffer(id,url,pts,name){
+  hImpact('medium');
+  state.pendingOffers[id]={url,pts,ts:Date.now(),name};saveLocal();
+  if(tgApp&&tgApp.openLink)tgApp.openLink(url);else window.open(url,'_blank');
+  const card=el('offer-'+id);
+  if(card){
+    card.classList.add('pending');
+    const info=card.querySelector('.offer-info');
+    if(info&&!info.querySelector('.verify-offer-btn')){
+      const vBtn=document.createElement('button');vBtn.className='verify-offer-btn';vBtn.dataset.id=id;vBtn.dataset.pts=pts;
+      vBtn.textContent='✅ تحقق من إتمام المهمة';
+      vBtn.addEventListener('click',(e)=>{e.stopPropagation();verifyOffer(id,pts);});
+      info.appendChild(vBtn);
     }
+    const statusEl=card.querySelector('.offer-status');
+    if(statusEl){statusEl.className='offer-status pending-s';statusEl.textContent='⏳ انتظار';}
+    else{const ptsDiv=card.querySelector('.offer-pts');if(ptsDiv){const s=document.createElement('div');s.className='offer-status pending-s';s.textContent='⏳ انتظار';ptsDiv.parentNode.appendChild(s);}}
+  }
+  toast('🔗 افتح الرابط وأكمل المهمة ثم اضغط تحقق','info',4000);
+}
+function verifyOffer(id,pts){
+  hImpact('light');
+  const pending=state.pendingOffers[id];if(!pending)return;
+  const elapsed=(Date.now()-(pending.ts||0))/1000;
+  if(elapsed<10){toast('⏳ انتظر قليلاً بعد إتمام المهمة','info');return;}
+  state.completedOffers[id]=true;delete state.pendingOffers[id];
+  state.coins+=parseInt(pts)||CFG.CPA_PTS_PER_OFFER;state.tasks+=1;
+  saveLocal();updCoins();animateCoinPop();hSuccess();
+  const card=el('offer-'+id);
+  if(card){card.classList.remove('pending');card.classList.add('completed');card.style.opacity='0.4';card.style.pointerEvents='none';}
+  toast('🎉 +'+pts+' '+tr('pts')+'!','success');
+  const countEl=el('offers-count');const done=Object.keys(state.completedOffers).length;
+  if(countEl)countEl.textContent=done+'/'+allOffers.length+' مهمة';
+  const pageStart=(offersPage-1)*CFG.OFFERS_PER_PAGE;
+  const pageDone=allOffers.slice(pageStart,offersPage*CFG.OFFERS_PER_PAGE).every(o=>state.completedOffers[String(o.id||o.offer_id)]);
+  if(pageDone&&offersPage*CFG.OFFERS_PER_PAGE<allOffers.length){setTimeout(()=>{renderOffersPage();toast('✨ مهام جديدة متاحة!','info');},800);}
+}
 
-    function fetchT(url, opts, ms) {
-        ms = ms || 5000;
-        return new Promise((res, rej) => { const t = setTimeout(() => rej(new Error('timeout')), ms);
-            fetch(url, opts).then(r => { clearTimeout(t);
-                res(r); }).catch(e => { clearTimeout(t);
-                rej(e); }); });
-    }
+// ============ Game ============
+function renderGameHistory(){const container=el('game-history');if(!container)return;container.innerHTML='';const history=state.gameHistory||[];history.slice(-12).forEach(h=>{const dot=document.createElement('span');dot.className='game-history-dot '+(h.win?'win-dot':'lose-dot');dot.textContent=h.win?'W':'L';container.appendChild(dot);});}
+async function playGame(choice){
+  if(isGameInProgress)return;
+  const betInput=el('bet-amount');const rawBet=parseInt(betInput.value);
+  if(isNaN(rawBet)||rawBet<CFG.MIN_BET){toast(tr('min_bet_error'),'error');hError();return;}
+  if(rawBet>state.coins){toast(tr('game_need_coins'),'error');hError();return;}
+  const bet=rawBet;isGameInProgress=true;
+  const btnLow=el('btn-low');const btnHigh=el('btn-high');btnLow.disabled=true;btnHigh.disabled=true;
+  hImpact('heavy');state.coins-=bet;saveLocal();updCoins();animateCoinPop();
+  const ballContainer=el('ball-container');ballContainer.classList.remove('win','lose');void ballContainer.offsetWidth;
+  await new Promise(r=>setTimeout(r,600));
+  const result=Math.floor(Math.random()*100)+1;
+  const isLow=result>=1&&result<=49;const isHigh=result>=51&&result<=100;
+  let userWon=false;
+  if(choice==='low'&&isLow)userWon=true;if(choice==='high'&&isHigh)userWon=true;if(result===50)userWon=false;
+  if(userWon){const winnings=bet*2;state.coins+=winnings;ballContainer.classList.add('win');hSuccess();toast(tr('game_win')+winnings+' 🪙','success',3500);}
+  else{ballContainer.classList.add('lose');hError();toast(tr('game_lose')+bet+' 🪙','error',3000);}
+  state.gameHistory=state.gameHistory||[];state.gameHistory.push({choice,result,win:userWon,bet,time:Date.now()});
+  if(state.gameHistory.length>50)state.gameHistory=state.gameHistory.slice(-50);
+  saveLocal();updCoins();renderGameHistory();
+  setTimeout(()=>{ballContainer.classList.remove('win','lose');isGameInProgress=false;btnLow.disabled=false;btnHigh.disabled=false;},1200);
+}
 
-    function saveLocal() {
-        try {
-            const data = { coins: state.coins, ads_watched: state.ads, tasks_done: state.tasks, refs: state.refs,
-                channel_done: state.channelDone, checkin_date: state.checkinDate, checkin_streak: state.checkinStreak,
-                mystery_date: state.mysteryDate, lang: state.lang, game_history: state.gameHistory, _ts: Date.now() };
-            const key = 'te_' + (state.uid || 'guest');
-            try { sessionStorage.setItem(key, JSON.stringify(data)); } catch (e) {}
-            try { localStorage.setItem(key, JSON.stringify(data)); } catch (e) {}
-        } catch (e) {}
-    }
+// ============ Ad ============
+async function watchAd(){
+  if(isAdWatching)return;
+  const btn=el('ad-btn');isAdWatching=true;btn.disabled=true;btn.innerHTML='⏳ ...';hImpact('medium');
+  if(!window.Adsgram||!window.Adsgram.init){toast(tr('ad_err'),'error');resetAdButton(btn);return;}
+  let ctrl;try{ctrl=window.Adsgram.init({blockId:CFG.AD_BLOCK});}catch(e){toast(tr('ad_err'),'error');resetAdButton(btn);return;}
+  ctrl.show().then(async()=>{
+    try{
+      const initData=(tgApp&&tgApp.initData)||'';
+      const res=await fetchT(CFG.VERCEL+'/api/ad-watched',{method:'POST',headers:{'Content-Type':'application/json','Authorization':'Bearer '+initData},body:JSON.stringify({uid:state.uid})},5000);
+      const data=await res.json();
+      if(data.success){state.coins=data.newBalance;state.ads=data.adsWatched;}else throw new Error();
+    }catch(e){state.coins+=3;state.ads+=1;}
+    saveLocal();updCoins();hSuccess();animateCoinPop();toast('🎉 +3 '+tr('pts')+'!','success');resetAdButton(btn);
+  }).catch(()=>{hError();toast(tr('ad_skip'),'error');resetAdButton(btn);});
+}
+function resetAdButton(btn){isAdWatching=false;btn.disabled=false;btn.innerHTML='📺 <span>'+tr('watch')+'</span>';}
 
-    function loadLocal() {
-        const key = 'te_' + (state.uid || 'guest');
-        let raw = null;
-        try { raw = sessionStorage.getItem(key); } catch (e) {}
-        if (!raw) try { raw = localStorage.getItem(key); } catch (e) {}
-        if (!raw) return null;
-        try { return JSON.parse(raw); } catch (e) { return null; }
-    }
+// ============ Mystery ============
+function pickMysteryReward(){const total=CFG.MYSTERY.reduce((s,m)=>s+m.w,0);let r=Math.random()*total;for(const m of CFG.MYSTERY){r-=m.w;if(r<=0)return m;}return CFG.MYSTERY[0];}
+async function openMysteryBox(){
+  if(isMysteryWatching)return;
+  const box=el('mystery-box');if(!box.classList.contains('ready'))return;
+  if(state.mysteryDate===today()){toast(tr('mystery_locked'),'info');return;}
+  if(!window.Adsgram||!window.Adsgram.init){toast(tr('ad_err'),'error');return;}
+  isMysteryWatching=true;hImpact('medium');
+  let ctrl;try{ctrl=window.Adsgram.init({blockId:CFG.AD_BLOCK});}catch(e){toast(tr('ad_err'),'error');isMysteryWatching=false;return;}
+  ctrl.show().then(()=>{
+    const reward=pickMysteryReward();box.classList.remove('ready');box.classList.add('opening');hSuccess();
+    setTimeout(()=>{
+      state.coins+=reward.pts;state.mysteryDate=today();saveLocal();updCoins();animateCoinPop();box.classList.remove('opening');
+      const lbl=el('tl-mystery-label');const sub=el('tl-mystery-sub');
+      if(lbl)lbl.textContent=reward.e+' +'+reward.pts+' '+tr('pts')+'!';if(sub)sub.textContent=reward.label+' Reward';
+      toast(reward.e+' +'+reward.pts+' '+tr('pts')+'!','success',3500);
+      setTimeout(()=>renderMysteryBox(),3000);
+    },500);
+    isMysteryWatching=false;
+  }).catch(()=>{hError();toast(tr('ad_skip'),'error');isMysteryWatching=false;});
+}
+function renderMysteryBox(){const box=el('mystery-box');const lbl=el('tl-mystery-label');const sub=el('tl-mystery-sub');if(!box)return;const locked=state.mysteryDate===today();box.classList.toggle('ready',!locked);if(lbl)lbl.textContent=locked?tr('mystery_locked'):tr('mystery_label');if(sub)sub.textContent=locked?'':tr('mystery_sub');}
 
-    // تصحيح قيمة الرهان للعرض فقط، لا يستخدم في اللعب
-    function correctBetValue(val) {
-        let num = parseInt(val);
-        if (isNaN(num) || num < CFG.MIN_BET) num = CFG.MIN_BET;
-        if (num > state.coins) num = Math.max(state.coins, CFG.MIN_BET);
-        return num;
-    }
+// ============ Checkin ============
+function renderCheckin(){const strip=el('checkin-strip');if(!strip)return;strip.innerHTML='';const days=['S','M','T','W','T','F','S'];const streak=state.checkinStreak||0;for(let i=0;i<7;i++){const d=document.createElement('div');d.className='checkin-day'+(i<streak?' checked':'')+(i===streak?' today':'');d.innerHTML='<div class="day-num">'+days[i]+'</div><div class="day-dot">'+(i<streak?'✓':'')+'</div><div class="day-reward">+'+CFG.CHECKIN_REWARDS[i]+'</div>';strip.appendChild(d);}const btn=el('checkin-btn');if(btn){const done=state.checkinDate===today();btn.disabled=done;const sp=btn.querySelector('#tl-checkin-btn');if(sp)sp.textContent=done?tr('checkin_done'):tr('checkin_btn');}}
+async function claimCheckin(){if(state.checkinDate===today()){toast(tr('checkin_done'),'info');return;}hImpact('medium');const streak=Math.min(state.checkinStreak,6);const reward=CFG.CHECKIN_REWARDS[streak];state.coins+=reward;state.checkinDate=today();state.checkinStreak=(state.checkinStreak<7)?state.checkinStreak+1:1;saveLocal();updCoins();animateCoinPop();hSuccess();renderCheckin();toast(tr('ci_ok')+' +'+reward,'success');}
 
-    function updCoins() {
-        const u = (state.coins * CFG.RATE).toFixed(4);
-        ['coins', 'coins2'].forEach(id => { const e = el(id); if (e) e.textContent = state.coins; });
-        ['usdt1', 'usdt2'].forEach(id => { const e = el(id); if (e) e.textContent = '≈ ' + u + ' USDT'; });
-        const prog = el('prog'); if (prog) prog.style.width = Math.min((state.coins % 1000) / 10, 100) + '%';
-        const sa = el('s-ads'); if (sa) sa.textContent = state.ads;
-        const sr = el('s-refs'); if (sr) sr.textContent = state.refs;
-        const st = el('s-tasks'); if (st) st.textContent = state.tasks;
-        const rn = el('r-num'); if (rn) rn.textContent = state.refs;
-        const rp = el('r-pts'); if (rp) rp.textContent = state.refs * 100;
-        const ru = el('r-usd'); if (ru) ru.textContent = (state.refs * 100 * CFG.RATE).toFixed(2);
-        const ai = el('ad-info'); if (ai) ai.textContent = state.ads > 0 ? state.ads + ' ' + tr('adw') : '';
-        const wdb = el('btn-withdraw'); if (wdb) wdb.disabled = !(connectedWallet && state.coins >= CFG.MIN_WD);
-        const betMax = el('bet-max'); if (betMax) betMax.textContent = 'MAX (' + state.coins + ')';
-        const betInput = el('bet-amount');
-        if (betInput && document.activeElement !== betInput) {
-            // تصحيح فقط إذا لم يكن الحقل نشطاً
-            const current = parseInt(betInput.value);
-            if (isNaN(current) || current < CFG.MIN_BET || current > state.coins) {
-                betInput.value = correctBetValue(betInput.value);
-            }
-        }
-    }
+// ============ Channel ============
+async function verifyChannel(){
+  const vBtn=el('verify-btn');if(vBtn){vBtn.disabled=true;vBtn.textContent=tr('checking');}hImpact('light');
+  try{
+    const initData=(tgApp&&tgApp.initData)||'';
+    const res=await fetchT(CFG.VERCEL+'/api/check-channel',{method:'POST',headers:{'Content-Type':'application/json','Authorization':'Bearer '+initData},body:JSON.stringify({uid:state.uid})},6000);
+    const data=await res.json();
+    if(data.subscribed||data.success)giveChannelReward(vBtn);
+    else{hError();toast(tr('not_sub'),'error');if(vBtn){vBtn.disabled=false;vBtn.textContent=tr('verify_btn');}}
+  }catch(e){giveChannelReward(vBtn);}
+}
+function giveChannelReward(vBtn){state.channelDone=true;state.coins+=50;state.tasks+=1;saveLocal();updCoins();animateCoinPop();hSuccess();el('tk-ch').classList.add('done');if(vBtn)vBtn.remove();toast('🎉 +50 '+tr('pts')+'!','success');}
 
-    function animateCoinPop() {
-        const ico = el('coin-ico'); if (!ico) return;
-        ico.classList.remove('coin-pop');
-        void ico.offsetWidth;
-        ico.classList.add('coin-pop');
-        setTimeout(() => ico.classList.remove('coin-pop'), 400);
-    }
+// ============ Referral ============
+function copyRef(){const link='https://t.me/'+CFG.BOT+'?start='+state.uid;hImpact('light');try{navigator.clipboard.writeText(link).then(()=>toast(tr('copied'),'success')).catch(()=>fallbackCopy(link));}catch(e){fallbackCopy(link);}}
+function fallbackCopy(t){const ta=document.createElement('textarea');ta.value=t;document.body.appendChild(ta);ta.select();document.execCommand('copy');document.body.removeChild(ta);toast(tr('copied'),'success');}
+function shareRef(){const link='https://t.me/'+CFG.BOT+'?start='+state.uid;hImpact('medium');if(tgApp&&tgApp.openTelegramLink)tgApp.openTelegramLink('https://t.me/share/url?url='+encodeURIComponent(link)+'&text='+encodeURIComponent('انضم لـ TaskEarn واكسب TON! 🚀'));else if(navigator.share)navigator.share({title:'TaskEarn',url:link}).catch(()=>{});else copyRef();}
+function shareTask(){hImpact('medium');if(!state.shareDone){state.shareDone=true;state.tasks+=1;saveLocal();updCoins();el('tk-sh').classList.add('done');}shareRef();}
 
-    function renderGameHistory() {
-        const container = el('game-history'); if (!container) return;
-        container.innerHTML = '';
-        const history = state.gameHistory || [];
-        const recent = history.slice(-12);
-        recent.forEach(h => {
-            const dot = document.createElement('span');
-            dot.className = 'game-history-dot ' + (h.win ? 'win-dot' : 'lose-dot');
-            dot.textContent = h.win ? 'W' : 'L';
-            container.appendChild(dot);
-        });
-    }
+// ============ TON Connect ============
+function initTonConnect(){
+  if(typeof TonConnectUI==='undefined'){renderConnectBtn(false);return;}
+  try{
+    tonUI=new TonConnectUI({manifestUrl:CFG.TON_MANIFEST});
+    tonUI.onStatusChange(wallet=>{connectedWallet=wallet;updWalletStatus();updCoins();});
+    const w=tonUI.wallet;if(w)connectedWallet=w;
+  }catch(e){renderConnectBtn(false);return;}
+  renderConnectBtn(true);
+}
+function renderConnectBtn(ready){
+  const container=el('ton-connect-container');if(!container)return;container.innerHTML='';
+  const btn=document.createElement('button');btn.id='ton-connect-btn';btn.className='btn btn-gold';btn.style.marginTop='0';
+  if(!ready){btn.innerHTML='⚠️ TON Connect غير متاح';btn.disabled=true;}
+  else{
+    btn.innerHTML=connectedWallet?'🔌 '+tr('disconnect'):'👛 Connect TON Wallet';
+    btn.addEventListener('click',()=>{if(!tonUI)return;if(connectedWallet){tonUI.disconnect();connectedWallet=null;updWalletStatus();updCoins();}else{tonUI.openModal();}});
+  }
+  container.appendChild(btn);
+}
+function updWalletStatus(){
+  const statusEl=el('wallet-status');
+  if(connectedWallet&&connectedWallet.account){
+    const addr=connectedWallet.account.address;const short=addr.substring(0,6)+'...'+addr.substring(addr.length-4);
+    if(statusEl){statusEl.style.display='block';statusEl.className='wallet-connected';statusEl.innerHTML=tr('wallet_ok')+'<div class="wallet-addr">'+short+'</div>';}
+    const btn=el('ton-connect-btn');if(btn)btn.innerHTML='🔌 '+tr('disconnect');
+  }else{
+    if(statusEl){statusEl.style.display='none';statusEl.innerHTML='';}
+    const btn=el('ton-connect-btn');if(btn)btn.innerHTML='👛 Connect TON Wallet';
+  }
+  updCoins();
+}
+async function withdraw(){
+  if(!connectedWallet){toast(tr('need_wallet'),'error');hError();return;}
+  if(state.coins<CFG.MIN_WD){toast(tr('need_pts'),'error');hError();return;}
+  const btn=el('btn-withdraw');btn.disabled=true;btn.innerHTML='⏳ ...';hImpact('heavy');
+  try{
+    const initData=(tgApp&&tgApp.initData)||'';
+    const res=await fetchT(CFG.VERCEL+'/api/withdraw',{method:'POST',headers:{'Content-Type':'application/json','Authorization':'Bearer '+initData},body:JSON.stringify({uid:state.uid,coins:state.coins,wallet:connectedWallet.account.address})},8000);
+    const data=await res.json();if(!data.success)throw new Error();
+  }catch(e){}
+  hSuccess();toast(tr('wd_ok'),'success',4000);state.coins=0;saveLocal();updCoins();
+  btn.innerHTML='💸 <span>'+tr('wdb')+'</span>';
+}
 
-    async function playGame(choice) {
-        if (isGameInProgress) return;
-        const betInput = el('bet-amount');
-        // نقرأ القيمة الخام
-        const rawBet = parseInt(betInput.value);
-        // التحقق من الحد الأدنى
-        if (isNaN(rawBet) || rawBet < CFG.MIN_BET) {
-            toast(tr('min_bet_error'), 'error');
-            hError();
-            return;
-        }
-        // التحقق من الرصيد
-        if (rawBet > state.coins) {
-            toast(tr('game_need_coins'), 'error');
-            hError();
-            return;
-        }
-        const bet = rawBet;
-        isGameInProgress = true;
-        const btnLow = el('btn-low');
-        const btnHigh = el('btn-high');
-        btnLow.disabled = true;
-        btnHigh.disabled = true;
-        hImpact('heavy');
-        state.coins -= bet;
-        saveLocal();
-        updCoins();
-        animateCoinPop();
-        const ballContainer = el('ball-container');
-        ballContainer.classList.remove('win', 'lose');
-        void ballContainer.offsetWidth;
-        await new Promise(r => setTimeout(r, 600));
-        const result = Math.floor(Math.random() * 100) + 1;
-        const isLow = result >= 1 && result <= 49;
-        const isHigh = result >= 51 && result <= 100;
-        let userWon = false;
-        if (choice === 'low' && isLow) userWon = true;
-        if (choice === 'high' && isHigh) userWon = true;
-        if (result === 50) userWon = false;
-        if (userWon) {
-            const winnings = bet * 2;
-            state.coins += winnings;
-            ballContainer.classList.add('win');
-            hSuccess();
-            toast(tr('game_win') + winnings + ' 🪙', 'success', 3500);
-        } else {
-            ballContainer.classList.add('lose');
-            hError();
-            toast(tr('game_lose') + bet + ' 🪙', 'error', 3000);
-        }
-        state.gameHistory = state.gameHistory || [];
-        state.gameHistory.push({ choice, result, win: userWon, bet, time: Date.now() });
-        if (state.gameHistory.length > 50) state.gameHistory = state.gameHistory.slice(-50);
-        saveLocal();
-        updCoins();
-        renderGameHistory();
-        setTimeout(() => {
-            ballContainer.classList.remove('win', 'lose');
-            isGameInProgress = false;
-            btnLow.disabled = false;
-            btnHigh.disabled = false;
-        }, 1200);
-    }
+// ============ Ticker ============
+function initTicker(){const track=el('ticker');if(!track)return;track.textContent=FAKE_WD.join(' • ')+' • '+FAKE_WD.join(' • ');}
 
-    async function watchAd() {
-        if (isAdWatching) return;
-        const btn = el('ad-btn');
-        isAdWatching = true;
-        btn.disabled = true;
-        btn.innerHTML = '⏳ ...';
-        hImpact('medium');
-        if (!window.Adsgram || !window.Adsgram.init) { toast(tr('ad_err'), 'error'); resetAdButton(btn); return; }
-        let ctrl;
-        try { ctrl = window.Adsgram.init({ blockId: CFG.AD_BLOCK }); } catch (e) { toast(tr('ad_err'), 'error'); resetAdButton(btn); return; }
-        ctrl.show().then(async () => {
-            try {
-                const initData = (tgApp && tgApp.initData) || '';
-                const res = await fetchT(CFG.VERCEL + '/api/ad-watched', { method: 'POST', headers: { 'Content-Type': 'application/json', 'Authorization': 'Bearer ' + initData }, body: JSON.stringify({ uid: state.uid }) }, 5000);
-                const data = await res.json();
-                if (data.success) { state.coins = data.newBalance; state.ads = data.adsWatched; saveLocal(); updCoins(); hSuccess(); animateCoinPop(); toast('🎉 +3 ' + tr('pts') + '!', 'success'); } else throw new Error('denied');
-            } catch (e) { state.coins += 3; state.ads += 1; saveLocal(); updCoins(); hSuccess(); animateCoinPop(); toast('🎉 +3 ' + tr('pts') + '!', 'success'); }
-            resetAdButton(btn);
-        }).catch(() => { hError(); toast(tr('ad_skip'), 'error'); resetAdButton(btn); });
-    }
+// ============ Lang ============
+function setLang(l,activeEl){
+  hImpact('light');state.lang=l;
+  document.querySelectorAll('.lang-i').forEach(i=>i.classList.remove('on'));if(activeEl)activeEl.classList.add('on');
+  document.documentElement.dir=l==='ar'?'rtl':'ltr';document.documentElement.lang=l;
+  const map={'nl-home':'home','nl-earn':'earn','nl-squad':'squad','nl-wallet':'wallet','tl-ads':'ads','tl-refs':'refs','tl-tasks':'tasks','tl-earn':'earn_title','tl-pts':'pts','tl-watch':'watch','tl-daily':'daily','tl-join':'join','tl-joind':'joind','tl-share':'share','tl-shared':'shared','tl-reft':'reft','tl-refd':'refd','tl-copy':'copy','tl-sref':'sref','tl-rnum':'rnum','tl-bal':'bal','tl-wall':'wall','tl-wdt':'wdt','tl-wdb':'wdb','tl-min':'min','tl-time':'time','tl-lang':'lang','tl-checkin':'checkin','tl-checkin-btn':'checkin_btn','tl-mystery':'mystery','tl-mystery-label':'mystery_label','tl-mystery-sub':'mystery_sub','tl-bet-amount':'bet_amount'};
+  Object.keys(map).forEach(id=>{const e=el(id);if(e)e.textContent=tr(map[id]);});
+  saveLocal();renderCheckin();renderMysteryBox();updCoins();renderGameHistory();
+}
 
-    function resetAdButton(btn) { isAdWatching = false; btn.disabled = false; btn.innerHTML = '📺 <span>' + tr('watch') + '</span>'; }
+// ============ Navigate ============
+function navigateTo(pg){
+  document.querySelectorAll('.page').forEach(p=>p.classList.remove('active'));
+  document.querySelectorAll('.nb').forEach(b=>b.classList.remove('on'));
+  const navGameBtn=el('nav-game-btn');if(navGameBtn)navGameBtn.classList.remove('on');
+  const pageEl=el('pg-'+pg);if(pageEl)pageEl.classList.add('active');
+  if(pg==='game'){if(navGameBtn)navGameBtn.classList.add('on');}
+  else{const navBtn=document.querySelector('.nb[data-page="'+pg+'"]');if(navBtn)navBtn.classList.add('on');}
+  if(pg==='wallet')updWalletStatus();
+  if(pg==='game'){updCoins();renderGameHistory();}
+  if(pg==='tasks'&&allOffers.length===0)loadOffers(true);
+  window.scrollTo(0,0);
+}
 
-    function pickMysteryReward() { const total = CFG.MYSTERY.reduce((s, m) => s + m.w, 0); let r = Math.random() * total; for (const m of CFG.MYSTERY) { r -= m.w; if (r <= 0) return m; } return CFG.MYSTERY[0]; }
-    async function openMysteryBox() {
-        if (isMysteryWatching) return;
-        const box = el('mystery-box'); if (!box.classList.contains('ready')) return;
-        if (state.mysteryDate === today()) { toast(tr('mystery_locked'), 'info'); return; }
-        if (!window.Adsgram || !window.Adsgram.init) { toast(tr('ad_err'), 'error'); return; }
-        isMysteryWatching = true; hImpact('medium');
-        let ctrl;
-        try { ctrl = window.Adsgram.init({ blockId: CFG.AD_BLOCK }); } catch (e) { toast(tr('ad_err'), 'error'); isMysteryWatching = false; return; }
-        ctrl.show().then(async () => { const reward = pickMysteryReward(); box.classList.remove('ready'); box.classList.add('opening'); hSuccess();
-            setTimeout(() => { state.coins += reward.pts; state.mysteryDate = today(); saveLocal(); updCoins(); animateCoinPop(); box.classList.remove('opening');
-                const lbl = el('tl-mystery-label'); const sub = el('tl-mystery-sub'); if (lbl) lbl.textContent = reward.e + ' +' + reward.pts + ' ' + tr('pts') + '!'; if (sub) sub.textContent = reward.label + ' Reward';
-                toast(reward.e + ' +' + reward.pts + ' ' + tr('pts') + '!', 'success', 3500);
-                setTimeout(() => renderMysteryBox(), 3000); }, 500);
-            isMysteryWatching = false; }).catch(() => { hError(); toast(tr('ad_skip'), 'error'); isMysteryWatching = false; }); }
+// ============ wireEvents ============
+function wireEvents(){
+  el('ad-btn').addEventListener('click',watchAd);
+  el('checkin-btn').addEventListener('click',claimCheckin);
+  el('mystery-box').addEventListener('click',openMysteryBox);
+  el('btn-copy').addEventListener('click',copyRef);
+  el('btn-share-ref').addEventListener('click',shareRef);
+  el('btn-withdraw').addEventListener('click',withdraw);
+  el('tk-sh').addEventListener('click',shareTask);
+  el('tk-ch').addEventListener('click',function(){
+    if(state.channelDone)return;hImpact('medium');
+    if(tgApp&&tgApp.openLink)tgApp.openLink(CFG.CHANNEL);else window.open(CFG.CHANNEL,'_blank');
+    setTimeout(()=>{
+      if(el('verify-btn'))return;
+      const btn=document.createElement('button');btn.id='verify-btn';btn.textContent=tr('verify_btn');
+      btn.addEventListener('click',verifyChannel);document.body.appendChild(btn);
+      setTimeout(()=>{const b=el('verify-btn');if(b)b.remove();},40000);
+    },2000);
+  });
+  const loadMoreBtn=el('load-more-btn');if(loadMoreBtn)loadMoreBtn.addEventListener('click',()=>{hImpact('light');renderOffersPage();});
+  document.querySelectorAll('.nb').forEach(btn=>{btn.addEventListener('click',function(){hImpact('light');navigateTo(this.getAttribute('data-page'));});});
+  const navGameBtn=el('nav-game-btn');if(navGameBtn)navGameBtn.addEventListener('click',function(){hImpact('medium');navigateTo('game');});
+  document.querySelectorAll('.lang-i').forEach(li=>{li.addEventListener('click',function(){setLang(this.getAttribute('data-lang'),this);});});
+  el('btn-low').addEventListener('click',()=>playGame('low'));
+  el('btn-high').addEventListener('click',()=>playGame('high'));
+  el('bet-half').addEventListener('click',()=>{const inp=el('bet-amount');const val=parseInt(inp.value)||CFG.MIN_BET;inp.value=Math.max(CFG.MIN_BET,Math.floor(val/2));hImpact('light');});
+  el('bet-double').addEventListener('click',()=>{const inp=el('bet-amount');const val=parseInt(inp.value)||CFG.MIN_BET;inp.value=Math.min(state.coins,val*2);hImpact('light');});
+  el('bet-max').addEventListener('click',()=>{const inp=el('bet-amount');inp.value=Math.max(CFG.MIN_BET,state.coins);hImpact('medium');});
+  el('bet-min').addEventListener('click',()=>{const inp=el('bet-amount');inp.value=CFG.MIN_BET;hImpact('light');});
+  const betInput=el('bet-amount');
+  betInput.addEventListener('blur',()=>{betInput.value=correctBetValue(betInput.value);updCoins();});
+  betInput.addEventListener('input',()=>{if(betInput.value==='')return;let val=parseInt(betInput.value);if(isNaN(val)){betInput.value='';return;}if(val<0)betInput.value=CFG.MIN_BET;});
+}
 
-    function renderMysteryBox() { const box = el('mystery-box'); const lbl = el('tl-mystery-label'); const sub = el('tl-mystery-sub'); if (!box) return; const locked = state.mysteryDate === today(); box.classList.toggle('ready', !locked); if (lbl) lbl.textContent = locked ? tr('mystery_locked') : tr('mystery_label'); if (sub) sub.textContent = locked ? '' : tr('mystery_sub'); }
-
-    function renderCheckin() { const strip = el('checkin-strip'); if (!strip) return; strip.innerHTML = ''; const days = ['S', 'M', 'T', 'W', 'T', 'F', 'S']; const rewards = CFG.CHECKIN_REWARDS; const streak = state.checkinStreak || 0; for (let i = 0; i < 7; i++) { const d = document.createElement('div'); d.className = 'checkin-day' + (i < streak ? ' checked' : '') + (i === streak ? ' today' : ''); d.innerHTML = '<div class="day-num">' + days[i] + '</div><div class="day-dot">' + (i < streak ? '✓' : '') + '</div><div class="day-reward">+' + rewards[i] + '</div>'; strip.appendChild(d); } const btn = el('checkin-btn'); if (btn) { const done = state.checkinDate === today(); btn.disabled = done; const sp = btn.querySelector('#tl-checkin-btn'); if (sp) sp.textContent = done ? tr('checkin_done') : tr('checkin_btn'); } }
-    async function claimCheckin() { if (state.checkinDate === today()) { toast(tr('checkin_done'), 'info'); return; } hImpact('medium'); const streak = Math.min(state.checkinStreak, 6); const reward = CFG.CHECKIN_REWARDS[streak]; state.coins += reward; state.checkinDate = today(); state.checkinStreak = (state.checkinStreak < 7) ? state.checkinStreak + 1 : 1; saveLocal(); updCoins(); animateCoinPop(); hSuccess(); renderCheckin(); toast(tr('ci_ok') + ' +' + reward, 'success'); try { const initData = (tgApp && tgApp.initData) || ''; fetchT(CFG.VERCEL + '/api/checkin', { method: 'POST', headers: { 'Content-Type': 'application/json', 'Authorization': 'Bearer ' + initData }, body: JSON.stringify({ uid: state.uid, reward, streak: state.checkinStreak }) }, 4000).catch(() => {}); } catch (e) {} }
-    async function verifyChannel() { const vBtn = el('verify-btn'); if (vBtn) { vBtn.disabled = true; vBtn.textContent = tr('checking'); } hImpact('light'); try { const initData = (tgApp && tgApp.initData) || ''; const res = await fetchT(CFG.VERCEL + '/api/check-channel', { method: 'POST', headers: { 'Content-Type': 'application/json', 'Authorization': 'Bearer ' + initData }, body: JSON.stringify({ uid: state.uid }) }, 6000); const data = await res.json(); if (data.subscribed || data.success) { state.channelDone = true; state.coins += 50; state.tasks += 1; saveLocal(); updCoins(); animateCoinPop(); hSuccess(); el('tk-ch').classList.add('done'); if (vBtn) vBtn.remove(); toast('🎉 +50 ' + tr('pts') + '!', 'success'); } else { hError(); toast(tr('not_sub'), 'error'); if (vBtn) { vBtn.disabled = false; vBtn.textContent = tr('verify_btn'); } } } catch (e) { state.channelDone = true; state.coins += 50; state.tasks += 1; saveLocal(); updCoins(); animateCoinPop(); hSuccess(); el('tk-ch').classList.add('done'); if (vBtn) vBtn.remove(); toast('🎉 +50 ' + tr('pts') + '!', 'success'); } }
-
-    function copyRef() { const link = 'https://t.me/' + CFG.BOT + '?start=' + state.uid; hImpact('light'); try { navigator.clipboard.writeText(link).then(() => toast(tr('copied'), 'success')).catch(() => { const ta = document.createElement('textarea'); ta.value = link; document.body.appendChild(ta); ta.select(); document.execCommand('copy'); document.body.removeChild(ta); toast(tr('copied'), 'success'); }); } catch (e) { toast(tr('copied'), 'success'); } }
-    function shareRef() { const link = 'https://t.me/' + CFG.BOT + '?start=' + state.uid; hImpact('medium'); if (tgApp && tgApp.openTelegramLink) { tgApp.openTelegramLink('https://t.me/share/url?url=' + encodeURIComponent(link) + '&text=' + encodeURIComponent('انضم لـ TaskEarn واكسب TON! 🚀')); } else if (navigator.share) { navigator.share({ title: 'TaskEarn', text: 'انضم لـ TaskEarn واكسب TON! 🚀', url: link }).catch(() => {}); } else copyRef(); }
-    function shareTask() { hImpact('medium'); if (!state.shareDone) { state.shareDone = true; state.tasks += 1; saveLocal(); updCoins(); el('tk-sh').classList.add('done'); } shareRef(); }
-
-    function initTonConnect() { if (typeof TonConnectUI === 'undefined') { renderConnectBtn(false); return; } try { tonUI = new TonConnectUI({ manifestUrl: CFG.TON_MANIFEST }); tonUI.onStatusChange(wallet => { connectedWallet = wallet; updWalletStatus(); updCoins(); }); const w = tonUI.wallet; if (w) { connectedWallet = w; } } catch (e) { renderConnectBtn(false); return; } renderConnectBtn(true); }
-    function renderConnectBtn(ready) { const container = el('ton-connect-container'); if (!container) return; container.innerHTML = ''; const btn = document.createElement('button'); btn.id = 'ton-connect-btn'; btn.className = 'btn btn-gold'; btn.style.marginTop = '0'; if (!ready) { btn.innerHTML = '⚠️ TON Connect غير متاح'; btn.disabled = true; } else { btn.innerHTML = connectedWallet ? '🔌 ' + tr('disconnect') : '👛 Connect TON Wallet'; btn.addEventListener('click', () => { if (!tonUI) return; if (connectedWallet) { tonUI.disconnect(); connectedWallet = null; updWalletStatus(); updCoins(); } else { tonUI.openModal(); } }); } container.appendChild(btn); }
-    function updWalletStatus() { const statusEl = el('wallet-status'); if (connectedWallet && connectedWallet.account) { const addr = connectedWallet.account.address; const short = addr.substring(0, 6) + '...' + addr.substring(addr.length - 4); if (statusEl) { statusEl.style.display = 'block'; statusEl.className = 'wallet-connected'; statusEl.innerHTML = tr('wallet_ok') + '<div class="wallet-addr">' + short + '</div>'; } const btn = el('ton-connect-btn'); if (btn) btn.innerHTML = '🔌 ' + tr('disconnect'); } else { if (statusEl) { statusEl.style.display = 'none'; statusEl.innerHTML = ''; } const btn = el('ton-connect-btn'); if (btn) btn.innerHTML = '👛 Connect TON Wallet'; } updCoins(); }
-    async function withdraw() { if (!connectedWallet) { toast(tr('need_wallet'), 'error'); hError(); return; } if (state.coins < CFG.MIN_WD) { toast(tr('need_pts'), 'error'); hError(); return; } const btn = el('btn-withdraw'); btn.disabled = true; btn.innerHTML = '⏳ ...'; hImpact('heavy'); try { const initData = (tgApp && tgApp.initData) || ''; const addr = connectedWallet.account.address; const res = await fetchT(CFG.VERCEL + '/api/withdraw', { method: 'POST', headers: { 'Content-Type': 'application/json', 'Authorization': 'Bearer ' + initData }, body: JSON.stringify({ uid: state.uid, coins: state.coins, wallet: addr }) }, 8000); const data = await res.json(); if (data.success) { hSuccess(); toast(tr('wd_ok'), 'success', 4000); state.coins = 0; saveLocal(); updCoins(); } else { throw new Error(data.error || 'failed'); } } catch (e) { hSuccess(); toast(tr('wd_ok'), 'success', 4000); state.coins = 0; saveLocal(); updCoins(); } btn.innerHTML = '💸 <span>' + tr('wdb') + '</span>'; }
-
-    function initTicker() { const track = el('ticker'); if (!track) return; const items = FAKE_WD.join(' • '); track.textContent = items + ' • ' + items; }
-
-    function setLang(l, activeEl) { hImpact('light'); state.lang = l; document.querySelectorAll('.lang-i').forEach(i => i.classList.remove('on')); if (activeEl) activeEl.classList.add('on'); document.documentElement.dir = l === 'ar' ? 'rtl' : 'ltr'; document.documentElement.lang = l; const map = { 'nl-home': 'home', 'nl-earn': 'earn', 'nl-squad': 'squad', 'nl-wallet': 'wallet', 'tl-ads': 'ads', 'tl-refs': 'refs', 'tl-tasks': 'tasks', 'tl-earn': 'earn_title', 'tl-pts': 'pts', 'tl-watch': 'watch', 'tl-daily': 'daily', 'tl-join': 'join', 'tl-joind': 'joind', 'tl-share': 'share', 'tl-shared': 'shared', 'tl-reft': 'reft', 'tl-refd': 'refd', 'tl-copy': 'copy', 'tl-sref': 'sref', 'tl-rnum': 'rnum', 'tl-bal': 'bal', 'tl-wall': 'wall', 'tl-wdt': 'wdt', 'tl-wdb': 'wdb', 'tl-min': 'min', 'tl-time': 'time', 'tl-lang': 'lang', 'tl-checkin': 'checkin', 'tl-checkin-btn': 'checkin_btn', 'tl-mystery': 'mystery', 'tl-mystery-label': 'mystery_label', 'tl-mystery-sub': 'mystery_sub', 'tl-bet-amount': 'bet_amount' }; Object.keys(map).forEach(id => { const e = el(id); if (e) e.textContent = tr(map[id]); }); saveLocal(); renderCheckin(); renderMysteryBox(); updCoins(); renderGameHistory(); }
-
-    function navigateTo(pg) {
-        document.querySelectorAll('.page').forEach(p => p.classList.remove('active'));
-        document.querySelectorAll('.nb').forEach(b => b.classList.remove('on'));
-        const navGameBtn = el('nav-game-btn'); if (navGameBtn) navGameBtn.classList.remove('on');
-        const pageEl = el('pg-' + pg); if (pageEl) pageEl.classList.add('active');
-        if (pg === 'game') { if (navGameBtn) navGameBtn.classList.add('on'); } else { const navBtn = document.querySelector('.nb[data-page="' + pg + '"]'); if (navBtn) navBtn.classList.add('on'); }
-        if (pg === 'wallet') updWalletStatus();
-        if (pg === 'game') { updCoins(); renderGameHistory(); }
-        window.scrollTo(0, 0);
-    }
-
-    function wireEvents() {
-        el('ad-btn').addEventListener('click', watchAd);
-        el('checkin-btn').addEventListener('click', claimCheckin);
-        el('mystery-box').addEventListener('click', openMysteryBox);
-        el('btn-copy').addEventListener('click', copyRef);
-        el('btn-share-ref').addEventListener('click', shareRef);
-        el('btn-withdraw').addEventListener('click', withdraw);
-        el('tk-sh').addEventListener('click', shareTask);
-        el('tk-ch').addEventListener('click', function() { if (state.channelDone) return; hImpact('medium'); if (tgApp && tgApp.openLink) tgApp.openLink(CFG.CHANNEL); else window.open(CFG.CHANNEL, '_blank'); setTimeout(() => { if (el('verify-btn')) return; const btn = document.createElement('button'); btn.id = 'verify-btn'; btn.textContent = tr('verify_btn'); btn.addEventListener('click', verifyChannel); document.body.appendChild(btn); setTimeout(() => { const b = el('verify-btn'); if (b) b.remove(); }, 40000); }, 2000); });
-        document.querySelectorAll('.nb').forEach(btn => { btn.addEventListener('click', function() { hImpact('light'); navigateTo(this.getAttribute('data-page')); }); });
-        const navGameBtn = el('nav-game-btn'); if (navGameBtn) { navGameBtn.addEventListener('click', function() { hImpact('medium'); navigateTo('game'); }); }
-        document.querySelectorAll('.lang-i').forEach(langEl => { langEl.addEventListener('click', function() { setLang(this.getAttribute('data-lang'), this); }); });
-        el('btn-low').addEventListener('click', () => playGame('low'));
-        el('btn-high').addEventListener('click', () => playGame('high'));
-        el('bet-half').addEventListener('click', () => { const inp = el('bet-amount'); const val = parseInt(inp.value) || CFG.MIN_BET; inp.value = Math.max(CFG.MIN_BET, Math.floor(val / 2)); hImpact('light'); });
-        el('bet-double').addEventListener('click', () => { const inp = el('bet-amount'); const val = parseInt(inp.value) || CFG.MIN_BET; inp.value = Math.min(state.coins, val * 2); hImpact('light'); });
-        el('bet-max').addEventListener('click', () => { const inp = el('bet-amount'); inp.value = Math.max(CFG.MIN_BET, state.coins); hImpact('medium'); });
-        el('bet-min').addEventListener('click', () => { const inp = el('bet-amount'); inp.value = CFG.MIN_BET; hImpact('light'); });
-
-        const betInput = el('bet-amount');
-        betInput.addEventListener('blur', () => {
-            betInput.value = correctBetValue(betInput.value);
-            updCoins();
-        });
-        betInput.addEventListener('input', () => {
-            if (betInput.value === '') return; // اسمح بالمسح
-            let val = parseInt(betInput.value);
-            if (isNaN(val)) {
-                betInput.value = '';
-                return;
-            }
-            if (val < 0) betInput.value = CFG.MIN_BET;
-            // لا نجبر الحد الأعلى هنا
-        });
-    }
-
-    function init() {
-        if (tgApp) { tgApp.ready(); tgApp.expand(); try { tgApp.setHeaderColor('secondary_bg_color'); } catch (e) {} }
-        const u = tgApp && tgApp.initDataUnsafe && tgApp.initDataUnsafe.user;
-        if (u) { state.uid = String(u.id); } else { try { state.uid = localStorage.getItem('te_guest') || ('guest_' + Date.now()); localStorage.setItem('te_guest', state.uid); } catch (e) { state.uid = 'guest_' + Date.now(); } }
-        const idChip = el('id-chip'); if (idChip) idChip.textContent = 'ID: ' + state.uid;
-        const refLink = el('ref-link'); if (refLink) refLink.textContent = 'https://t.me/' + CFG.BOT + '?start=' + state.uid;
-        const saved = loadLocal();
-        if (saved) { state.coins = saved.coins || 0; state.ads = saved.ads_watched || 0; state.tasks = saved.tasks_done || 0; state.refs = saved.refs || 0; state.channelDone = saved.channel_done || false; state.checkinDate = saved.checkin_date || null; state.checkinStreak = saved.checkin_streak || 0; state.mysteryDate = saved.mystery_date || null; state.gameHistory = saved.game_history || []; if (saved.lang && TX[saved.lang]) state.lang = saved.lang; }
-        if (state.channelDone) { const tk = el('tk-ch'); if (tk) tk.classList.add('done'); }
-        if (state.shareDone) { const ts = el('tk-sh'); if (ts) ts.classList.add('done'); }
-        if (!saved || !saved.lang) { const tgLang = u && u.language_code; if (tgLang) { if (TX[tgLang]) state.lang = tgLang; else if (tgLang.indexOf('ar') === 0) state.lang = 'ar'; else state.lang = 'en'; } }
-        document.documentElement.dir = state.lang === 'ar' ? 'rtl' : 'ltr';
-        document.documentElement.lang = state.lang;
-        document.querySelectorAll('.lang-i').forEach(li => li.classList.toggle('on', li.getAttribute('data-lang') === state.lang));
-        wireEvents();
-        setLang(state.lang, document.querySelector('.lang-i[data-lang="' + state.lang + '"]'));
-        initTicker();
-        initTonConnect();
-        updCoins();
-        renderCheckin();
-        renderMysteryBox();
-        renderGameHistory();
-        const betInput = el('bet-amount');
-        if (betInput) betInput.value = correctBetValue(betInput.value);
-        if (u) { const initData = (tgApp && tgApp.initData) || ''; fetchT(CFG.VERCEL + '/api/user?uid=' + state.uid, { headers: { 'Authorization': 'Bearer ' + initData } }, 5000).then(r => r.json()).then(data => { if (data && data.coins !== undefined) { state.coins = data.coins; state.ads = data.ads_watched || state.ads; state.tasks = data.tasks_done || state.tasks; state.refs = data.refs || state.refs; state.channelDone = data.channel_bonus || state.channelDone; state.checkinDate = data.checkin_date || state.checkinDate; state.checkinStreak = data.checkin_streak || state.checkinStreak; state.mysteryDate = data.mystery_date || state.mysteryDate; saveLocal(); updCoins(); renderCheckin(); renderMysteryBox(); renderGameHistory(); if (state.channelDone) { const tk = el('tk-ch'); if (tk) tk.classList.add('done'); } } }).catch(() => {}); }
-    }
-    init();
+// ============ Init ============
+function init(){
+  if(tgApp){tgApp.ready();tgApp.expand();try{tgApp.setHeaderColor('secondary_bg_color');}catch(e){}}
+  const u=tgApp&&tgApp.initDataUnsafe&&tgApp.initDataUnsafe.user;
+  if(u){state.uid=String(u.id);}else{try{state.uid=localStorage.getItem('te_guest')||('guest_'+Date.now());localStorage.setItem('te_guest',state.uid);}catch(e){state.uid='guest_'+Date.now();}}
+  const idChip=el('id-chip');if(idChip)idChip.textContent='ID: '+state.uid;
+  const refLink=el('ref-link');if(refLink)refLink.textContent='https://t.me/'+CFG.BOT+'?start='+state.uid;
+  const saved=loadLocal();
+  if(saved){
+    state.coins=saved.coins||0;state.ads=saved.ads_watched||0;state.tasks=saved.tasks_done||0;state.refs=saved.refs||0;
+    state.channelDone=saved.channel_done||false;state.checkinDate=saved.checkin_date||null;state.checkinStreak=saved.checkin_streak||0;
+    state.mysteryDate=saved.mystery_date||null;state.gameHistory=saved.game_history||[];
+    state.completedOffers=saved.completed_offers||{};state.pendingOffers=saved.pending_offers||{};
+    if(saved.lang&&TX[saved.lang])state.lang=saved.lang;
+  }
+  if(state.channelDone){const tk=el('tk-ch');if(tk)tk.classList.add('done');}
+  if(state.shareDone){const ts=el('tk-sh');if(ts)ts.classList.add('done');}
+  if(!saved||!saved.lang){const tgLang=u&&u.language_code;if(tgLang){if(TX[tgLang])state.lang=tgLang;else if(tgLang.indexOf('ar')===0)state.lang='ar';else state.lang='en';}}
+  document.documentElement.dir=state.lang==='ar'?'rtl':'ltr';document.documentElement.lang=state.lang;
+  document.querySelectorAll('.lang-i').forEach(li=>li.classList.toggle('on',li.getAttribute('data-lang')===state.lang));
+  wireEvents();
+  setLang(state.lang,document.querySelector('.lang-i[data-lang="'+state.lang+'"]'));
+  initTicker();initTonConnect();updCoins();renderCheckin();renderMysteryBox();renderGameHistory();
+  const betInput=el('bet-amount');if(betInput)betInput.value=correctBetValue(betInput.value);
+  if(u){
+    const initData=(tgApp&&tgApp.initData)||'';
+    fetchT(CFG.VERCEL+'/api/user?uid='+state.uid,{headers:{'Authorization':'Bearer '+initData}},5000)
+    .then(r=>r.json()).then(data=>{
+      if(data&&data.coins!==undefined){
+        state.coins=data.coins;state.ads=data.ads_watched||state.ads;state.tasks=data.tasks_done||state.tasks;
+        state.refs=data.refs||state.refs;state.channelDone=data.channel_bonus||state.channelDone;
+        state.checkinDate=data.checkin_date||state.checkinDate;state.checkinStreak=data.checkin_streak||state.checkinStreak;
+        state.mysteryDate=data.mystery_date||state.mysteryDate;
+        saveLocal();updCoins();renderCheckin();renderMysteryBox();renderGameHistory();
+        if(state.channelDone){const tk=el('tk-ch');if(tk)tk.classList.add('done');}
+      }
+    }).catch(()=>{});
+  }
+}
+init();
 </script>
 </body>
 </html>
