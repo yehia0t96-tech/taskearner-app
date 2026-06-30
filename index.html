@@ -577,14 +577,21 @@ function watchMonetagAd(){
 }
 
 // ============ Monetag In-App Interstitial - تلقائي عند فتح التطبيق ============
-function startInAppAds(){
-  if(typeof show_11189424!=='function')return;
-  try{
-    show_11189424({
-      type:'inApp',
-      inAppSettings:{frequency:2,capping:0.1,interval:30,timeout:5,everyPage:false}
-    });
-  }catch(e){}
+function startInAppAds(retries){
+  retries=retries||0;
+  if(typeof show_11189424==='function'){
+    try{
+      show_11189424({
+        type:'inApp',
+        inAppSettings:{frequency:2,capping:0.1,interval:30,timeout:5,everyPage:false}
+      });
+    }catch(e){}
+    return;
+  }
+  // الـ SDK لسه ما اتحملش، نعيد المحاولة كل نص ثانية لحد 20 محاولة (10 ثواني)
+  if(retries<20){
+    setTimeout(()=>startInAppAds(retries+1),500);
+  }
 }
 
 // ============ Mystery ============
