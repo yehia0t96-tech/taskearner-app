@@ -8,6 +8,7 @@
 <script src="https://telegram.org/js/telegram-web-app.js"></script>
 <script src="https://unpkg.com/@tonconnect/ui@latest/dist/tonconnect-ui.min.js"></script>
 <script src="https://sad.adsgram.ai/js/sad.min.js"></script>
+<script src='//libtl.com/sdk.js' data-zone='11189424' data-sdk='show_11189424'></script>
 <style>
 :root{
 --bg:#0e0e12;--surface:#14141a;--neon:#00e676;--neon-glow:rgba(0,230,118,.55);--neon-soft:rgba(0,230,118,.15);
@@ -243,6 +244,12 @@ background-image:radial-gradient(ellipse at 30% 10%,rgba(0,230,118,.06) 0%,trans
     <button class="ad-btn" id="ad-btn">📺 <span id="tl-watch">شاهد الإعلان</span></button>
     <div class="ad-info" id="ad-info"></div>
   </div>
+  <div class="ad-box glass-card" style="margin-top:10px;">
+    <div class="ad-sub" id="tl-earn2">شاهد إعلاناً آخر واكسب نقاط إضافية!</div>
+    <div class="ad-pts">+3 <span style="font-size:15px">نقاط</span></div>
+    <button class="ad-btn" id="ad-btn2">🎬 <span id="tl-watch2">شاهد إعلان آخر</span></button>
+    <div class="ad-info" id="ad-info2"></div>
+  </div>
   <div class="card glass-card">
     <div class="card-h"><span class="ico">📋</span><span id="tl-daily">المهام</span></div>
     <div class="task glass-card" id="tk-ch">
@@ -407,8 +414,8 @@ let state={coins:0,uid:null,ads:0,refs:0,tasks:0,lang:'ar',channelDone:false,sha
 let connectedWallet=null,isAdWatching=false,notifTimer=null,tonUI=null,isMysteryWatching=false,isGameInProgress=false,isShortlinkWatching=false;
 
 const TX={
-  ar:{home:'الرئيسية',earn:'الربح',squad:'الفريق',wallet:'المحفظة',ads:'إعلانات',refs:'إحالات',tasks:'مهام',earn_title:'شاهد إعلاناً واكسب نقاط!',pts:'نقاط',watch:'شاهد الإعلان',daily:'المهام',join:'اشترك في قناة TaskEarn',joind:'اشترك واكسب 50 نقطة',share:'شارك رابط الإحالة',shared:'100 نقطة لكل صديق',reft:'نظام الإحالة',refd:'ادعو أصدقاءك واكسب 100 نقطة لكل صديق!',copy:'نسخ الرابط',sref:'مشاركة',rnum:'إحالات',bal:'رصيدك الحالي',wall:'اربط محفظة TON للسحب',wdt:'سحب المكافآت',wdb:'سحب',min:'الحد الأدنى: 1000 نقطة',time:'وقت المعالجة: 24-48 ساعة',lang:'اللغة',myid:'معرفك',adw:'إعلان',checkin:'التسجيل اليومي',checkin_btn:'احصل على مكافأة اليوم',checkin_done:'تم الاستلام!',mystery:'الصندوق الغامض',mystery_label:'اضغط للفتح!',mystery_sub:'شاهد إعلاناً لفتح مكافأة عشوائية',mystery_locked:'متاح غداً',wallet_ok:'✅ المحفظة متصلة',ad_skip:'⚠️ تم تخطي الإعلان',ad_err:'⚠️ خطأ في تحميل الإعلان',ci_ok:'🎉 تم تسجيل الحضور!',wd_ok:'✅ تم إرسال طلب السحب!',need_wallet:'⚠️ اربط محفظة TON أولاً',need_pts:'⚠️ تحتاج 1000 نقطة',already_sub:'✅ أنت مشترك بالفعل!',checking:'⏳ جاري التحقق...',not_sub:'❌ لسه مشتركتش!',verify_btn:'✅ تحقق من اشتراكي',copied:'✅ تم النسخ!',disconnect:'🔌 فصل المحفظة',bet_amount:'مبلغ الرهان',game_win:'🎉 فوز! +',game_lose:'💔 خسارة! -',game_need_coins:'⚠️ رصيد غير كافي!',min_bet_error:'⚠️ الحد الأدنى 10 نقاط',game_in_progress:'⏳ جاري اللعب...',shortlink_watch:'زيارة الرابط'},
-  en:{home:'Home',earn:'Earn',squad:'Squad',wallet:'Wallet',ads:'Ads',refs:'Refs',tasks:'Tasks',earn_title:'Watch ad & earn!',pts:'pts',watch:'Watch Ad',daily:'Tasks',join:'Join Channel',joind:'Subscribe & earn 50',share:'Share Link',shared:'100 pts/friend',reft:'Referral',refd:'Invite & earn 100 pts!',copy:'Copy',sref:'Share',rnum:'Refs',bal:'Balance',wall:'Connect TON wallet',wdt:'Withdraw',wdb:'Withdraw',min:'Min: 1000',time:'24-48h',lang:'Language',myid:'Your ID',adw:'ad',checkin:'Check-in',checkin_btn:'Claim Reward',checkin_done:'Claimed!',mystery:'Mystery Box',mystery_label:'Tap!',mystery_sub:'Watch ad to unlock',mystery_locked:'Tomorrow',wallet_ok:'✅ Connected',ad_skip:'⚠️ Skipped',ad_err:'⚠️ Error',ci_ok:'🎉 Done!',wd_ok:'✅ Sent!',need_wallet:'⚠️ Connect wallet',need_pts:'⚠️ Need 1000 pts',already_sub:'✅ Subscribed!',checking:'⏳ Checking...',not_sub:'❌ Not subscribed!',verify_btn:'✅ Verify',copied:'✅ Copied!',disconnect:'🔌 Disconnect',bet_amount:'Bet',game_win:'🎉 Win! +',game_lose:'💔 Loss! -',game_need_coins:'⚠️ Low balance!',min_bet_error:'⚠️ Min 10 pts',game_in_progress:'⏳ Playing...',shortlink_watch:'Visit Link'},
+  ar:{home:'الرئيسية',earn:'الربح',squad:'الفريق',wallet:'المحفظة',ads:'إعلانات',refs:'إحالات',tasks:'مهام',earn_title:'شاهد إعلاناً واكسب نقاط!',pts:'نقاط',watch:'شاهد الإعلان',daily:'المهام',join:'اشترك في قناة TaskEarn',joind:'اشترك واكسب 50 نقطة',share:'شارك رابط الإحالة',shared:'100 نقطة لكل صديق',reft:'نظام الإحالة',refd:'ادعو أصدقاءك واكسب 100 نقطة لكل صديق!',copy:'نسخ الرابط',sref:'مشاركة',rnum:'إحالات',bal:'رصيدك الحالي',wall:'اربط محفظة TON للسحب',wdt:'سحب المكافآت',wdb:'سحب',min:'الحد الأدنى: 1000 نقطة',time:'وقت المعالجة: 24-48 ساعة',lang:'اللغة',myid:'معرفك',adw:'إعلان',checkin:'التسجيل اليومي',checkin_btn:'احصل على مكافأة اليوم',checkin_done:'تم الاستلام!',mystery:'الصندوق الغامض',mystery_label:'اضغط للفتح!',mystery_sub:'شاهد إعلاناً لفتح مكافأة عشوائية',mystery_locked:'متاح غداً',wallet_ok:'✅ المحفظة متصلة',ad_skip:'⚠️ تم تخطي الإعلان',ad_err:'⚠️ خطأ في تحميل الإعلان',ci_ok:'🎉 تم تسجيل الحضور!',wd_ok:'✅ تم إرسال طلب السحب!',need_wallet:'⚠️ اربط محفظة TON أولاً',need_pts:'⚠️ تحتاج 1000 نقطة',already_sub:'✅ أنت مشترك بالفعل!',checking:'⏳ جاري التحقق...',not_sub:'❌ لسه مشتركتش!',verify_btn:'✅ تحقق من اشتراكي',copied:'✅ تم النسخ!',disconnect:'🔌 فصل المحفظة',bet_amount:'مبلغ الرهان',game_win:'🎉 فوز! +',game_lose:'💔 خسارة! -',game_need_coins:'⚠️ رصيد غير كافي!',min_bet_error:'⚠️ الحد الأدنى 10 نقاط',game_in_progress:'⏳ جاري اللعب...',shortlink_watch:'زيارة الرابط',watch2:'شاهد إعلان آخر',earn_title2:'شاهد إعلاناً آخر واكسب نقاط إضافية!'},
+  en:{home:'Home',earn:'Earn',squad:'Squad',wallet:'Wallet',ads:'Ads',refs:'Refs',tasks:'Tasks',earn_title:'Watch ad & earn!',pts:'pts',watch:'Watch Ad',daily:'Tasks',join:'Join Channel',joind:'Subscribe & earn 50',share:'Share Link',shared:'100 pts/friend',reft:'Referral',refd:'Invite & earn 100 pts!',copy:'Copy',sref:'Share',rnum:'Refs',bal:'Balance',wall:'Connect TON wallet',wdt:'Withdraw',wdb:'Withdraw',min:'Min: 1000',time:'24-48h',lang:'Language',myid:'Your ID',adw:'ad',checkin:'Check-in',checkin_btn:'Claim Reward',checkin_done:'Claimed!',mystery:'Mystery Box',mystery_label:'Tap!',mystery_sub:'Watch ad to unlock',mystery_locked:'Tomorrow',wallet_ok:'✅ Connected',ad_skip:'⚠️ Skipped',ad_err:'⚠️ Error',ci_ok:'🎉 Done!',wd_ok:'✅ Sent!',need_wallet:'⚠️ Connect wallet',need_pts:'⚠️ Need 1000 pts',already_sub:'✅ Subscribed!',checking:'⏳ Checking...',not_sub:'❌ Not subscribed!',verify_btn:'✅ Verify',copied:'✅ Copied!',disconnect:'🔌 Disconnect',bet_amount:'Bet',game_win:'🎉 Win! +',game_lose:'💔 Loss! -',game_need_coins:'⚠️ Low balance!',min_bet_error:'⚠️ Min 10 pts',game_in_progress:'⏳ Playing...',shortlink_watch:'Visit Link',watch2:'Watch Another Ad',earn_title2:'Watch another ad for bonus points!'},
   fr:{home:'Accueil',earn:'Gagner',squad:'Équipe',wallet:'Portefeuille',ads:'Pubs',refs:'Refs',tasks:'Tâches',earn_title:'Voir pub!',pts:'pts',watch:'Voir pub',daily:'Tâches',join:'Rejoindre',joind:'Abonnez 50pts',share:'Partager',shared:'100pts/ami',reft:'Parrainage',refd:'Invitez!',copy:'Copier',sref:'Partager',rnum:'Refs',bal:'Solde',wall:'Connectez TON',wdt:'Retrait',wdb:'Retirer',min:'Min:1000',time:'24-48h',lang:'Langue',myid:'ID',adw:'pub',checkin:'Check-in',checkin_btn:'Réclamer',checkin_done:'Reçu!',mystery:'Boîte',mystery_label:'Touchez!',mystery_sub:'Voir pub',mystery_locked:'Demain',wallet_ok:'✅ Connecté',ad_skip:'⚠️ Ignoré',ad_err:'⚠️ Erreur',ci_ok:'🎉 Fait!',wd_ok:'✅ Envoyé!',need_wallet:'⚠️ Connectez',need_pts:'⚠️ Min 1000',already_sub:'✅ Abonné!',checking:'⏳...',not_sub:'❌ Non!',verify_btn:'✅ Vérifier',copied:'✅ Copié!',disconnect:'🔌 Déconnecter',bet_amount:'Mise',game_win:'🎉 Gain! +',game_lose:'💔 Perte! -',game_need_coins:'⚠️ Solde bas!',min_bet_error:'⚠️ Min 10',game_in_progress:'⏳...'},
   ru:{home:'Главная',earn:'Заработок',squad:'Команда',wallet:'Кошелёк',ads:'Реклама',refs:'Рефералы',tasks:'Задания',earn_title:'Смотри!',pts:'очков',watch:'Смотреть',daily:'Задания',join:'Подписаться',joind:'+50 очков',share:'Поделиться',shared:'100/друга',reft:'Рефералы',refd:'Приглашай!',copy:'Копировать',sref:'Поделиться',rnum:'Рефералы',bal:'Баланс',wall:'Подключите TON',wdt:'Вывод',wdb:'Вывести',min:'Мин:1000',time:'24-48ч',lang:'Язык',myid:'ID',adw:'реклама',checkin:'Вход',checkin_btn:'Получить',checkin_done:'Получено!',mystery:'Коробка',mystery_label:'Нажми!',mystery_sub:'Смотри рекламу',mystery_locked:'Завтра',wallet_ok:'✅ Подключён',ad_skip:'⚠️ Пропущена',ad_err:'⚠️ Ошибка',ci_ok:'🎉 Готово!',wd_ok:'✅ Отправлено!',need_wallet:'⚠️ Подключите',need_pts:'⚠️ Мин 1000',already_sub:'✅ Подписаны!',checking:'⏳...',not_sub:'❌ Нет!',verify_btn:'✅ Проверить',copied:'✅ Скопировано!',disconnect:'🔌 Отключить',bet_amount:'Ставка',game_win:'🎉 Победа! +',game_lose:'💔 Поражение! -',game_need_coins:'⚠️ Мало средств!',min_bet_error:'⚠️ Мин 10',game_in_progress:'⏳...'}
 };
@@ -549,6 +556,37 @@ async function watchAd(){
 }
 function resetAdButton(btn){isAdWatching=false;btn.disabled=false;btn.innerHTML='📺 <span>'+tr('watch')+'</span>';}
 
+// ============ Monetag Rewarded Ad ============
+let isMonetagAdWatching=false;
+function watchMonetagAd(){
+  if(isMonetagAdWatching)return;
+  const btn=el('ad-btn2');
+  if(typeof show_11189424!=='function'){toast(tr('ad_err'),'error');return;}
+  isMonetagAdWatching=true;btn.disabled=true;btn.innerHTML='⏳ ...';hImpact('medium');
+  show_11189424().then(()=>{
+    state.coins+=3;state.ads+=1;
+    saveLocal();updCoins();hSuccess();animateCoinPop();
+    toast('🎉 +3 '+tr('pts')+'!','success');
+    isMonetagAdWatching=false;btn.disabled=false;
+    btn.innerHTML='🎬 <span>'+tr('watch2')+'</span>';
+  }).catch(()=>{
+    hError();toast(tr('ad_skip'),'error');
+    isMonetagAdWatching=false;btn.disabled=false;
+    btn.innerHTML='🎬 <span>'+tr('watch2')+'</span>';
+  });
+}
+
+// ============ Monetag In-App Interstitial - تلقائي عند فتح التطبيق ============
+function startInAppAds(){
+  if(typeof show_11189424!=='function')return;
+  try{
+    show_11189424({
+      type:'inApp',
+      inAppSettings:{frequency:2,capping:0.1,interval:30,timeout:5,everyPage:false}
+    });
+  }catch(e){}
+}
+
 // ============ Mystery ============
 function pickMysteryReward(){const total=CFG.MYSTERY.reduce((s,m)=>s+m.w,0);let r=Math.random()*total;for(const m of CFG.MYSTERY){r-=m.w;if(r<=0)return m;}return CFG.MYSTERY[0];}
 async function openMysteryBox(){
@@ -648,7 +686,7 @@ function setLang(l,activeEl){
   hImpact('light');state.lang=l;
   document.querySelectorAll('.lang-i').forEach(i=>i.classList.remove('on'));if(activeEl)activeEl.classList.add('on');
   document.documentElement.dir=l==='ar'?'rtl':'ltr';document.documentElement.lang=l;
-  const map={'nl-home':'home','nl-earn':'earn','nl-squad':'squad','nl-wallet':'wallet','tl-ads':'ads','tl-refs':'refs','tl-tasks':'tasks','tl-earn':'earn_title','tl-pts':'pts','tl-watch':'watch','tl-daily':'daily','tl-join':'join','tl-joind':'joind','tl-share':'share','tl-shared':'shared','tl-reft':'reft','tl-refd':'refd','tl-copy':'copy','tl-sref':'sref','tl-rnum':'rnum','tl-bal':'bal','tl-wall':'wall','tl-wdt':'wdt','tl-wdb':'wdb','tl-min':'min','tl-time':'time','tl-lang':'lang','tl-checkin':'checkin','tl-checkin-btn':'checkin_btn','tl-mystery':'mystery','tl-mystery-label':'mystery_label','tl-mystery-sub':'mystery_sub','tl-bet-amount':'bet_amount'};
+  const map={'nl-home':'home','nl-earn':'earn','nl-squad':'squad','nl-wallet':'wallet','tl-ads':'ads','tl-refs':'refs','tl-tasks':'tasks','tl-earn':'earn_title','tl-earn2':'earn_title2','tl-watch2':'watch2','tl-pts':'pts','tl-watch':'watch','tl-daily':'daily','tl-join':'join','tl-joind':'joind','tl-share':'share','tl-shared':'shared','tl-reft':'reft','tl-refd':'refd','tl-copy':'copy','tl-sref':'sref','tl-rnum':'rnum','tl-bal':'bal','tl-wall':'wall','tl-wdt':'wdt','tl-wdb':'wdb','tl-min':'min','tl-time':'time','tl-lang':'lang','tl-checkin':'checkin','tl-checkin-btn':'checkin_btn','tl-mystery':'mystery','tl-mystery-label':'mystery_label','tl-mystery-sub':'mystery_sub','tl-bet-amount':'bet_amount','tl-shortlink-watch':'shortlink_watch'};
   Object.keys(map).forEach(id=>{const e=el(id);if(e)e.textContent=tr(map[id]);});
   saveLocal();renderCheckin();renderMysteryBox();updCoins();renderGameHistory();
 }
@@ -670,6 +708,7 @@ function navigateTo(pg){
 // ============ wireEvents ============
 function wireEvents(){
   el('ad-btn').addEventListener('click',watchAd);
+  const adBtn2=el('ad-btn2');if(adBtn2)adBtn2.addEventListener('click',watchMonetagAd);
   el('checkin-btn').addEventListener('click',claimCheckin);
   el('mystery-box').addEventListener('click',openMysteryBox);
   el('btn-copy').addEventListener('click',copyRef);
@@ -704,6 +743,7 @@ function wireEvents(){
 // ============ Init ============
 function init(){
   if(tgApp){tgApp.ready();tgApp.expand();try{tgApp.setHeaderColor('secondary_bg_color');}catch(e){}}
+  startInAppAds();
   const u=tgApp&&tgApp.initDataUnsafe&&tgApp.initDataUnsafe.user;
   if(u){state.uid=String(u.id);}else{try{state.uid=localStorage.getItem('te_guest')||('guest_'+Date.now());localStorage.setItem('te_guest',state.uid);}catch(e){state.uid='guest_'+Date.now();}}
   const idChip=el('id-chip');if(idChip)idChip.textContent='ID: '+state.uid;
