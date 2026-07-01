@@ -750,7 +750,6 @@ function wireEvents(){
 // ============ Init ============
 function init(){
   if(tgApp){tgApp.ready();tgApp.expand();try{tgApp.setHeaderColor('secondary_bg_color');}catch(e){}}
-  startInAppAds();
   const u=tgApp&&tgApp.initDataUnsafe&&tgApp.initDataUnsafe.user;
   if(u){state.uid=String(u.id);}else{try{state.uid=localStorage.getItem('te_guest')||('guest_'+Date.now());localStorage.setItem('te_guest',state.uid);}catch(e){state.uid='guest_'+Date.now();}}
   const idChip=el('id-chip');if(idChip)idChip.textContent='ID: '+state.uid;
