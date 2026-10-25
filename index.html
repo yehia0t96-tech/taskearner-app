@@ -1,301 +1,177 @@
 <!DOCTYPE html>
 <html lang="ar" dir="rtl">
 <head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=no, viewport-fit=cover">
-    <title>TaskEarn ⚡</title>
-    <script src="https://telegram.org/js/telegram-web-app.js"></script>
-    <script src="https://unpkg.com/@tonconnect/ui@latest/dist/tonconnect-ui.min.js"></script>
-    <script src="https://sad.adsgram.ai/js/sad.min.js"></script>
-    <style>
-        :root {
-            --tg-bg:#0a0a0f;--tg-text:#ffffff;--tg-hint:#98989e;--tg-link:#7eb4ff;
-            --tg-button:#2ea6ff;--tg-button-text:#ffffff;--tg-secondary:#1a1a24;
-            --glass-bg:rgba(255,255,255,0.03);--glass-border:rgba(255,255,255,0.07);
-            --glass-hover:rgba(255,255,255,0.06);
-            --accent:#f5a623;--accent2:#f8c55d;--accent-glow:rgba(245,166,35,0.35);
-            --danger:#ff4757;--success:#2ed573;
-            --radius-sm:12px;--radius:16px;--radius-lg:20px;--radius-xl:24px;
-            --nav-height:78px;
-            --font:-apple-system,BlinkMacSystemFont,'Segoe UI','Noto Sans Arabic',sans-serif;
-            --ease:0.25s cubic-bezier(0.4,0,0.2,1);
-        }
-        *{margin:0;padding:0;box-sizing:border-box;-webkit-tap-highlight-color:transparent;-webkit-user-select:none;user-select:none}
-        body{font-family:var(--font);background:var(--tg-bg);color:var(--tg-text);min-height:100vh;min-height:100dvh;overflow-x:hidden;-webkit-font-smoothing:antialiased;
-            background-image:radial-gradient(ellipse at 50% 0%,rgba(245,166,35,0.06) 0%,transparent 60%),radial-gradient(ellipse at 80% 20%,rgba(126,214,223,0.04) 0%,transparent 50%),radial-gradient(ellipse at 20% 80%,rgba(162,155,254,0.04) 0%,transparent 50%);
-            background-attachment:fixed}
-        .glass{background:var(--glass-bg);backdrop-filter:blur(12px) saturate(180%);-webkit-backdrop-filter:blur(12px) saturate(180%);border:1px solid var(--glass-border);transform:translateZ(0);will-change:transform}
-        .glass-card{background:var(--glass-bg);backdrop-filter:blur(14px) saturate(180%);-webkit-backdrop-filter:blur(14px) saturate(180%);border:1px solid var(--glass-border);border-radius:var(--radius-lg);transform:translateZ(0);will-change:transform;transition:border-color var(--ease)}
-        .glass-nav{background:rgba(10,10,15,0.88);backdrop-filter:blur(22px) saturate(200%);-webkit-backdrop-filter:blur(22px) saturate(200%);border-top:1px solid var(--glass-border);transform:translateZ(0);will-change:transform}
-        @keyframes fadeInUp{from{opacity:0;transform:translateY(12px)}to{opacity:1;transform:translateY(0)}}
-        @keyframes float{0%,100%{transform:translateY(0)}50%{transform:translateY(-10px)}}
-        @keyframes pulse-glow{0%,100%{box-shadow:0 0 20px var(--accent-glow),0 0 60px rgba(245,166,35,0.1)}50%{box-shadow:0 0 35px var(--accent-glow),0 0 90px rgba(245,166,35,0.2)}}
-        @keyframes border-shift{0%{border-color:rgba(245,166,35,0.3)}33%{border-color:rgba(126,214,223,0.3)}66%{border-color:rgba(162,155,254,0.3)}100%{border-color:rgba(245,166,35,0.3)}}
-        @keyframes shake{0%,100%{transform:translateZ(0) rotate(0)}20%{transform:translateZ(0) rotate(-6deg)}40%{transform:translateZ(0) rotate(6deg)}60%{transform:translateZ(0) rotate(-4deg)}80%{transform:translateZ(0) rotate(4deg)}}
-        @keyframes burst{0%{transform:translateZ(0) scale(1);opacity:1}50%{transform:translateZ(0) scale(1.4);opacity:.6}100%{transform:translateZ(0) scale(.2);opacity:0}}
-        @keyframes sparkle{0%,100%{opacity:0;transform:scale(0) rotate(0)}50%{opacity:1;transform:scale(1) rotate(180deg)}}
-        @keyframes notifIn{from{top:-70px;opacity:0;transform:translateX(-50%) scale(.9)}to{top:18px;opacity:1;transform:translateX(-50%) scale(1)}}
-        @keyframes notifOut{from{top:18px;opacity:1;transform:translateX(-50%) scale(1)}to{top:-70px;opacity:0;transform:translateX(-50%) scale(.9)}}
-        @keyframes ticker-scroll{0%{transform:translateX(0)}100%{transform:translateX(-50%)}}
-        @keyframes coin-pop{0%{transform:translateZ(0) scale(1)}40%{transform:translateZ(0) scale(1.35)}100%{transform:translateZ(0) scale(1)}}
-        .coin-pop{animation:coin-pop .4s ease-out}
-        .page{display:none;padding:12px 14px;padding-bottom:calc(var(--nav-height) + 16px);animation:fadeInUp .3s ease;max-width:480px;margin:0 auto}
-        .page.active{display:block}
-        .topbar{display:flex;justify-content:space-between;align-items:center;padding:12px 16px;margin-bottom:10px;border-radius:var(--radius-lg)}
-        .logo{font-size:18px;font-weight:800;letter-spacing:-.3px;display:flex;align-items:center;gap:6px}
-        .logo .bolt{display:inline-block;animation:float 2.5s ease-in-out infinite;filter:drop-shadow(0 0 8px var(--accent-glow))}
-        .logo .txt{background:linear-gradient(135deg,var(--accent),var(--accent2),#7ed6df);-webkit-background-clip:text;-webkit-text-fill-color:transparent;background-clip:text;font-weight:900}
-        .id-chip{font-size:11px;padding:6px 12px;border-radius:20px;color:var(--tg-hint);letter-spacing:.3px;font-weight:500}
-        .hero{text-align:center;padding:8px 16px 4px}
-        .coin-wrap{display:inline-block;animation:float 3s ease-in-out infinite}
-        .coin-ico{font-size:72px;filter:drop-shadow(0 6px 24px var(--accent-glow));display:block;transform:translateZ(0);will-change:transform}
-        .coin-num{font-size:50px;font-weight:900;letter-spacing:-2px;margin-top:2px;background:linear-gradient(180deg,#fff 0%,rgba(255,255,255,.7) 100%);-webkit-background-clip:text;-webkit-text-fill-color:transparent;background-clip:text;transition:all .3s ease}
-        .coin-usdt{font-size:12px;color:var(--tg-hint);margin-top:1px;letter-spacing:.3px}
-        .prog-wrap{margin:12px 20px 0;height:5px;border-radius:10px;overflow:hidden;background:rgba(255,255,255,.06)}
-        .prog{height:100%;border-radius:10px;background:linear-gradient(90deg,var(--accent),var(--accent2),#7ed6df);transition:width .7s cubic-bezier(.4,0,.2,1);box-shadow:0 0 12px var(--accent-glow)}
-        .stats{display:grid;grid-template-columns:repeat(3,1fr);gap:8px;padding:8px 14px}
-        .stat{text-align:center;padding:13px 8px;border-radius:var(--radius);transition:all var(--ease)}
-        .stat-n{font-size:22px;font-weight:800;letter-spacing:-.5px;color:var(--accent)}
-        .stat-l{font-size:10px;color:var(--tg-hint);margin-top:3px;text-transform:uppercase;letter-spacing:.5px}
-        .card{padding:16px;margin-bottom:10px;border-radius:var(--radius-lg);animation:border-shift 5s infinite}
-        .card-h{font-size:13px;font-weight:700;margin-bottom:12px;display:flex;align-items:center;gap:7px;letter-spacing:.2px}
-        .card-h .ico{font-size:18px}
-        .ad-box{padding:20px;text-align:center;margin-bottom:10px;border-radius:var(--radius-xl);animation:border-shift 5s infinite,pulse-glow 3s infinite;position:relative;overflow:hidden}
-        .ad-pts{font-size:38px;font-weight:900;letter-spacing:-1px;background:linear-gradient(135deg,var(--accent),#f8c55d);-webkit-background-clip:text;-webkit-text-fill-color:transparent;background-clip:text}
-        .ad-sub{font-size:12px;color:var(--tg-hint);margin-bottom:4px}
-        .ad-btn{width:100%;padding:14px;border-radius:var(--radius);font-size:15px;font-weight:700;cursor:pointer;color:#000;border:none;background:linear-gradient(135deg,var(--accent),#e8961a);letter-spacing:.3px;transition:all var(--ease);transform:translateZ(0);will-change:transform;box-shadow:0 4px 20px rgba(245,166,35,.25);margin-top:12px}
-        .ad-btn:active{transform:translateZ(0) scale(.96)}
-        .ad-btn:disabled{opacity:.4;cursor:not-allowed;box-shadow:none;filter:grayscale(30%)}
-        .ad-info{font-size:11px;color:var(--tg-hint);margin-top:8px;letter-spacing:.2px}
-        .task{display:flex;justify-content:space-between;align-items:center;padding:13px 14px;border-radius:var(--radius);margin-bottom:7px;cursor:pointer;transition:all var(--ease);transform:translateZ(0);will-change:transform}
-        .task:active{transform:translateZ(0) scale(.97);background:var(--glass-hover)}
-        .task.done{opacity:.3;pointer-events:none;filter:grayscale(40%)}
-        .task-l{display:flex;align-items:center;gap:11px}
-        .task-ico{font-size:28px}
-        .task-name{font-size:13px;font-weight:600;letter-spacing:.1px}
-        .task-desc{font-size:11px;color:var(--tg-hint);margin-top:1px}
-        .badge{padding:6px 11px;border-radius:8px;font-size:12px;font-weight:700;white-space:nowrap;background:rgba(245,166,35,.1);border:1px solid rgba(245,166,35,.25);color:var(--accent)}
-        .ticker-wrap{padding:10px 14px;border-radius:var(--radius);margin-bottom:10px;overflow:hidden}
-        .ticker-label{font-size:10px;color:var(--tg-hint);margin-bottom:4px;letter-spacing:.5px;text-transform:uppercase}
-        .ticker-inner{overflow:hidden;white-space:nowrap}
-        .ticker-track{white-space:nowrap;animation:ticker-scroll 22s linear infinite;font-size:11px;color:var(--accent);display:inline-block}
-        .checkin-strip{display:flex;justify-content:space-between;gap:5px;padding:4px 0}
-        .checkin-day{flex:1;text-align:center;padding:9px 3px;border-radius:var(--radius-sm);min-width:0}
-        .checkin-day .day-num{font-size:9px;color:var(--tg-hint);margin-bottom:2px}
-        .checkin-day .day-dot{width:26px;height:26px;border-radius:50%;margin:0 auto;display:flex;align-items:center;justify-content:center;font-size:12px;border:2px solid rgba(255,255,255,.1);transition:all var(--ease)}
-        .checkin-day.checked .day-dot{background:linear-gradient(135deg,var(--accent),#e8961a);border-color:var(--accent);box-shadow:0 0 14px var(--accent-glow)}
-        .checkin-day.today .day-dot{border-color:var(--accent);box-shadow:0 0 20px var(--accent-glow)}
-        .checkin-day .day-reward{font-size:9px;color:var(--tg-hint);margin-top:3px}
-        .checkin-day.checked .day-reward{color:var(--accent)}
-        .mystery-box-wrap{text-align:center;padding:20px 16px;cursor:pointer;position:relative;transform:translateZ(0);will-change:transform;transition:all var(--ease)}
-        .mystery-box-wrap:active{transform:translateZ(0) scale(.95)}
-        .mystery-box-wrap.ready .mystery-ico{animation:shake .7s ease-in-out infinite}
-        .mystery-box-wrap.opening .mystery-ico{animation:burst .5s ease-out forwards}
-        .mystery-ico{font-size:70px;display:block;filter:drop-shadow(0 0 20px rgba(162,155,254,.5));transform:translateZ(0);will-change:transform}
-        .mystery-label{font-size:13px;font-weight:600;margin-top:8px}
-        .mystery-sub{font-size:10px;color:var(--tg-hint);margin-top:2px}
-        .mystery-sparkles{position:absolute;pointer-events:none;inset:0}
-        .sparkle{position:absolute;font-size:14px;animation:sparkle 1.5s ease-in-out infinite;opacity:0}
-        .sparkle:nth-child(1){top:10%;left:15%}
-        .sparkle:nth-child(2){top:5%;right:15%;animation-delay:.4s}
-        .sparkle:nth-child(3){bottom:20%;left:10%;animation-delay:.8s}
-        .sparkle:nth-child(4){bottom:10%;right:12%;animation-delay:1.2s}
-        .ref-box{padding:13px;border-radius:var(--radius);font-size:11px;word-break:break-all;margin:8px 0;line-height:1.7;color:rgba(126,180,255,.85);font-family:'SF Mono','Courier New',monospace}
-        .btn{width:100%;padding:14px;border-radius:var(--radius);font-size:14px;font-weight:700;cursor:pointer;margin-top:8px;transition:all var(--ease);border:none;letter-spacing:.3px;transform:translateZ(0);will-change:transform}
-        .btn:active{transform:translateZ(0) scale(.96)}
-        .btn-gold{color:#000;background:linear-gradient(135deg,var(--accent),#e8961a);box-shadow:0 4px 18px rgba(245,166,35,.2)}
-        .btn-ghost{color:var(--tg-hint);background:transparent;border:1px solid var(--glass-border)}
-        #ton-connect-container{margin:10px 0;display:flex;justify-content:center;min-height:48px;align-items:center}
-        .wallet-connected{text-align:center;padding:10px;border-radius:var(--radius);background:rgba(46,213,115,.08);border:1px solid rgba(46,213,115,.25);font-size:12px;color:var(--success);word-break:break-all;margin:8px 0}
-        .nav{position:fixed;bottom:0;left:0;right:0;display:flex;justify-content:space-around;padding:6px 8px max(10px,env(safe-area-inset-bottom,10px));z-index:100;max-width:480px;margin:0 auto;border-radius:var(--radius-xl) var(--radius-xl) 0 0}
-        .nb{background:none;border:none;color:var(--tg-hint);font-size:10px;cursor:pointer;display:flex;flex-direction:column;align-items:center;gap:3px;padding:6px 14px;transition:all var(--ease);border-radius:var(--radius);position:relative;transform:translateZ(0);will-change:transform}
-        .nb .ic{font-size:22px;transition:all var(--ease);transform:translateZ(0)}
-        .nb.on{color:var(--accent);font-weight:600}
-        .nb.on .ic{filter:drop-shadow(0 0 8px var(--accent-glow));transform:translateZ(0) scale(1.1)}
-        .nb.on::after{content:'';position:absolute;top:-4px;width:20px;height:2px;border-radius:4px;background:var(--accent);box-shadow:0 0 8px var(--accent-glow)}
-        .notif{position:fixed;top:18px;left:50%;transform:translateX(-50%);padding:11px 22px;border-radius:25px;font-size:13px;font-weight:700;z-index:999;display:none;letter-spacing:.3px;white-space:nowrap;pointer-events:none;box-shadow:0 8px 32px rgba(0,0,0,.4);max-width:90vw;text-align:center}
-        .notif.success{background:#1a1a1a;color:var(--success);border:1px solid rgba(46,213,115,.3)}
-        .notif.error{background:#1a1a1a;color:var(--danger);border:1px solid rgba(255,71,87,.3)}
-        .notif.info{background:#1a1a1a;color:var(--accent);border:1px solid rgba(245,166,35,.3)}
-        .lang-g{display:grid;grid-template-columns:1fr 1fr;gap:8px;margin-top:8px}
-        .lang-i{padding:12px;border-radius:var(--radius);text-align:center;cursor:pointer;font-size:13px;transition:all var(--ease);transform:translateZ(0);will-change:transform}
-        .lang-i:active{transform:translateZ(0) scale(.95)}
-        .lang-i.on{border-color:var(--accent)!important;background:rgba(245,166,35,.1)!important;color:var(--accent);box-shadow:0 0 16px rgba(245,166,35,.15)}
-        #verify-btn{position:fixed;bottom:85px;z-index:200;padding:14px;border-radius:13px;font-size:14px;font-weight:700;cursor:pointer;border:none;width:calc(100% - 28px);max-width:452px;left:50%;transform:translateX(-50%);background:linear-gradient(135deg,var(--accent),#e8961a);color:#000}
-        [dir="rtl"] .ticker-track{animation-direction:reverse}
-        [dir="rtl"] .prog{background:linear-gradient(270deg,var(--accent),var(--accent2),#7ed6df)}
-        .info-row{font-size:11px;color:var(--tg-hint);display:flex;align-items:center;gap:6px;padding:3px 0}
-    </style>
-</head>
-<body>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=no, viewport-fit=cover">
+<title>TaskEarn ⚡</title>
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;600;700;900&display=swap" rel="stylesheet">
+<script src="https://telegram.org/js/telegram-web-app.js"></script>
+<script src="https://unpkg.com/@tonconnect/ui@latest/dist/tonconnect-ui.min.js"></script>
+<script src="https://sad.adsgram.ai/js/sad.min.js"></script>
+<script src='//libtl.com/sdk.js' data-zone='11189424' data-sdk='show_11189424'></script>
+<style>
+:root{
+--bg:#0e0e12;--surface:#14141a;--neon:#00e676;--neon-glow:rgba(0,230,118,.55);--neon-soft:rgba(0,230,118,.15);
+--gold:#ffd700;--gold-glow:rgba(255,215,0,.5);--danger:#ff1744;--danger-glow:rgba(255,23,68,.6);
+--text:#e0e0e0;--hint:#888;--radius-sm:10px;--radius:14px;--radius-lg:18px;--radius-xl:22px;--nav-height:74px;
+--font:'Inter',-apple-system,BlinkMacSystemFont,'Segoe UI','Noto Sans Arabic',sans-serif;
+--ease:0.25s cubic-bezier(0.4,0,0.2,1);
+--glass-bg:rgba(20,20,30,0.7);--glass-border:rgba(0,230,118,0.18);--glass-hover:rgba(0,230,118,0.08);
+}
+*{margin:0;padding:0;box-sizing:border-box;-webkit-tap-highlight-color:transparent;-webkit-user-select:none;user-select:none;}
+body{font-family:var(--font);background:var(--bg);color:var(--text);min-height:100vh;min-height:100dvh;overflow-x:hidden;-webkit-font-smoothing:antialiased;
+background-image:radial-gradient(ellipse at 30% 10%,rgba(0,230,118,.06) 0%,transparent 55%),radial-gradient(ellipse at 70% 80%,rgba(0,230,118,.04) 0%,transparent 55%);background-attachment:fixed;}
+.glass{background:var(--glass-bg);backdrop-filter:blur(18px) saturate(180%);-webkit-backdrop-filter:blur(18px) saturate(180%);border:1px solid var(--glass-border);transform:translateZ(0);}
+.glass-card{background:var(--glass-bg);backdrop-filter:blur(18px) saturate(180%);-webkit-backdrop-filter:blur(18px) saturate(180%);border:1px solid var(--glass-border);border-radius:var(--radius-lg);transform:translateZ(0);transition:border-color var(--ease),box-shadow var(--ease);}
+.glass-nav{background:rgba(10,10,16,.94);backdrop-filter:blur(28px) saturate(180%);-webkit-backdrop-filter:blur(28px) saturate(180%);border-top:1px solid var(--glass-border);transform:translateZ(0);}
+@keyframes fadeInUp{from{opacity:0;transform:translateY(12px);}to{opacity:1;transform:translateY(0);}}
+@keyframes float{0%,100%{transform:translateY(0);}50%{transform:translateY(-10px);}}
+@keyframes pulse-glow{0%,100%{box-shadow:0 0 15px var(--neon-glow),0 0 45px rgba(0,230,118,.15);}50%{box-shadow:0 0 30px var(--neon-glow),0 0 80px rgba(0,230,118,.35);}}
+@keyframes pulse-glow-gold{0%,100%{box-shadow:0 0 12px var(--gold-glow),0 0 35px rgba(255,215,0,.12);}50%{box-shadow:0 0 28px var(--gold-glow),0 0 65px rgba(255,215,0,.3);}}
+@keyframes shake{0%,100%{transform:rotate(0);}20%{transform:rotate(-5deg);}40%{transform:rotate(5deg);}60%{transform:rotate(-3deg);}80%{transform:rotate(3deg);}}
+@keyframes burst{0%{transform:scale(1);opacity:1;}50%{transform:scale(1.5);opacity:.5;}100%{transform:scale(.2);opacity:0;}}
+@keyframes sparkle{0%,100%{opacity:0;transform:scale(0) rotate(0);}50%{opacity:1;transform:scale(1) rotate(180deg);}}
+@keyframes notifIn{from{top:-70px;opacity:0;transform:translateX(-50%) scale(.9);}to{top:18px;opacity:1;transform:translateX(-50%) scale(1);}}
+@keyframes notifOut{from{top:18px;opacity:1;transform:translateX(-50%) scale(1);}to{top:-70px;opacity:0;transform:translateX(-50%) scale(.9);}}
+@keyframes ticker-scroll{0%{transform:translateX(0);}100%{transform:translateX(-50%);}}
+@keyframes coin-pop{0%{transform:scale(1);}40%{transform:scale(1.4);}100%{transform:scale(1);}}
+@keyframes ball-float{0%,100%{transform:translateY(0) scale(1);}30%{transform:translateY(-18px) scale(1.08);}60%{transform:translateY(-6px) scale(1.03);}}
+@keyframes nav-game-pulse{0%,100%{box-shadow:0 0 22px var(--neon-glow),0 0 55px rgba(0,230,118,.35);}50%{box-shadow:0 0 45px var(--neon-glow),0 0 100px rgba(0,230,118,.65);}}
+@keyframes gauge-pulse{0%,100%{box-shadow:0 0 8px rgba(0,230,118,.4),0 0 20px rgba(255,23,68,.3);}50%{box-shadow:0 0 18px rgba(0,230,118,.7),0 0 40px rgba(255,23,68,.55);}}
+@keyframes spin{to{transform:rotate(360deg);}}
+.coin-pop{animation:coin-pop .4s ease-out;}
+.page{display:none;padding:12px 14px;padding-bottom:calc(var(--nav-height) + 20px);animation:fadeInUp .3s ease;max-width:480px;margin:0 auto;}
+.page.active{display:block;}
+.topbar{display:flex;justify-content:space-between;align-items:center;padding:14px 18px;margin-bottom:10px;border-radius:var(--radius-lg);}
+.logo{font-size:19px;font-weight:800;letter-spacing:-.3px;display:flex;align-items:center;gap:6px;}
+.logo .bolt{display:inline-block;animation:float 2.5s ease-in-out infinite;filter:drop-shadow(0 0 12px var(--neon-glow));font-size:22px;}
+.logo .txt{background:linear-gradient(135deg,#00e676,#69f0ae,#ffd700);-webkit-background-clip:text;-webkit-text-fill-color:transparent;background-clip:text;font-weight:900;}
+.id-chip{font-size:11px;padding:6px 14px;border-radius:20px;color:var(--hint);letter-spacing:.3px;font-weight:500;background:var(--glass-bg);backdrop-filter:blur(10px);border:1px solid rgba(0,230,118,.2);}
+.hero{text-align:center;padding:10px 16px 6px;}
+.coin-wrap{display:inline-block;animation:float 3s ease-in-out infinite;}
+.coin-ico{font-size:76px;filter:drop-shadow(0 8px 25px var(--neon-glow));display:block;}
+.coin-num{font-size:52px;font-weight:900;letter-spacing:-2px;margin-top:4px;background:linear-gradient(180deg,#fff 0%,rgba(200,255,220,.85) 100%);-webkit-background-clip:text;-webkit-text-fill-color:transparent;background-clip:text;}
+.coin-usdt{font-size:12px;color:var(--hint);margin-top:2px;letter-spacing:.5px;}
+.prog-wrap{margin:14px 20px 0;height:6px;border-radius:10px;overflow:hidden;background:rgba(255,255,255,.06);}
+.prog{height:100%;border-radius:10px;background:linear-gradient(90deg,#00e676,#69f0ae,#ffd700);transition:width .7s cubic-bezier(.4,0,.2,1);box-shadow:0 0 18px var(--neon-glow);}
+.stats{display:grid;grid-template-columns:repeat(3,1fr);gap:8px;padding:8px 14px;}
+.stat{text-align:center;padding:14px 8px;border-radius:var(--radius);}
+.stat-n{font-size:23px;font-weight:800;letter-spacing:-.5px;color:#00e676;text-shadow:0 0 12px var(--neon-glow);}
+.stat-l{font-size:10px;color:var(--hint);margin-top:4px;text-transform:uppercase;letter-spacing:.5px;}
+.card{padding:16px;margin-bottom:10px;border-radius:var(--radius-lg);}
+.card-h{font-size:14px;font-weight:700;margin-bottom:12px;display:flex;align-items:center;gap:8px;color:#00e676;text-shadow:0 0 8px rgba(0,230,118,.3);}
+.card-h .ico{font-size:20px;}
+.ad-box{padding:22px;text-align:center;margin-bottom:10px;border-radius:var(--radius-xl);animation:pulse-glow-gold 3s infinite;position:relative;overflow:hidden;background:rgba(20,25,18,.5);backdrop-filter:blur(12px);border:1px solid rgba(255,215,0,.25);}
+.ad-pts{font-size:42px;font-weight:900;letter-spacing:-1px;background:linear-gradient(135deg,#00e676,#ffd700);-webkit-background-clip:text;-webkit-text-fill-color:transparent;background-clip:text;}
+.ad-sub{font-size:13px;color:var(--hint);margin-bottom:6px;}
+.ad-btn{width:100%;padding:14px;border-radius:var(--radius);font-size:15px;font-weight:700;cursor:pointer;color:#0e0e12;border:none;background:linear-gradient(135deg,#00e676,#69f0ae);box-shadow:0 4px 25px rgba(0,230,118,.4);margin-top:12px;transition:all var(--ease);}
+.ad-btn:active{transform:scale(.96);}
+.ad-btn:disabled{opacity:.5;cursor:not-allowed;box-shadow:none;}
+.ad-info{font-size:11px;color:var(--hint);margin-top:8px;}
+.task{display:flex;justify-content:space-between;align-items:center;padding:14px;border-radius:var(--radius);margin-bottom:7px;cursor:pointer;transition:all var(--ease);background:var(--glass-bg);border:1px solid var(--glass-border);}
+.task:active{transform:scale(.97);background:var(--glass-hover);}
+.task.done{opacity:.3;pointer-events:none;filter:grayscale(40%);}
+.task-l{display:flex;align-items:center;gap:12px;}
+.task-ico{font-size:30px;}
+.task-name{font-size:14px;font-weight:600;}
+.task-desc{font-size:11px;color:var(--hint);margin-top:2px;}
+.badge{padding:6px 12px;border-radius:8px;font-size:12px;font-weight:700;white-space:nowrap;background:rgba(0,230,118,.12);border:1px solid rgba(0,230,118,.3);color:#00e676;}
+.ticker-wrap{padding:10px 14px;border-radius:var(--radius);margin-bottom:10px;overflow:hidden;}
+.ticker-label{font-size:10px;color:var(--hint);margin-bottom:4px;letter-spacing:.5px;text-transform:uppercase;}
+.ticker-inner{overflow:hidden;white-space:nowrap;}
+.ticker-track{white-space:nowrap;animation:ticker-scroll 22s linear infinite;font-size:11px;color:#00e676;display:inline-block;}
+.checkin-strip{display:flex;justify-content:space-between;gap:5px;padding:4px 0;}
+.checkin-day{flex:1;text-align:center;padding:9px 3px;border-radius:var(--radius-sm);}
+.checkin-day .day-num{font-size:9px;color:var(--hint);margin-bottom:2px;}
+.checkin-day .day-dot{width:28px;height:28px;border-radius:50%;margin:0 auto;display:flex;align-items:center;justify-content:center;font-size:13px;border:2px solid rgba(255,255,255,.1);background:rgba(20,25,20,.5);}
+.checkin-day.checked .day-dot{background:linear-gradient(135deg,#00e676,#69f0ae);border-color:#00e676;box-shadow:0 0 18px var(--neon-glow);color:#0e0e12;}
+.checkin-day.today .day-dot{border-color:#00e676;box-shadow:0 0 25px var(--neon-glow);}
+.checkin-day .day-reward{font-size:9px;color:var(--hint);margin-top:3px;}
+.checkin-day.checked .day-reward{color:#00e676;}
+.mystery-box-wrap{text-align:center;padding:22px 16px;cursor:pointer;position:relative;transition:all var(--ease);}
+.mystery-box-wrap:active{transform:scale(.95);}
+.mystery-box-wrap.ready .mystery-ico{animation:shake .7s ease-in-out infinite;}
+.mystery-box-wrap.opening .mystery-ico{animation:burst .5s ease-out forwards;}
+.mystery-ico{font-size:74px;display:block;filter:drop-shadow(0 0 30px rgba(0,230,118,.65));}
+.mystery-label{font-size:14px;font-weight:600;margin-top:10px;}
+.mystery-sub{font-size:11px;color:var(--hint);margin-top:3px;}
+.mystery-sparkles{position:absolute;pointer-events:none;inset:0;}
+.sparkle{position:absolute;font-size:16px;animation:sparkle 1.5s ease-in-out infinite;opacity:0;}
+.sparkle:nth-child(1){top:10%;left:15%;}.sparkle:nth-child(2){top:5%;right:15%;animation-delay:.4s;}.sparkle:nth-child(3){bottom:20%;left:10%;animation-delay:.8s;}.sparkle:nth-child(4){bottom:10%;right:12%;animation-delay:1.2s;}
+.ref-box{padding:14px;border-radius:var(--radius);font-size:11px;word-break:break-all;margin:8px 0;line-height:1.7;color:rgba(180,220,180,.9);font-family:'SF Mono','Courier New',monospace;background:rgba(20,25,20,.5);border:1px solid rgba(0,230,118,.2);}
+.btn{width:100%;padding:14px;border-radius:var(--radius);font-size:14px;font-weight:700;cursor:pointer;margin-top:8px;transition:all var(--ease);border:none;}
+.btn:active{transform:scale(.96);}
+.btn-gold{color:#0e0e12;background:linear-gradient(135deg,#00e676,#69f0ae);box-shadow:0 4px 22px rgba(0,230,118,.35);}
+.btn-ghost{color:var(--hint);background:transparent;border:1px solid var(--glass-border);}
+.btn:disabled{opacity:.5;pointer-events:none;}
+#ton-connect-container{margin:10px 0;display:flex;justify-content:center;min-height:48px;align-items:center;}
+.wallet-connected{text-align:center;padding:12px;border-radius:var(--radius);background:rgba(0,230,118,.1);border:1px solid rgba(0,230,118,.3);font-size:12px;color:#00e676;word-break:break-all;margin:8px 0;}
+.wallet-addr{font-size:11px;color:var(--hint);margin-top:4px;word-break:break-all;}
 
-<div class="notif" id="notif"></div>
+/* ===== NAV مع SVG icons احترافية ===== */
+.nav{position:fixed;bottom:0;left:0;right:0;display:flex;justify-content:space-around;align-items:flex-end;padding:6px 4px max(8px,env(safe-area-inset-bottom,8px));z-index:100;max-width:480px;margin:0 auto;border-radius:var(--radius-xl) var(--radius-xl) 0 0;}
+.nb{background:none;border:none;color:var(--hint);font-size:9px;cursor:pointer;display:flex;flex-direction:column;align-items:center;gap:3px;padding:6px 4px;transition:all var(--ease);border-radius:var(--radius);position:relative;flex:1;min-width:0;}
+.nb svg{width:21px;height:21px;transition:all var(--ease);stroke:currentColor;fill:none;stroke-width:2;stroke-linecap:round;stroke-linejoin:round;}
+.nb span{white-space:nowrap;overflow:hidden;text-overflow:ellipsis;max-width:100%;}
+.nb.on{color:#00e676;font-weight:600;text-shadow:0 0 10px var(--neon-glow);}
+.nb.on svg{filter:drop-shadow(0 0 8px var(--neon-glow));transform:scale(1.12);stroke-width:2.3;}
+.nb.on::after{content:'';position:absolute;top:-4px;width:16px;height:3px;border-radius:4px;background:#00e676;box-shadow:0 0 14px var(--neon-glow);}
+.nb-game{position:relative;margin-top:-32px;z-index:110;background:linear-gradient(135deg,#00e676,#00c853);border-radius:50%;width:62px;height:62px;display:flex;align-items:center;justify-content:center;animation:nav-game-pulse 2.2s ease-in-out infinite;box-shadow:0 0 30px var(--neon-glow),0 0 70px rgba(0,230,118,.45);cursor:pointer;border:3px solid rgba(255,255,255,.25);transition:all var(--ease);flex-shrink:0;}
+.nb-game:active{transform:scale(.9);}
+.nb-game .ball-emoji{font-size:30px;line-height:1;filter:drop-shadow(0 2px 3px rgba(0,0,0,.4));}
+.nb-game.on{animation:nav-game-pulse 1.4s ease-in-out infinite;box-shadow:0 0 50px var(--neon-glow),0 0 110px rgba(0,230,118,.7);border-color:#fff;}
 
-<div id="pg-home" class="page active">
-    <div class="topbar glass-card">
-        <div class="logo"><span class="bolt">⚡</span><span class="txt">TaskEarn</span></div>
-        <div class="id-chip glass" id="id-chip">ID: ···</div>
-    </div>
-    <div class="hero">
-        <div class="coin-wrap"><span class="coin-ico" id="coin-ico">🪙</span></div>
-        <div class="coin-num" id="coins">0</div>
-        <div class="coin-usdt" id="usdt1">≈ 0.0000 USDT</div>
-        <div class="prog-wrap"><div class="prog" id="prog" style="width:0%"></div></div>
-    </div>
-    <div class="stats">
-        <div class="stat glass-card"><div class="stat-n" id="s-ads">0</div><div class="stat-l" id="tl-ads">إعلانات</div></div>
-        <div class="stat glass-card"><div class="stat-n" id="s-refs">0</div><div class="stat-l" id="tl-refs">إحالات</div></div>
-        <div class="stat glass-card"><div class="stat-n" id="s-tasks">0</div><div class="stat-l" id="tl-tasks">مهام</div></div>
-    </div>
-    <div class="card glass-card">
-        <div class="card-h"><span class="ico">📅</span><span id="tl-checkin">التسجيل اليومي</span></div>
-        <div class="checkin-strip" id="checkin-strip"></div>
-        <button class="btn btn-gold" id="checkin-btn" style="margin-top:10px;">✅ <span id="tl-checkin-btn">احصل على مكافأة اليوم</span></button>
-    </div>
-    <div class="card glass-card">
-        <div class="card-h"><span class="ico">🎁</span><span id="tl-mystery">الصندوق الغامض</span></div>
-        <div class="mystery-box-wrap ready" id="mystery-box">
-            <span class="mystery-ico">🎁</span>
-            <div class="mystery-sparkles"><span class="sparkle">✨</span><span class="sparkle">💫</span><span class="sparkle">⭐</span><span class="sparkle">🌟</span></div>
-            <div class="mystery-label" id="tl-mystery-label">اضغط للفتح!</div>
-            <div class="mystery-sub" id="tl-mystery-sub">شاهد إعلاناً لفتح مكافأة عشوائية</div>
-        </div>
-    </div>
-    <div class="ad-box glass-card">
-        <div class="ad-sub" id="tl-earn">شاهد إعلاناً واكسب نقاط!</div>
-        <div class="ad-pts">+3 <span style="font-size:15px" id="tl-pts">نقاط</span></div>
-        <button class="ad-btn" id="ad-btn">📺 <span id="tl-watch">شاهد الإعلان</span></button>
-        <div class="ad-info" id="ad-info"></div>
-    </div>
-    <div class="card glass-card">
-        <div class="card-h"><span class="ico">📋</span><span id="tl-daily">المهام</span></div>
-        <div class="task glass-card" id="tk-ch">
-            <div class="task-l"><div class="task-ico">📢</div>
-                <div><div class="task-name" id="tl-join">اشترك في قناة TaskEarn</div>
-                <div class="task-desc" id="tl-joind">اشترك واكسب 50 نقطة</div></div>
-            </div>
-            <div class="badge">+50 🪙</div>
-        </div>
-        <div class="task glass-card" id="tk-sh">
-            <div class="task-l"><div class="task-ico">🔗</div>
-                <div><div class="task-name" id="tl-share">شارك رابط الإحالة</div>
-                <div class="task-desc" id="tl-shared">100 نقطة لكل صديق</div></div>
-            </div>
-            <div class="badge">+100 🪙</div>
-        </div>
-    </div>
-</div>
+.notif{position:fixed;top:18px;left:50%;transform:translateX(-50%);padding:12px 24px;border-radius:28px;font-size:14px;font-weight:700;z-index:999;display:none;white-space:nowrap;pointer-events:none;box-shadow:0 8px 32px rgba(0,0,0,.7);max-width:90vw;text-align:center;backdrop-filter:blur(20px);background:rgba(20,20,30,.9);}
+.notif.success{color:#00e676;border:1px solid rgba(0,230,118,.5);}
+.notif.error{color:#ff1744;border:1px solid rgba(255,23,68,.5);}
+.notif.info{color:#00e676;border:1px solid rgba(0,230,118,.4);}
+.lang-g{display:grid;grid-template-columns:1fr 1fr;gap:8px;margin-top:8px;}
+.lang-i{padding:12px;border-radius:var(--radius);text-align:center;cursor:pointer;font-size:13px;background:var(--glass-bg);border:1px solid var(--glass-border);transition:all var(--ease);}
+.lang-i:active{transform:scale(.95);}
+.lang-i.on{border-color:#00e676!important;background:rgba(0,230,118,.15)!important;color:#00e676;box-shadow:0 0 22px rgba(0,230,118,.25);}
+#verify-btn{position:fixed;bottom:90px;z-index:200;padding:14px;border-radius:14px;font-size:14px;font-weight:700;cursor:pointer;border:none;width:calc(100% - 28px);max-width:452px;left:50%;transform:translateX(-50%);background:linear-gradient(135deg,#00e676,#69f0ae);color:#0e0e12;box-shadow:0 0 28px rgba(0,230,118,.55);}
+.info-row{font-size:11px;color:var(--hint);display:flex;align-items:center;gap:6px;padding:3px 0;}
 
-<div id="pg-ref" class="page">
-    <div class="card glass-card">
-        <div class="card-h"><span class="ico">👥</span><span id="tl-reft">نظام الإحالة</span></div>
-        <p style="color:var(--tg-hint);font-size:12px;margin-bottom:8px;" id="tl-refd">ادعو أصدقاءك واكسب 100 نقطة لكل صديق!</p>
-        <div class="ref-box glass" id="ref-link">جاري التحميل...</div>
-        <button class="btn btn-gold" id="btn-copy">📋 <span id="tl-copy">نسخ الرابط</span></button>
-        <button class="btn btn-ghost" id="btn-share-ref">📤 <span id="tl-sref">مشاركة</span></button>
-    </div>
-    <div class="stats">
-        <div class="stat glass-card"><div class="stat-n" id="r-num">0</div><div class="stat-l" id="tl-rnum">إحالات</div></div>
-        <div class="stat glass-card"><div class="stat-n" id="r-pts">0</div><div class="stat-l">نقاط</div></div>
-        <div class="stat glass-card"><div class="stat-n" id="r-usd">0.00</div><div class="stat-l">USDT</div></div>
-    </div>
-</div>
+/* Game */
+.field{position:relative;width:100%;aspect-ratio:1.4/1;max-height:320px;border-radius:var(--radius-lg);overflow:hidden;background:linear-gradient(180deg,#0a2a0f 0%,#0d3314 30%,#0a2a0f 60%,#0d3314 100%);border:2px solid rgba(0,230,118,.35);box-shadow:0 0 40px rgba(0,230,118,.2),inset 0 0 80px rgba(0,0,0,.5);margin:0 auto 14px;}
+.field-lines{position:absolute;inset:0;pointer-events:none;}
+.field-line{position:absolute;background:rgba(0,230,118,.35);}
+.field-line.center{top:50%;left:0;right:0;height:2px;}
+.field-line.circle{top:50%;left:50%;width:100px;height:100px;border-radius:50%;background:transparent;border:2px solid rgba(0,230,118,.35);transform:translate(-50%,-50%);}
+.field-line.penalty-top{top:8%;left:25%;right:25%;height:25%;border:2px solid rgba(0,230,118,.3);border-top:none;border-radius:0 0 20px 20px;}
+.field-line.penalty-bottom{bottom:8%;left:25%;right:25%;height:25%;border:2px solid rgba(0,230,118,.3);border-bottom:none;border-radius:20px 20px 0 0;}
+.field-dot{position:absolute;width:8px;height:8px;background:rgba(0,230,118,.6);border-radius:50%;}
+.field-dot.center-dot{top:50%;left:50%;transform:translate(-50%,-50%);}
+.ball-container{position:absolute;top:50%;left:50%;transform:translate(-50%,-50%);z-index:5;animation:ball-float 3s ease-in-out infinite;transition:filter .3s ease;}
+.ball-container.win{animation:ball-float .6s ease-in-out infinite;filter:drop-shadow(0 0 35px #00e676) drop-shadow(0 0 80px #00e676)!important;}
+.ball-container.lose{animation:shake .5s ease-in-out;filter:drop-shadow(0 0 35px #ff1744) drop-shadow(0 0 80px #ff1744)!important;}
+.ball{font-size:60px;display:block;filter:drop-shadow(0 0 20px rgba(0,230,118,.5));}
+.gauge-wrap{display:flex;align-items:center;justify-content:center;margin:0 auto 16px;position:relative;height:48px;max-width:340px;border-radius:24px;overflow:hidden;animation:gauge-pulse 2.5s ease-in-out infinite;}
+.gauge-low{flex:1;height:100%;background:linear-gradient(180deg,rgba(0,230,118,.7),rgba(0,200,100,.85));display:flex;align-items:center;justify-content:center;font-weight:800;font-size:13px;color:#0e0e12;border-radius:24px 0 0 24px;}
+.gauge-high{flex:1;height:100%;background:linear-gradient(180deg,rgba(255,23,68,.7),rgba(255,50,80,.85));display:flex;align-items:center;justify-content:center;font-weight:800;font-size:13px;color:#fff;border-radius:0 24px 24px 0;}
+.gauge-mid{position:absolute;left:50%;top:50%;transform:translate(-50%,-50%);width:44px;height:44px;border-radius:50%;background:#0e0e12;border:3px solid rgba(255,215,0,.8);display:flex;align-items:center;justify-content:center;font-weight:900;font-size:15px;color:#ffd700;box-shadow:0 0 20px var(--gold-glow);z-index:2;}
+.game-btns{display:flex;gap:12px;margin-bottom:16px;max-width:340px;margin-left:auto;margin-right:auto;}
+.game-btn{flex:1;padding:16px;border-radius:var(--radius-lg);font-size:18px;font-weight:800;cursor:pointer;border:none;transition:all var(--ease);}
+.game-btn.low-btn{background:linear-gradient(135deg,#00c853,#00e676);color:#0e0e12;box-shadow:0 4px 30px rgba(0,230,118,.5);}
+.game-btn.high-btn{background:linear-gradient(135deg,#d50000,#ff1744);color:#fff;box-shadow:0 4px 30px rgba(255,23,68,.5);}
+.game-btn:active{transform:scale(.93);}
+.game-btn:disabled{opacity:.4;pointer-events:none;}
+.bet-section{max-width:340px;margin:0 auto;text-align:center;}
+.bet-input-wrap{position:relative;margin-bottom:10px;}
+.bet-input{width:100%;padding:14px 18px;border-radius:var(--radius-lg);background:rgba(20,25,20,.7);border:2px solid rgba(0,230,118,.35);color:#fff;font-size:22px;font-weight:800;text-align:center;font-family:var(--font);}
+.bet-input:focus{outline:none;border-color:#00e676;box-shadow:0 0 30px rgba(0,230,118,.35);}
+.bet-label{font-size:10px;color:var(--hint);text-transform:uppercase;margin-bottom:4px;}
+.bet-controls{display:grid;grid-template-columns:repeat(4,1fr);gap:6px;}
+.bet-ctrl{padding:10px 6px;border-radius:var(--radius-sm);font-size:13px;font-weight:700;cursor:pointer;border:1px solid rgba(0,230,118,.3);background:rgba(0,230,118,.08);color:#00e676;}
+.bet-ctrl:active{background:rgba(0,230,118,.25);transform:scale(.94);}
+.bet-ctrl.max-btn{border-color:rgba(255,215,0,.5);color:#ffd700;background:rgba(255,215,0,.08);}
+.bet-ctrl.min-btn{border-color:rgba(255,255,255,.4);color:#ccc;background:rgba(255,255,255,.05);}
+.game-history{max-width:340px;margin:12px auto;display:flex;gap:6px;flex-wrap:wrap;justify-content:center;}
+.game-history-dot{width:22px;height:22px;border-radius:50%;font-size:9px;display:flex;align-items:center;justify-content:center;font-weight:700;}
+.game-history-dot.win-dot{background:rgba(0,230,118,.25);color:#00e676;border:1px solid rgba(0,230,118,.5);}
+.game-history-dot.lose-dot{background:rgba(255,23,68,.25);color:#ff1744;border:1px solid rgba(255,23,68,.5);}
+[dir="rtl"] .ticker-track{animation-direction:reverse;}
+[dir="rtl"] .prog{background:linear-gradient(270deg,#00e676,#69f0ae,#ffd700);}
 
-<div id="pg-wd" class="page">
-    <div class="ticker-wrap glass-card">
-        <div class="ticker-label">🔴 عمليات سحب حديثة</div>
-        <div class="ticker-inner"><div class="ticker-track" id="ticker">جاري التحميل...</div></div>
-    </div>
-    <div class="card glass-card" style="text-align:center;animation:border-shift 5s infinite,pulse-glow 3s infinite;">
-        <div style="color:var(--tg-hint);font-size:12px;" id="tl-bal">رصيدك الحالي</div>
-        <div class="coin-num" style="font-size:40px;margin-top:4px;" id="coins2">0</div>
-        <div class="coin-usdt" id="usdt2">≈ 0.0000 USDT</div>
-        <div style="font-size:10px;color:var(--tg-hint);margin-top:4px;">1000 نقطة = 0.1 USDT</div>
-    </div>
-    <div class="card glass-card">
-        <div class="card-h"><span class="ico">💸</span><span id="tl-wdt">سحب المكافآت</span></div>
-        <p style="font-size:11px;color:var(--tg-hint);margin-bottom:8px;" id="tl-wall">اربط محفظة TON للسحب</p>
-        <div id="ton-connect-container"></div>
-        <div id="wallet-status" style="display:none;" class="wallet-connected"></div>
-        <button class="btn btn-gold" id="btn-withdraw" disabled>💸 <span id="tl-wdb">سحب</span></button>
-    </div>
-    <div class="card glass-card">
-        <div class="info-row">⚠️ <span id="tl-min">الحد الأدنى: 1000 نقطة</span></div>
-        <div class="info-row">⏱️ <span id="tl-time">وقت المعالجة: 24-48 ساعة</span></div>
-        <div class="info-row">💡 الربح الصافي: 100% لك</div>
-    </div>
-</div>
-
-<div id="pg-set" class="page">
-    <div class="card glass-card">
-        <div class="card-h"><span class="ico">🌍</span><span id="tl-lang">اللغة</span></div>
-        <div class="lang-g">
-            <div class="lang-i glass-card on" data-lang="ar">🇸🇦 العربية</div>
-            <div class="lang-i glass-card" data-lang="en">🇬🇧 English</div>
-            <div class="lang-i glass-card" data-lang="fr">🇫🇷 Français</div>
-            <div class="lang-i glass-card" data-lang="ru">🇷🇺 Русский</div>
-        </div>
-    </div>
-    <div class="card glass-card">
-        <div class="card-h"><span class="ico">📊</span><span id="tl-rate">معدل التحويل</span></div>
-        <div style="text-align:center;font-size:20px;font-weight:800;margin:6px 0;background:linear-gradient(135deg,var(--accent),var(--accent2));-webkit-background-clip:text;-webkit-text-fill-color:transparent;background-clip:text;">1000 🪙 = 0.1 USDT</div>
-    </div>
-    <div class="card glass-card">
-        <div class="card-h"><span class="ico">🆔</span><span id="tl-myid">معرفك</span></div>
-        <div style="text-align:center;font-size:18px;font-weight:700;letter-spacing:.5px;color:var(--accent);" id="my-id">-</div>
-    </div>
-</div>
-
-<nav class="nav glass-nav">
-    <button class="nb on" data-page="home"><span class="ic">🏠</span><span id="nl-home">الرئيسية</span></button>
-    <button class="nb" data-page="ref"><span class="ic">👥</span><span id="nl-ref">الإحالة</span></button>
-    <button class="nb" data-page="wd"><span class="ic">💰</span><span id="nl-wd">السحب</span></button>
-    <button class="nb" data-page="set"><span class="ic">⚙️</span><span id="nl-set">الإعدادات</span></button>
-</nav>
-
-<script>
-var CFG={RATE:0.0001,CHANNEL:'https://t.me/gxhxd',BOT:'earntaskpro_bot',VERCEL:'https://taskearnbot.vercel.app',AD_BLOCK:'35884',MIN_WD:1000,TON_MANIFEST:'https://taskearnbot.vercel.app/tonconnect-manifest.json',SB:'https://xdsqoflkdbcsbbqonfrv.supabase.co',SK:'sb_publishable_yyThqbzPOCoqrAcDmY60gw_-0QZSzJt',CHECKIN_REWARDS:[2,3,5,8,12,18,30],MYSTERY:[{label:'Common',pts:5,w:55,e:'🎯'},{label:'Uncommon',pts:15,w:25,e:'💎'},{label:'Rare',pts:50,w:12,e:'🔥'},{label:'Epic',pts:150,w:6,e:'⚡'},{label:'Legendary',pts:500,w:2,e:'👑'}]};
-var state={coins:0,uid:null,ads:0,refs:0,tasks:0,lang:'ar',channelDone:false,shareDone:false,checkinStreak:0,checkinDate:null,mysteryDate:null};
-var connectedWallet=null,isAdWatching=false,notifTimer=null,tonUI=null;
-var TX={ar:{home:'الرئيسية',ref:'الإحالة',wd:'السحب',set:'الإعدادات',ads:'إعلانات',refs:'إحالات',tasks:'مهام',earn:'شاهد إعلاناً واكسب نقاط!',pts:'نقاط',watch:'شاهد الإعلان',daily:'المهام',join:'اشترك في قناة TaskEarn',joind:'اشترك واكسب 50 نقطة',share:'شارك رابط الإحالة',shared:'100 نقطة لكل صديق',reft:'نظام الإحالة',refd:'ادعو أصدقاءك واكسب 100 نقطة لكل صديق!',copy:'نسخ الرابط',sref:'مشاركة',rnum:'إحالات',bal:'رصيدك الحالي',wall:'اربط محفظة TON للسحب',wdt:'سحب المكافآت',wdb:'سحب',min:'الحد الأدنى: 1000 نقطة',time:'وقت المعالجة: 24-48 ساعة',lang:'اللغة',rate:'معدل التحويل',myid:'معرفك',adw:'إعلان',checkin:'التسجيل اليومي',checkin_btn:'احصل على مكافأة اليوم',checkin_done:'تم الاستلام!',mystery:'الصندوق الغامض',mystery_label:'اضغط للفتح!',mystery_sub:'شاهد إعلاناً لفتح مكافأة عشوائية',mystery_locked:'متاح غداً',wallet_ok:'✅ المحفظة متصلة',ad_skip:'⚠️ تم تخطي الإعلان - لا مكافأة',ad_err:'⚠️ خطأ في تحميل الإعلان',ci_ok:'🎉 تم تسجيل الحضور!',wd_ok:'✅ تم إرسال طلب السحب!',need_wallet:'⚠️ اربط محفظة TON أولاً',need_pts:'⚠️ تحتاج 1000 نقطة على الأقل',already_sub:'✅ أنت مشترك بالفعل!',checking:'⏳ جاري التحقق...',not_sub:'❌ لسه مشتركتش! اشترك الأول',verify_err:'❌ خطأ في التحقق',verify_btn:'✅ تحقق من اشتراكي',copied:'✅ تم النسخ!',shared_ok:'تم مشاركة الرابط!'},en:{home:'Home',ref:'Referral',wd:'Withdraw',set:'Settings',ads:'Ads',refs:'Refs',tasks:'Tasks',earn:'Watch an ad & earn points!',pts:'pts',watch:'Watch Ad',daily:'Tasks',join:'Join TaskEarn Channel',joind:'Subscribe & earn 50 pts',share:'Share Referral Link',shared:'100 pts per friend',reft:'Referral System',refd:'Invite friends & earn 100 pts each!',copy:'Copy Link',sref:'Share',rnum:'Referrals',bal:'Your Balance',wall:'Connect TON wallet to withdraw',wdt:'Withdraw',wdb:'Withdraw',min:'Minimum: 1000 pts',time:'Processing: 24-48h',lang:'Language',rate:'Exchange Rate',myid:'Your ID',adw:'ad',checkin:'Daily Check-in',checkin_btn:"Claim Today's Reward",checkin_done:'Claimed!',mystery:'Mystery Box',mystery_label:'Tap to Open!',mystery_sub:'Watch an ad to unlock a random reward',mystery_locked:'Available tomorrow',wallet_ok:'✅ Wallet Connected',ad_skip:'⚠️ Ad skipped - no reward',ad_err:'⚠️ Ad loading error',ci_ok:'🎉 Check-in successful!',wd_ok:'✅ Withdrawal request sent!',need_wallet:'⚠️ Connect TON wallet first',need_pts:'⚠️ Need at least 1000 pts',already_sub:'✅ Already subscribed!',checking:'⏳ Checking...',not_sub:'❌ Not subscribed yet!',verify_err:'❌ Verify error',verify_btn:'✅ Verify Subscription',copied:'✅ Copied!',shared_ok:'Link shared!'},fr:{home:'Accueil',ref:'Parrainage',wd:'Retrait',set:'Paramètres',ads:'Pubs',refs:'Refs',tasks:'Tâches',earn:'Voir pub & gagner!',pts:'pts',watch:'Voir pub',daily:'Tâches',join:'Rejoindre TaskEarn',joind:'Abonnez-vous & gagnez 50 pts',share:'Partager lien',shared:'100 pts par ami',reft:'Parrainage',refd:'Invitez & gagnez 100 pts!',copy:'Copier',sref:'Partager',rnum:'Parrainages',bal:'Votre solde',wall:'Connectez portefeuille TON',wdt:'Retrait',wdb:'Retirer',min:'Min: 1000 pts',time:'Délai: 24-48h',lang:'Langue',rate:'Taux',myid:'Votre ID',adw:'pub',checkin:'Check-in quotidien',checkin_btn:'Réclamer',checkin_done:'Reçu!',mystery:'Boîte Mystère',mystery_label:'Touchez pour ouvrir!',mystery_sub:'Voir une pub pour débloquer',mystery_locked:'Disponible demain',wallet_ok:'✅ Portefeuille connecté',ad_skip:'⚠️ Pub ignorée',ad_err:'⚠️ Erreur de pub',ci_ok:'🎉 Check-in réussi!',wd_ok:'✅ Demande envoyée!',need_wallet:'⚠️ Connectez portefeuille TON',need_pts:'⚠️ 1000 pts minimum',already_sub:'✅ Déjà abonné!',checking:'⏳ Vérification...',not_sub:'❌ Pas encore abonné!',verify_err:'❌ Erreur de vérification',verify_btn:'✅ Vérifier',copied:'✅ Copié!',shared_ok:'Lien partagé!'},ru:{home:'Главная',ref:'Рефералы',wd:'Вывод',set:'Настройки',ads:'Реклама',refs:'Рефералы',tasks:'Задания',earn:'Смотри & зарабатывай!',pts:'очков',watch:'Смотреть',daily:'Задания',join:'Подписаться на TaskEarn',joind:'Подпишись & получи 50 очков',share:'Поделиться ссылкой',shared:'100 очков за друга',reft:'Рефералы',refd:'Приглашай & получай 100 очков!',copy:'Копировать',sref:'Поделиться',rnum:'Рефералы',bal:'Ваш баланс',wall:'Подключите TON кошелёк',wdt:'Вывод',wdb:'Вывести',min:'Минимум: 1000 очков',time:'Обработка: 24-48ч',lang:'Язык',rate:'Курс',myid:'Ваш ID',adw:'реклама',checkin:'Ежедневный вход',checkin_btn:'Получить награду',checkin_done:'Получено!',mystery:'Загадочная коробка',mystery_label:'Нажми открыть!',mystery_sub:'Посмотри рекламу для награды',mystery_locked:'Доступно завтра',wallet_ok:'✅ Кошелёк подключён',ad_skip:'⚠️ Реклама пропущена',ad_err:'⚠️ Ошибка рекламы',ci_ok:'🎉 Отметка получена!',wd_ok:'✅ Запрос отправлен!',need_wallet:'⚠️ Подключите TON кошелёк',need_pts:'⚠️ Минимум 1000 очков',already_sub:'✅ Вы уже подписаны!',checking:'⏳ Проверяем...',not_sub:'❌ Вы не подписаны!',verify_err:'❌ Ошибка проверки',verify_btn:'✅ Проверить подписку',copied:'✅ Скопировано!',shared_ok:'Ссылка отправлена!'}};
-var FAKE_WD=['أحمد س. سحب 0.5 USDT','محمد ع. سحب 1.2 USDT','سارة م. سحب 0.8 USDT','علي ح. سحب 2.0 USDT','فاطمة ك. سحب 0.3 USDT','Omar سحب 1.5 USDT','Yusuf سحب 0.7 USDT','نورا ف. سحب 0.9 USDT','Hassan سحب 3.0 USDT','ليلى ب. سحب 0.4 USDT','كريم ط. سحب 1.1 USDT','Aisha سحب 0.6 USDT'];
-var tgApp=window.Telegram&&window.Telegram.WebApp;
-var haptic=tgApp&&tgApp.HapticFeedback;
-function el(id){return document.getElementById(id);}
-function tr(k){return(TX[state.lang]||TX.ar)[k]||k;}
-function today(){return new Date().toISOString().split('T')[0];}
-function hImpact(s){try{haptic&&haptic.impactOccurred(s||'medium');}catch(e){}}
-function hSuccess(){try{haptic&&haptic.notificationOccurred('success');}catch(e){}}
-function hError(){try{haptic&&haptic.notificationOccurred('error');}catch(e){}}
-function toast(msg,type,dur){if(notifTimer)clearTimeout(notifTimer);var n=el('notif');n.textContent=msg;n.className='notif '+(type||'info');n.style.display='block';n.style.animation='none';n.offsetWidth;n.style.animation='notifIn .35s ease';notifTimer=setTimeout(function(){n.style.animation='notifOut .3s ease forwards';setTimeout(function(){n.style.display='none';},300);},dur||2800);}
-function fetchT(url,opts,ms){ms=ms||5000;return new Promise(function(res,rej){var t=setTimeout(function(){rej(new Error('timeout'));},ms);fetch(url,opts).then(function(r){clearTimeout(t);res(r);}).catch(function(e){clearTimeout(t);rej(e);});});}
-function storeKey(){return'te_'+(state.uid||'guest');}
-function sessionSave(){var data={coins:state.coins,ads_watched:state.ads,tasks_done:state.tasks,refs:state.refs,channel_done:state.channelDone,checkin_date:state.checkinDate,checkin_streak:state.checkinStreak,mystery_date:state.mysteryDate,lang:state.lang,_ts:Date.now()};try{sessionStorage.setItem(storeKey(),JSON.stringify(data));}catch(e){}try{localStorage.setItem(storeKey(),JSON.stringify(data));}catch(e){}return data;}
-function sessionLoad(){var raw=null;try{raw=sessionStorage.getItem(storeKey());}catch(e){}if(!raw){try{raw=localStorage.getItem(storeKey());}catch(e){}}if(!raw)return null;try{return JSON.parse(raw);}catch(e){return null;}}
-function syncSave(extra){var data=sessionSave();if(extra)Object.assign(data,extra);var initData=(tgApp&&tgApp.initData)||'';fetchT(CFG.VERCEL+'/api/sync',{method:'POST',headers:{'Content-Type':'application/json','Authorization':'Bearer '+initData},body:JSON.stringify(data)},4000).catch(function(){fetchT(CFG.SB+'/rest/v1/users?telegram_id=eq.'+state.uid,{method:'PATCH',headers:{'Content-Type':'application/json','apikey':CFG.SK,'Authorization':'Bearer '+CFG.SK},body:JSON.stringify({coins:state.coins,ads_watched:state.ads,tasks_done:state.tasks,refs:state.refs,channel_bonus:state.channelDone,checkin_date:state.checkinDate,checkin_streak:state.checkinStreak,mystery_date:state.mysteryDate})},4000).catch(function(){});});}
-function updCoins(){var u=(state.coins*CFG.RATE).toFixed(4);['coins','coins2'].forEach(function(id){var e=el(id);if(e)e.textContent=state.coins;});['usdt1','usdt2'].forEach(function(id){var e=el(id);if(e)e.textContent='≈ '+u+' USDT';});var prog=el('prog');if(prog)prog.style.width=Math.min((state.coins%1000)/10,100)+'%';el('s-ads').textContent=state.ads;el('s-refs').textContent=state.refs;el('s-tasks').textContent=state.tasks;el('r-num').textContent=state.refs;el('r-pts').textContent=state.refs*100;el('r-usd').textContent=(state.refs*100*CFG.RATE).toFixed(2);var adInfo=el('ad-info');if(adInfo)adInfo.textContent=state.ads>0?state.ads+' '+tr('adw'):'';var wdb=el('btn-withdraw');if(wdb)wdb.disabled=!(connectedWallet&&state.coins>=CFG.MIN_WD);}
-function animateCoinPop(){var ico=el('coin-ico');if(!ico)return;ico.classList.remove('coin-pop');ico.offsetWidth;ico.classList.add('coin-pop');setTimeout(function(){ico.classList.remove('coin-pop');},400);}
-document.querySelectorAll('.nb').forEach(function(btn){btn.addEventListener('click',function(){hImpact('light');var pg=btn.getAttribute('data-page');document.querySelectorAll('.page').forEach(function(p){p.classList.remove('active');});document.querySelectorAll('.nb').forEach(function(b){b.classList.remove('on');});var pageEl=el('pg-'+pg);if(pageEl)pageEl.classList.add('active');btn.classList.add('on');if(pg==='wd')updWalletStatus();});});
-document.querySelectorAll('.lang-i').forEach(function(langEl){langEl.addEventListener('click',function(){setLang(langEl.getAttribute('data-lang'),langEl);});});
-function setLang(l,activeEl){hImpact('light');state.lang=l;document.querySelectorAll('.lang-i').forEach(function(i){i.classList.remove('on');});if(activeEl)activeEl.classList.add('on');document.documentElement.dir=l==='ar'?'rtl':'ltr';var map={'nl-home':'home','nl-ref':'ref','nl-wd':'wd','nl-set':'set','tl-ads':'ads','tl-refs':'refs','tl-tasks':'tasks','tl-earn':'earn','tl-pts':'pts','tl-watch':'watch','tl-daily':'daily','tl-join':'join','tl-joind':'joind','tl-share':'share','tl-shared':'shared','tl-reft':'reft','tl-refd':'refd','tl-copy':'copy','tl-sref':'sref','tl-rnum':'rnum','tl-bal':'bal','tl-wall':'wall','tl-wdt':'wdt','tl-wdb':'wdb','tl-min':'min','tl-time':'time','tl-lang':'lang','tl-rate':'rate','tl-myid':'myid','tl-checkin':'checkin','tl-checkin-btn':'checkin_btn','tl-mystery':'mystery','tl-mystery-label':'mystery_label','tl-mystery-sub':'mystery_sub'};Object.keys(map).forEach(function(id){var e=el(id);if(e)e.textContent=tr(map[id]);});sessionSave();renderCheckin();renderMysteryBox();updCoins();}
-function watchAd(){if(isAdWatching)return;hImpact('medium');var btn=el('ad-btn');isAdWatching=true;btn.disabled=true;btn.innerHTML='⏳ ...';if(!window.Adsgram||!window.Adsgram.init){toast(tr('ad_err'),'error');isAdWatching=false;btn.disabled=false;btn.innerHTML='📺 <span>'+tr('watch')+'</span>';return;}var ctrl;try{ctrl=window.Adsgram.init({blockId:CFG.AD_BLOCK});}catch(e){toast(tr('ad_err'),'error');isAdWatching=false;btn.disabled=false;btn.innerHTML='📺 <span>'+tr('watch')+'</span>';return;}ctrl.show().then(function(){state.coins+=3;state.ads++;updCoins();syncSave();hSuccess();animateCoinPop();toast('🎉 +3 '+tr('pts')+'!','success');}).catch(function(){hError();toast(tr('ad_skip'),'error');}).finally(function(){isAdWatching=false;btn.disabled=false;btn.innerHTML='📺 <span>'+tr('watch')+'</span>';});}
-function renderCheckin(){var strip=el('checkin-strip');if(!strip)return;var todayStr=today();var claimedToday=(state.checkinDate===todayStr);var doneDays=state.checkinStreak;var nextDay=claimedToday?-1:doneDays+1;var html='';for(var i=1;i<=7;i++){var cls='checkin-day glass';if(i<=doneDays)cls+=' checked';else if(i===nextDay)cls+=' today';html+='<div class="'+cls+'"><div class="day-num">D'+i+'</div><div class="day-dot">'+(i<=doneDays?'✅':i)+'</div><div class="day-reward">+'+CFG.CHECKIN_REWARDS[i-1]+'</div></div>';}strip.innerHTML=html;var btn=el('checkin-btn');if(btn){if(claimedToday){btn.textContent='✅ '+tr('checkin_done');btn.disabled=true;btn.style.opacity='0.5';}else{btn.textContent='✅ '+tr('checkin_btn');btn.disabled=false;btn.style.opacity='1';}}}
-function claimCheckin(){hImpact('medium');var todayStr=today();if(state.checkinDate===todayStr){toast(tr('checkin_done'),'info');return;}var yesterday=new Date();yesterday.setDate(yesterday.getDate()-1);var yestStr=yesterday.toISOString().split('T')[0];if(state.checkinDate===yestStr){state.checkinStreak=Math.min(state.checkinStreak+1,7);}else{state.checkinStreak=1;}state.checkinDate=todayStr;var reward=CFG.CHECKIN_REWARDS[state.checkinStreak-1];state.coins+=reward;state.tasks++;updCoins();renderCheckin();syncSave();hSuccess();animateCoinPop();toast('🎉 +'+reward+' '+tr('pts')+'! '+tr('ci_ok'),'success');}
-function renderMysteryBox(){var box=el('mystery-box');var label=el('tl-mystery-label');var sub=el('tl-mystery-sub');if(!box)return;if(state.mysteryDate===today()){box.classList.remove('ready');if(label)label.textContent=tr('mystery_locked');if(sub)sub.textContent=tr('mystery_locked');}else{box.classList.add('ready');if(label)label.textContent=tr('mystery_label');if(sub)sub.textContent=tr('mystery_sub');}}
-function getRandReward(){var total=CFG.MYSTERY.reduce(function(s,r){return s+r.w;},0);var rand=Math.random()*total;for(var i=0;i<CFG.MYSTERY.length;i++){rand-=CFG.MYSTERY[i].w;if(rand<=0)return CFG.MYSTERY[i];}return CFG.MYSTERY[0];}
-function openMysteryBox(){if(isAdWatching)return;if(state.mysteryDate===today()){toast(tr('mystery_locked'),'info');return;}if(!window.Adsgram||!window.Adsgram.init){toast(tr('ad_err'),'error');return;}hImpact('medium');var box=el('mystery-box');var adBtn=el('ad-btn');isAdWatching=true;if(box)box.classList.add('opening');if(adBtn)adBtn.disabled=true;var ctrl;try{ctrl=window.Adsgram.init({blockId:CFG.AD_BLOCK});}catch(e){toast(tr('ad_err'),'error');isAdWatching=false;if(box)box.classList.remove('opening');if(adBtn)adBtn.disabled=false;return;}ctrl.show().then(function(){var reward=getRandReward();state.coins+=reward.pts;state.mysteryDate=today();state.tasks++;updCoins();renderMysteryBox();syncSave();hSuccess();animateCoinPop();toast(reward.e+' '+reward.label+'! +'+reward.pts+' '+tr('pts')+' 🎉','success',3500);}).catch(function(){hError();toast(tr('ad_skip'),'error');}).finally(function(){isAdWatching=false;if(box)box.classList.remove('opening');if(adBtn)adBtn.disabled=false;});}
-function verifyChannel(){hImpact('medium');if(state.channelDone){toast(tr('already_sub'),'info');return;}toast(tr('checking'),'info');fetchT(CFG.VERCEL+'/api/verify?uid='+state.uid,{},6000).then(function(r){return r.json();}).then(function(d){if(d.ok){state.channelDone=true;state.coins=d.coins||(state.coins+50);state.tasks++;updCoins();el('tk-ch').classList.add('done');var vb=el('verify-btn');if(vb)vb.remove();syncSave();hSuccess();animateCoinPop();toast('🎉 +50 '+tr('pts'),'success');}else{hError();toast(tr('not_sub'),'error');}}).catch(function(){hError();toast(tr('verify_err'),'error');});}
-function shareTask(){hImpact('medium');var link='https://t.me/'+CFG.BOT+'?start='+state.uid;if(tgApp)tgApp.openLink('https://t.me/share/url?url='+encodeURIComponent(link)+'&text='+encodeURIComponent('انضم لـ TaskEarn واكسب مكافآت! 🎁'));if(!state.shareDone){state.shareDone=true;el('tk-sh').classList.add('done');toast(tr('shared_ok'),'success');}}
-function copyRef(){hImpact('light');var link='https://t.me/'+CFG.BOT+'?start='+state.uid;if(navigator.clipboard){navigator.clipboard.writeText(link).catch(function(){});}toast(tr('copied'),'success');}
-function shareRef(){hImpact('light');var link='https://t.me/'+CFG.BOT+'?start='+state.uid;if(tgApp)tgApp.openLink('https://t.me/share/url?url='+encodeURIComponent(link)+'&text='+encodeURIComponent('انضم لـ TaskEarn واكسب مكافآت! 🎁'));}
-function updWalletStatus(){var statusEl=el('wallet-status');var wdb=el('btn-withdraw');if(connectedWallet){if(statusEl){statusEl.style.display='block';statusEl.textContent=tr('wallet_ok')+': '+connectedWallet.slice(0,6)+'...'+connectedWallet.slice(-4);}if(wdb)wdb.disabled=state.coins<CFG.MIN_WD;}else{if(statusEl)statusEl.style.display='none';if(wdb)wdb.disabled=true;}}
-function initTonConnect(){var container=el('ton-connect-container');if(!container)return;var UI=(window.TonConnectUI&&window.TonConnectUI.TonConnectUI)||window.TonConnectUI;if(!UI){container.innerHTML='<p style="color:var(--tg-hint);font-size:12px;text-align:center;">TON Connect جاري التحميل...</p>';return;}try{tonUI=new UI({manifestUrl:CFG.TON_MANIFEST,buttonRootId:'ton-connect-container',uiPreferences:{theme:'DARK',borderRadius:'m'},actionsConfiguration:{returnStrategy:'back',twaReturnUrl:'https://t.me/'+CFG.BOT}});tonUI.onStatusChange(function(w){connectedWallet=(w&&w.account)?w.account.address:null;updWalletStatus();if(connectedWallet){hSuccess();toast(tr('wallet_ok'),'success');}});if(tonUI.wallet&&tonUI.wallet.account){connectedWallet=tonUI.wallet.account.address;updWalletStatus();}}catch(e){container.innerHTML='<p style="color:var(--tg-hint);font-size:12px;text-align:center;">TON Connect غير متاح</p>';}}
-function withdraw(){hImpact('medium');if(!connectedWallet){hError();toast(tr('need_wallet'),'error');return;}if(state.coins<CFG.MIN_WD){hError();toast(tr('need_pts'),'error');return;}var usdt=(state.coins*CFG.RATE).toFixed(4);var initData=(tgApp&&tgApp.initData)||'';fetchT(CFG.VERCEL+'/api/withdraw',{method:'POST',headers:{'Content-Type':'application/json','Authorization':'Bearer '+initData},body:JSON.stringify({wallet:connectedWallet,coins:state.coins,usdt:usdt})},5000).catch(function(){return fetchT(CFG.SB+'/rest/v1/withdrawals',{method:'POST',headers:{'Content-Type':'application/json','apikey':CFG.SK,'Authorization':'Bearer '+CFG.SK},body:JSON.stringify({telegram_id:state.uid,wallet:connectedWallet,coins:state.coins,usdt:usdt,status:'pending'})},4000);}).then(function(){hSuccess();toast(tr('wd_ok'),'success');}).catch(function(){hError();toast('⚠️ خطأ في الإرسال','error');});}
-function initTicker(){var t=el('ticker');if(!t)return;var items=FAKE_WD.map(function(w){return'<span style="margin:0 22px;display:inline-block;">💚 '+w+'</span>';}).join('');t.innerHTML=items+items;}
-function applyTheme(){try{var tp=(tgApp&&tgApp.themeParams)||{};var r=document.documentElement.style;if(tp.bg_color)r.setProperty('--tg-bg',tp.bg_color);if(tp.text_color)r.setProperty('--tg-text',tp.text_color);if(tp.hint_color)r.setProperty('--tg-hint',tp.hint_color);if(tp.link_color)r.setProperty('--tg-link',tp.link_color);if(tp.button_color)r.setProperty('--tg-button',tp.button_color);if(tp.button_text_color)r.setProperty('--tg-button-text',tp.button_text_color);if(tp.secondary_bg_color)r.setProperty('--tg-secondary',tp.secondary_bg_color);var isDark=!tp.bg_color||parseInt((tp.bg_color||'#000').replace('#',''),16)<0x888888;if(!isDark){r.setProperty('--glass-bg','rgba(255,255,255,0.5)');r.setProperty('--glass-border','rgba(0,0,0,0.08)');}}catch(e){}}
-function wireEvents(){el('ad-btn').addEventListener('click',watchAd);el('checkin-btn').addEventListener('click',claimCheckin);el('mystery-box').addEventListener('click',openMysteryBox);el('btn-copy').addEventListener('click',copyRef);el('btn-share-ref').addEventListener('click',shareRef);el('btn-withdraw').addEventListener('click',withdraw);el('tk-sh').addEventListener('click',shareTask);el('tk-ch').addEventListener('click',function(){if(state.channelDone)return;hImpact('medium');if(tgApp)tgApp.openLink(CFG.CHANNEL);setTimeout(function(){if(el('verify-btn'))return;var btn=document.createElement('button');btn.id='verify-btn';btn.textContent=tr('verify_btn');btn.addEventListener('click',verifyChannel);document.body.appendChild(btn);setTimeout(function(){var b=el('verify-btn');if(b)b.remove();},35000);},1500);});}
-function init(){if(tgApp){tgApp.ready();tgApp.expand();try{tgApp.setHeaderColor('secondary_bg_color');}catch(e){}}applyTheme();var u=tgApp&&tgApp.initDataUnsafe&&tgApp.initDataUnsafe.user;var startParam=tgApp&&tgApp.initDataUnsafe&&tgApp.initDataUnsafe.start_param;if(u){state.uid=String(u.id);}else{try{state.uid=localStorage.getItem('te_guest')||('guest_'+Date.now());localStorage.setItem('te_guest',state.uid);}catch(e){state.uid='guest_'+Date.now();}}el('id-chip').textContent='ID: '+state.uid;el('my-id').textContent=state.uid;el('ref-link').textContent='https://t.me/'+CFG.BOT+'?start='+state.uid;var saved=sessionLoad();if(saved){state.coins=saved.coins||0;state.ads=saved.ads_watched||0;state.tasks=saved.tasks_done||0;state.refs=saved.refs||0;state.channelDone=saved.channel_done||false;state.checkinDate=saved.checkin_date||null;state.checkinStreak=saved.checkin_streak||0;state.mysteryDate=saved.mystery_date||null;if(saved.lang&&TX[saved.lang])state.lang=saved.lang;}if(state.channelDone)el('tk-ch').classList.add('done');if(!saved||!saved.lang){var tgLang=u&&u.language_code;if(tgLang){if(TX[tgLang])state.lang=tgLang;else if(tgLang.indexOf('ar')===0)state.lang='ar';else state.lang='en';}}document.querySelectorAll('.lang-i').forEach(function(langEl){langEl.classList.toggle('on',langEl.getAttribute('data-lang')===state.lang);});document.documentElement.dir=state.lang==='ar'?'rtl':'ltr';wireEvents();setLang(state.lang,document.querySelector('.lang-i.on'));initTicker();initTonConnect();if(!saved&&u){fetchT(CFG.SB+'/rest/v1/users?telegram_id=eq.'+state.uid+'&select=*',{headers:{'apikey':CFG.SK,'Authorization':'Bearer '+CFG.SK}},5000).then(function(r){return r.json();}).then(function(d){if(d&&d.length>0){state.coins=d[0].coins||0;state.ads=d[0].ads_watched||0;state.tasks=d[0].tasks_done||0;state.refs=d[0].refs||0;state.channelDone=d[0].channel_bonus||false;state.checkinDate=d[0].checkin_date||null;state.checkinStreak=d[0].checkin_streak||0;state.mysteryDate=d[0].mystery_date||null;sessionSave();if(state.channelDone)el('tk-ch').classList.add('done');updCoins();renderCheckin();renderMysteryBox();}else if(d&&d.length===0){if(startParam&&startParam!==state.uid){fetchT(CFG.SB+'/rest/v1/users?telegram_id=eq.'+startParam+'&select=coins,refs',{headers:{'apikey':CFG.SK,'Authorization':'Bearer '+CFG.SK}},4000).then(function(r){return r.json();}).then(function(rd){if(rd&&rd.length>0){return fetchT(CFG.SB+'/rest/v1/users?telegram_id=eq.'+startParam,{method:'PATCH',headers:{'Content-Type':'application/json','apikey':CFG.SK,'Authorization':'Bearer '+CFG.SK},body:JSON.stringify({coins:(rd[0].coins||0)+100,refs:(rd[0].refs||0)+1})},4000);}}).catch(function(){});}fetchT(CFG.SB+'/rest/v1/users',{method:'POST',headers:{'Content-Type':'application/json','apikey':CFG.SK,'Authorization':'Bearer '+CFG.SK},body:JSON.stringify({telegram_id:state.uid,username:(u&&u.username)||'',coins:0,ads_watched:0,tasks_done:0,refs:0,referred_by:startParam||null,channel_bonus:false})},4000).catch(function(){});}}).catch(function(){});}}
-init();
-</script>
-</body>
-</html>
+/* ===== صفحة المهام/Shortlinks ===== */
+.offer-card{display:flex;align-items:center;gap:12px;padding:14px;border-radius:var(--radius);margin-bottom:8px;cursor:pointer;transition:all var(--ease);backgr
